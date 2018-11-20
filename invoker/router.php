@@ -6,15 +6,15 @@ require_once './vendor/autoload.php';
 require_once './index.php';
 
 (function() {
-    $entryPoint = getenv('ENTRY_POINT', true);
-    if ($entryPoint === false) {
-        trigger_error('ENTRY_POINT is not set');
+    $target = getenv('FUNCTION_TARGET', true);
+    if ($target === false) {
+        trigger_error('FUNCTION_TARGET is not set');
     }
-    $triggerType = getenv('FUNCTION_TRIGGER_TYPE', true);
-    if ($triggerType === false) {
-        trigger_error('FUNCTION_TRIGGER_TYPE is not set');
+    $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true);
+    if ($signatureType === false) {
+        trigger_error('FUNCTION_SIGNATURE_TYPE is not set');
     }
 
-    $invoker = new Google\CloudFunctions\Invoker($entryPoint, $triggerType);
+    $invoker = new Google\CloudFunctions\Invoker($target, $signatureType);
     $invoker->handle()->send();
 })();

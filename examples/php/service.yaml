@@ -27,12 +27,7 @@ spec:
             image: *image
             imagePullPolicy: Always
             env:
-            # TODO: Skip setting PORT once https://github.com/knative/serving/issues/1911 is
-            # resolved.
-            - name: PORT
-              value: "8080"
-            - name: ENTRY_POINT
-              value: "httpFunction"
-            # TODO: Set trigger type during build time.
-            - name: FUNCTION_TRIGGER_TYPE
-              value: "HTTP_TRIGGER"
+            - name: FUNCTION_TARGET
+              value: httpFunction
+            - name: FUNCTION_SIGNATURE_TYPE
+              value: http

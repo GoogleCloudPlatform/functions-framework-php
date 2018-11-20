@@ -9,12 +9,12 @@ class Invoker
 {
     private $function;
 
-    public function __construct($entryPoint, $triggerType)
+    public function __construct($target, $signatureType)
     {
-        if ($triggerType === 'HTTP_TRIGGER') {
-            $this->function = new HttpFunctionWrapper($entryPoint);
+        if ($signatureType === 'http') {
+            $this->function = new HttpFunctionWrapper($target);
         } else {
-            $this->function = new BackgroundFunctionWrapper($entryPoint);
+            $this->function = new BackgroundFunctionWrapper($target);
         }
     }
 
