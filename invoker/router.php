@@ -1,6 +1,6 @@
 <?php
 
-chdir('../../..'); // We're in vendor/google/function-invoker
+chdir(dirname(__FILE__) . '/../../../..'); // We're in vendor/google/functions-framework/invoker
 
 require_once './vendor/autoload.php';
 require_once './index.php';
