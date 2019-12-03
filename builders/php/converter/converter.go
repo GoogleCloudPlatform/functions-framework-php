@@ -40,42 +40,6 @@ func writeManifest(manifest map[string]interface{}) error {
 	return ioutil.WriteFile("composer.json", manifestBytes, 0644)
 }
 
-func addCustomRepositories() error {
-	customRepositories := []interface{}{
-		map[string]interface{}{
-			"type": "path",
-			"url":  "../invoker",
-			"options": map[string]interface{}{
-				"symlink": false,
-			},
-		},
-	}
-
-	manifestBytes, err := ioutil.ReadFile("composer.json")
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-		return writeManifest(map[string]interface{}{"repositories": customRepositories})
-	}
-
-	var manifest map[string]interface{}
-	if err := json.Unmarshal(manifestBytes, &manifest); err != nil {
-		return err
-	}
-	rawRepositories, hasRepositories := manifest["repositories"]
-	if !hasRepositories {
-		manifest["repositories"] = customRepositories
-		return writeManifest(manifest)
-	}
-	repositories, ok := rawRepositories.([]interface{})
-	if !ok {
-		return errors.New("repositories field of composer.json must be a list")
-	}
-	manifest["repositories"] = append(repositories, customRepositories...)
-	return writeManifest(manifest)
-}
-
 func moveToSubdirectory(name string) error {
 	userFiles, err := ioutil.ReadDir(".")
 	if err != nil {
@@ -96,9 +60,6 @@ func moveToSubdirectory(name string) error {
 func main() {
 	fmt.Println("Converting PHP function to application...")
 
-	if err := addCustomRepositories(); err != nil {
-		log.Fatalf("Error: could not add custom repositories: %v", err)
-	}
 	if err := moveToSubdirectory("app"); err != nil {
 		log.Fatalf("Error: could not move user code to new location: %v", err)
 	}
@@ -109,7 +70,7 @@ func main() {
 	os.Chdir("app")
 	// TODO: raise an error if Invoker is already a direct dependency of user project,
 	// not to cause a silent update.
-	cmd := exec.Command("/usr/local/bin/composer", "-n", "require", "google/function-invoker")
+	cmd := exec.Command("/usr/local/bin/composer", "-n", "require", "google/cloud-functions-framework")
 	cmd.Stderr = &bytes.Buffer{}
 	if err := cmd.Run(); err != nil {
 		_, ok := err.(*exec.ExitError)

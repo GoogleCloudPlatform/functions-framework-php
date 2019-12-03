@@ -15,7 +15,8 @@ RUN apt-get update >/dev/null \
   && curl https://getcomposer.org/download/1.7.2/composer.phar > /usr/local/bin/composer \
   && chmod +x /usr/local/bin/composer
 
-COPY invoker/ /invoker/
+COPY src /invoker/src
+COPY router.php /invoker/router.php
 COPY --from=builder /tmp/converter /
 
 WORKDIR /workspace

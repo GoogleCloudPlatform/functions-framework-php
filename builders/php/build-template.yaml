@@ -21,18 +21,18 @@ spec:
   - name: IMAGE
     description: The name of the image to push
   - name: RUNTIME_VERSION
-    description: The version of App Engine PHP 7.2 runtime images.
-    default: php72_7_2_8_20180831_RC00
+    description: The version of App Engine PHP 7.3 runtime images.
+    default: php73_20190827_7_3_7_RC03
 
   steps:
   - name: php-function-converter
     image: gcr.io/serverless-function-frameworks/php-function-converter
   - name: build-and-push
     # TODO: Use RUNTIME_VERSION parameter once https://github.com/knative/build/issues/323 is fixed.
-    image: gcr.io/gae-runtimes/php72_app_builder:php72_7_2_8_20180831_RC00
+    image: gcr.io/gae-runtimes/php73_app_builder:php73_20190827_7_3_7_RC03
     args:
     - --directory=/workspace/app
-    - --base=gcr.io/gae-runtimes/php72:${RUNTIME_VERSION}
+    - --base=gcr.io/gae-runtimes/php73:${RUNTIME_VERSION}
     - --name=${IMAGE}
     - --entrypoint-from-app-yaml=false
-    - --entrypoint-contents=serve vendor/google/function-invoker/router.php
+    - --entrypoint-contents=serve vendor/google/cloud-functions-framework/router.php

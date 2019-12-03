@@ -1,7 +1,6 @@
 {
-  "type": "libary",
-  "name": "google/function-invoker",
-  "version": "0.1.0",
+  "name": "google/cloud-functions-framework",
+  "description": "Google Cloud Functions framework for PHP",
   "require": {
     "symfony/http-foundation": "^4.1"
   },
