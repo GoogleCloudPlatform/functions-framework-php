@@ -63,7 +63,7 @@ Run the following commands:
 ```sh
 export FUNCTION_TARGET="httpFunction"
 export FUNCTION_SIGNATURE_TYPE="http"
-php -S localhost:8080 vendor/google/gcf-eng-php-ff/invoker/router.php
+php -S localhost:8080 vendor/google/cloud-functions-framework/invoker/router.php
 ```
 
 Open `http://localhost:8080/` in your browser and see *Hello, World*.
