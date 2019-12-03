@@ -1,3 +1,5 @@
+**DISCLAIMER: This repository is in development and not meant for production use**
+
 # Functions Framework for PHP
 
 An open source FaaS (Function as a service) framework for writing portable
@@ -43,7 +45,7 @@ handling logic.
 Add the Functions Framework to your `composer.json` file using `composer`.
 
 ```sh
-composer install google-cloud/functions-framework
+composer install google/cloud-functions-framework
 ```
 
 # Quickstart: Hello, World on your local machine
