@@ -15,15 +15,14 @@
 
 // The converter command converts function code located at /workspace to a PHP application, in-place.
 // It treats supplied source directory as a Composer project and installs Invoker package as a dependency,
-// converting it to a working PHP application with router located at vendor/google/function-invoker/router.php.
+// converting it to a working PHP application with router located at vendor/google/cloud-functions-framework/router.php.
 // To build a Knative-compatible function converter image, run the following command from the project root:
-// $ docker build -t <tag> -f builders/javascript/converter/Dockerfile .
+// $ docker build -t <tag> -f builders/converter/Dockerfile .
 package main
 
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"

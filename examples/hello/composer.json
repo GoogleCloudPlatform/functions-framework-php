@@ -1,7 +1,4 @@
 {
-    "require": {
-        "google/cloud-functions-framework": "dev-master"
-    },
     "scripts": {
         "start-http": "@php cloud-functions.php start helloHttp"
     },
