@@ -4,7 +4,7 @@ RUN apt-get update >/dev/null \
   && apt-get install -y golang >/dev/null
 
 WORKDIR /tmp
-COPY builders/php/converter/converter.go .
+COPY builders/converter/converter.go .
 RUN go build converter.go
 
 FROM gcr.io/gcp-runtimes/ubuntu_18_0_4
