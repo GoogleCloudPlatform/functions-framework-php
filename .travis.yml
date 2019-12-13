@@ -17,4 +17,4 @@ before_install:
 
 script:
   - $COMPOSER_BIN_DIR/php-cs-fixer fix --dry-run --diff .
-  - ./vendor/bin/phpunit -v
+  - $COMPOSER_BIN_DIR/phpunit -v
