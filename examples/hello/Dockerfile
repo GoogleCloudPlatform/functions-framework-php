@@ -1,4 +1,4 @@
-FROM gcr.io/gae-runtimes/php73:php73_20190827_7_3_7_RC03
+FROM gcr.io/gae-runtimes/php73:php73_20191020_7_3_10_RC00
 
 WORKDIR /srv/
 
