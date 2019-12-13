@@ -1,9 +1,5 @@
 {
-    "scripts": {
-        "start-http": "@php cloud-functions.php start helloHttp"
-    },
-    "require-dev": {
-        "symfony/console": "^4.3",
-        "symfony/process": "^4.3"
+    "require": {
+        "google/cloud-functions-framework": "dev-master"
     }
 }

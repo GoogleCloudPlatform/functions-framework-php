@@ -2,6 +2,7 @@
 
 namespace Google\CloudFunctions;
 
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,8 +14,11 @@ class Invoker
     {
         if ($signatureType === 'http') {
             $this->function = new HttpFunctionWrapper($target);
-        } else {
+        } elseif ($signatureType === 'event') {
             $this->function = new BackgroundFunctionWrapper($target);
+        } else {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid signature type: "%s"', $signatureType));
         }
     }
 

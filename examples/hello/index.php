@@ -8,7 +8,3 @@ function helloHttp(Request $request) {
         $request->query->get('name') ?: 'World'
     );
 }
-
-function helloEvent($data, Context $context) {
-    printf("Hello %s PHP Event function!" . PHP_EOL, $data);
-}

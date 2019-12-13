@@ -1,11 +1,35 @@
 <?php
 
+/**
+ * Determine the autoload file to load.
+ */
+if (file_exists(__DIR__ . '/../../autoload.php')) {
+    // when running from vendor/google/cloud-error-reporting
+    require_once __DIR__ . '/../../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    // when running from git clone.
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 
-// We're in vendor/google/cloud-functions-framework
+/**
+ * Determine the function source file to load
+ */
+if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
+    // when function src is set by environment variable
+    if (!file_exists($functionSource)) {
+        throw new InvalidArgumentException(sprintf(
+            'Unable to load function from "%s"', $functionSource));
+    }
+    require_once $functionSource;
+} elseif (file_exists($functionSource = __DIR__ . '/../../../index.php')) {
+    // when running from vendor/google/cloud-functions-framework, default to
+    // loading functions from "index.php" in the root of the project.
+    require_once $functionSource;
+}
 
-require_once __DIR__ . '/../../autoload.php';
-require_once getenv('FUNCTION_SOURCE', true) ?: __DIR__ . '/../../../index.php';
-
+/**
+ * Invoke the function based on the function type.
+ */
 (function() {
     $target = getenv('FUNCTION_TARGET', true);
     if ($target === false) {

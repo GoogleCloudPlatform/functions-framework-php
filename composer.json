@@ -1,6 +1,6 @@
 {
   "name": "google/cloud-functions-framework",
-  "description": "Google Cloud Functions framework for PHP",
+  "description": "Google Cloud Functions Framework for PHP",
   "require": {
     "symfony/http-foundation": "^4.1"
   },
@@ -8,5 +8,8 @@
     "psr-4": {
       "Google\\CloudFunctions\\": "src"
     }
-  }
+  },
+  "bin": [
+    "router.php"
+  ]
 }
