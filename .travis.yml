@@ -1,0 +1,23 @@
+language: php
+
+branches:
+  only: [master]
+
+matrix:
+  include:
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4
+
+env:
+  global:
+    - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
+
+before_install:
+  - composer install
+  - composer global require friendsofphp/php-cs-fixer:^2
+
+script:
+  - $COMPOSER_BIN_DIR/php-cs-fixer fix --dry-run --diff .
+  - $COMPOSER_BIN_DIR/phpunit -v

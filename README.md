@@ -15,8 +15,8 @@ different environments, including:
 The framework allows you to go from:
 
 ```php
-function helloWorld() {
-    return "Hello, World" . PHP_EOL;
+function helloHttp() {
+    return "Hello World from PHP HTTP function!" . PHP_EOL;
 };
 ```
 
@@ -24,7 +24,7 @@ To:
 
 ```sh
 curl http://my-url
-# Output: Hello, World
+# Output: "Hello World from PHP HTTP function!"
 ```
 
 All without needing to worry about writing an HTTP server or complicated request
@@ -48,41 +48,36 @@ Add the Functions Framework to your `composer.json` file using `composer`.
 composer install google/cloud-functions-framework
 ```
 
-# Quickstart: Hello, World on your local machine
+# Quickstart: Run your function locally on your local machine
 
 Create an `index.php` file with the following contents:
 
 ```php
-function helloWorld() {
-    return "Hello, World" . PHP_EOL;
+function helloHttp() {
+    return "Hello World from PHP HTTP function!" . PHP_EOL;
 };
 ```
 
 Run the following commands:
 
 ```sh
-export FUNCTION_TARGET="httpFunction"
-export FUNCTION_SIGNATURE_TYPE="http"
-php -S localhost:8080 vendor/google/cloud-functions-framework/invoker/router.php
+export FUNCTION_TARGET=helloHttp
+export FUNCTION_SIGNATURE_TYPE=http
+export FUNCTION_SOURCE=index.php
+php -S localhost:8080 vendor/bin/router.php
 ```
 
-Open `http://localhost:8080/` in your browser and see *Hello, World*.
+Open `http://localhost:8080/` in your browser and see *Hello World...*.
 
 
-# Quickstart: Set up a new project
+# Quickstart: Run your function in a container
 
 Create an `index.php` file with the following contents:
 
 ```php
-function helloWorld() {
-    return "Hello, World" . PHP_EOL;
+function helloHttp() {
+    return "Hello World from PHP HTTP function!" . PHP_EOL;
 };
-```
-
-To run a function locally, first create a `composer.json` file using `composer init`:
-
-```sh
-composer init
 ```
 
 Now install the Functions Framework:
@@ -91,11 +86,30 @@ Now install the Functions Framework:
 composer install google-cloud/functions-framework
 ```
 
-Send requests to this function using `curl` from another terminal window:
+Build the container using the example Dockerfile:
+
+```
+docker build . \
+    -f vendor/google/cloud-functions/framework/examples/hello/Dockerfile \
+    -t my-cloud-function
+```
+
+Run the cloud functions framework container:
+
+```
+docker run -p 8080:8080 \
+    -e FUNCTION_TARGET=helloHttp \
+    -e FUNCTION_SIGNATURE_TYPE=http \
+    -e FUNCTION_SOURCE=index.php \
+    my-cloud-function
+```
+
+Open `http://localhost:8080/` in your browser and see *Hello World...*, or
+send requests to this function using `curl` from another terminal window:
 
 ```sh
 curl localhost:8080
-# Output: Hello, World
+# Output: Hello World from PHP HTTP function!
 ```
 
 # Run your function on serverless platforms
