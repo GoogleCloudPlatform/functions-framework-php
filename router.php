@@ -37,9 +37,11 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
     }
     require_once $functionSource;
 } elseif (file_exists($functionSource = __DIR__ . '/../../../index.php')) {
-    // when running from vendor/google/cloud-functions-framework, default to
-    // loading functions from "index.php" in the root of the project.
+    // When running from vendor/google/cloud-functions-framework, default to
+    // "index.php" in the root project for the function source.
     require_once $functionSource;
+} else {
+    // Do nothing - assume the function source is being autoloaded.
 }
 
 /**
