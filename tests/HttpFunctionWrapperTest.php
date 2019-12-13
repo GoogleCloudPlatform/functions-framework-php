@@ -15,31 +15,27 @@
  * limitations under the License.
  */
 
-namespace Google\CloudFunctions;
+namespace Google\CloudFunctions\Tests;
 
-class Context
+use Google\CloudFunctions\HttpFunctionWrapper;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * @group gcf-framework
+ */
+class HttpFunctionWrapperTest extends TestCase
 {
-    public $eventId;
-    public $timestamp;
-    public $eventType;
-    public $resource;
-
-    public function __construct($eventId, $timestamp, $eventType, $resource)
+    public function testHttpHttpFunctionWrapper()
     {
-        $this->eventId = $eventId;
-        $this->timestamp = $timestamp;
-        $this->eventType = $eventType;
-        $this->resource = $resource;
+        $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
+        $request = new Request();
+        $response = $httpFunctionWrapper->execute($request);
+        $this->assertEquals((string) $response->getContent(), 'Invoked!');
     }
 
-    public static function fromArray(array $arr)
+    public function invokeThis(Request $request)
     {
-        $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
-        $args = [];
-        foreach ($argKeys as $key) {
-            $args[] = $arr[$key];
-        }
-
-        return new static(...$args);
+        return 'Invoked!';
     }
 }
