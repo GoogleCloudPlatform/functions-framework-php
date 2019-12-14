@@ -18,9 +18,9 @@
 /**
  * Determine the autoload file to load.
  */
-if (file_exists(__DIR__ . '/../../autoload.php')) {
-    // when running from vendor/google/cloud-error-reporting
-    require_once __DIR__ . '/../../vendor/autoload.php';
+if (file_exists(__DIR__ . '/../autoload.php')) {
+    // when running from vendor/bin
+    require_once __DIR__ . '/../vendor/autoload.php';
 } elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
     // when running from git clone.
     require_once __DIR__ . '/vendor/autoload.php';
@@ -36,9 +36,8 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
             'Unable to load function from "%s"', $functionSource));
     }
     require_once $functionSource;
-} elseif (file_exists($functionSource = __DIR__ . '/../../../index.php')) {
-    // When running from vendor/google/cloud-functions-framework, default to
-    // "index.php" in the root project for the function source.
+} elseif (file_exists($functionSource = __DIR__ . '/../../index.php')) {
+    // When running from vendor/bin, default to "index.php" in the root project.
     require_once $functionSource;
 } else {
     // Do nothing - assume the function source is being autoloaded.
