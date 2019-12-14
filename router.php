@@ -19,8 +19,8 @@
  * Determine the autoload file to load.
  */
 if (file_exists(__DIR__ . '/../../autoload.php')) {
-    // when running from vendor/google/cloud-error-reporting
-    require_once __DIR__ . '/../../vendor/autoload.php';
+    // when running from vendor/google/cloud-functions-framework
+    require_once __DIR__ . '/../../autoload.php';
 } elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
     // when running from git clone.
     require_once __DIR__ . '/vendor/autoload.php';
