@@ -1,6 +1,6 @@
 **DISCLAIMER: This repository is in development and not meant for production use**
 
-# Functions Framework for PHP
+# Functions Framework for PHP [![Build Status](https://travis-ci.com/GoogleCloudPlatform/functions-framework-php.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/functions-framework-php) [![Packagist](https://poser.pugx.org/google/cloud-functions-framework/v/stable)](https://packagist.org/packages/google/cloud-functions-framework)
 
 An open source FaaS (Function as a service) framework for writing portable
 PHP functions.
