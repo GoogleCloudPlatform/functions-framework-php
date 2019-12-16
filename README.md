@@ -53,6 +53,7 @@ composer install google/cloud-functions-framework
 Create an `index.php` file with the following contents:
 
 ```php
+<?php
 function helloHttp() {
     return "Hello World from PHP HTTP function!" . PHP_EOL;
 };
@@ -75,6 +76,7 @@ Open `http://localhost:8080/` in your browser and see *Hello World...*.
 Create an `index.php` file with the following contents:
 
 ```php
+<?php
 function helloHttp() {
     return "Hello World from PHP HTTP function!" . PHP_EOL;
 };
