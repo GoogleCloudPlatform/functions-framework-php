@@ -15,9 +15,10 @@ different environments, including:
 The framework allows you to go from:
 
 ```php
-function helloHttp() {
+function helloHttp()
+{
     return "Hello World from PHP HTTP function!" . PHP_EOL;
-};
+}
 ```
 
 To:
@@ -36,8 +37,6 @@ handling logic.
 
 *   Spin up a local development server for quick testing
 *   Invoke a function in response to a request
-*   Automatically unmarshal events conforming to the
-    [CloudEvents](https://cloudevents.io/) spec
 *   Portable between serverless platforms
 
 # Installation
@@ -48,14 +47,19 @@ Add the Functions Framework to your `composer.json` file using `composer`.
 composer install google/cloud-functions-framework
 ```
 
-# Quickstart: Run your function locally on your local machine
+# Run your function locally on your local machine
 
 Create an `index.php` file with the following contents:
 
 ```php
-function helloHttp() {
+<?php
+
+use Symfony\Component\HttpFoundation\Request;
+
+function helloHttp(Request $request)
+{
     return "Hello World from PHP HTTP function!" . PHP_EOL;
-};
+}
 ```
 
 Run the following commands:
@@ -70,14 +74,19 @@ php -S localhost:8080 vendor/bin/router.php
 Open `http://localhost:8080/` in your browser and see *Hello World...*.
 
 
-# Quickstart: Run your function in a container
+# Run your function in a container
 
 Create an `index.php` file with the following contents:
 
 ```php
-function helloHttp() {
+<?php
+
+use Symfony\Component\HttpFoundation\Request;
+
+function helloHttp(Request $request)
+{
     return "Hello World from PHP HTTP function!" . PHP_EOL;
-};
+}
 ```
 
 Now install the Functions Framework:
@@ -112,6 +121,26 @@ curl localhost:8080
 # Output: Hello World from PHP HTTP function!
 ```
 
+## Accessing the HTTP Object
+
+The first parameter of your function is a `Request` object from `symfony/http-foundation`:
+
+```php
+use Symfony\Component\HttpFoundation\Request;
+
+function helloHttp(Request $request)
+{
+    return sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
+        $request->query->get('name') ?: 'World'
+    );
+}
+```
+
+See the [HttpFoundation documentation][httpfoundation] documentation for more on working
+with the request object.
+
+[httpfoundation]: https://symfony.com/doc/current/components/http_foundation.html
+
 # Run your function on serverless platforms
 
 [Google Cloud Functions](https://cloud.google.com/functions/docs) does _not_ have native support for PHP. Furthermore, it _can not_ use custom Function Frameworks.
@@ -145,10 +174,11 @@ These will be passed as arguments to your function when it receives a request.
 Note that your function must use the event-style function signature:
 
 ```php
-function helloEvents($data, $context) {
+function helloEvents($data, $context)
+{
   var_dump($data);
   var_dump($context);
-};
+}
 ```
 
 To enable automatic unmarshalling, set the `FUNCTION_SIGNATURE_TYPE` environment
