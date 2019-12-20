@@ -109,7 +109,6 @@ Run the cloud functions framework container:
 docker run -p 8080:8080 \
     -e FUNCTION_TARGET=helloHttp \
     -e FUNCTION_SIGNATURE_TYPE=http \
-    -e FUNCTION_SOURCE=index.php \
     my-cloud-function
 ```
 
