@@ -76,6 +76,12 @@ Open `http://localhost:8080/` in your browser and see *Hello World...*.
 
 # Run your function in a container
 
+Add the Functions Framework to your `composer.json` file using `composer`.
+
+```sh
+composer require google/cloud-functions-framework
+```
+
 Create an `index.php` file with the following contents:
 
 ```php
@@ -87,12 +93,6 @@ function helloHttp(Request $request)
 {
     return "Hello World from PHP HTTP function!" . PHP_EOL;
 }
-```
-
-Now install the Functions Framework:
-
-```sh
-composer require google-cloud/functions-framework
 ```
 
 Build the container using the example Dockerfile:
@@ -109,7 +109,6 @@ Run the cloud functions framework container:
 docker run -p 8080:8080 \
     -e FUNCTION_TARGET=helloHttp \
     -e FUNCTION_SIGNATURE_TYPE=http \
-    -e FUNCTION_SOURCE=index.php \
     my-cloud-function
 ```
 
