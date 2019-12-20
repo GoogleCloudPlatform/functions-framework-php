@@ -99,7 +99,7 @@ Build the container using the example Dockerfile:
 
 ```
 docker build . \
-    -f vendor/google/cloud-functions/framework/examples/hello/Dockerfile \
+    -f vendor/google/cloud-functions-framework/examples/hello/Dockerfile \
     -t my-cloud-function
 ```
 
