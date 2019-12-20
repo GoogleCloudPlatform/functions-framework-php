@@ -92,7 +92,7 @@ function helloHttp(Request $request)
 Now install the Functions Framework:
 
 ```sh
-composer install google-cloud/functions-framework
+composer require google-cloud/functions-framework
 ```
 
 Build the container using the example Dockerfile:
