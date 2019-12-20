@@ -44,7 +44,7 @@ handling logic.
 Add the Functions Framework to your `composer.json` file using `composer`.
 
 ```sh
-composer install google/cloud-functions-framework
+composer require google/cloud-functions-framework
 ```
 
 # Run your function locally on your local machine
