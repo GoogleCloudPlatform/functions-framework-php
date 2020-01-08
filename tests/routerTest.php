@@ -34,28 +34,6 @@ class routerTest extends TestCase
         require 'router.php';
     }
 
-    public function testInvalidFunctionTarget()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('FUNCTION_TARGET is not set');
-
-        putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
-        putenv('FUNCTION_TARGET');
-        putenv('FUNCTION_SIGNATURE_TYPE');
-        require 'router.php';
-    }
-
-    public function testInvalidFunctionSignatureType()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('FUNCTION_SIGNATURE_TYPE is not set');
-
-        putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
-        putenv('FUNCTION_TARGET=helloHttp');
-        putenv('FUNCTION_SIGNATURE_TYPE');
-        require 'router.php';
-    }
-
     public function testRouterInvokedSuccessfully()
     {
         putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
