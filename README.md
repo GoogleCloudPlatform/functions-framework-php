@@ -164,6 +164,7 @@ You can configure the Functions Framework using the environment variables shown 
 | ------------------------- | -----------
 | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests.
 | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http` or `event`.
+| `FUNCTION_SOURCE` | The name of the file containing the source code for your function to load. By default the file **index.php** is loaded in the application root if it exists.
 
 # Enable CloudEvents
 
