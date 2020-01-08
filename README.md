@@ -144,7 +144,7 @@ with the request object.
 
 [Google Cloud Functions](https://cloud.google.com/functions/docs) does _not_ have native support for PHP. Furthermore, it _can not_ use custom Function Frameworks.
 
-To get around these restrictions, we can use a Knative-based hosting platform such as [Cloud Run](https://cloud.google.com/run/docs) or Cloud Run on GKE](https://cloud.google.com/run/docs/gke/setup).
+To get around these restrictions, we can use a Knative-based hosting platform such as [Cloud Run](https://cloud.google.com/run/docs) or [Cloud Run on GKE](https://cloud.google.com/run/docs/gke/setup).
 
 ## Cloud Run/Cloud Run on GKE
 
