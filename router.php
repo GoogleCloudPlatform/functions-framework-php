@@ -67,7 +67,7 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
     }
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true);
     if (false === $signatureType) {
-        $signatureType = 'http'
+        $signatureType = 'http';
     }
 
     $invoker = new Google\CloudFunctions\Invoker($target, $signatureType);
