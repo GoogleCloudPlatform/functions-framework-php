@@ -29,7 +29,7 @@ class vendorTest extends TestCase
 {
     private static $tmpDir;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         mkdir($tmpDir = sys_get_temp_dir() . '/ff-php-test-' . rand());
         chdir($tmpDir);
