@@ -1,0 +1,14 @@
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "%s",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "google/cloud-functions-framework": "dev-master"
+    }
+}

@@ -29,17 +29,26 @@ if (file_exists(__DIR__ . '/../../autoload.php')) {
 /**
  * Determine the function source file to load
  */
+// Ensure function source is loaded relative to the application root directory
+$documentRoot = __DIR__ . '/../../../';
 if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
-    // when function src is set by environment variable
-    if (!file_exists($functionSource)) {
-        throw new RuntimeException(sprintf(
-            'Unable to load function from "%s"', $functionSource));
+    if (0 !== strpos($functionSource, '/')) {
+        // Make the path relative
+        $relativeSource = $documentRoot . $functionSource;
+        if (!file_exists($relativeSource)) {
+            throw new RuntimeException(sprintf(
+                'Unable to load function from "%s"',
+                getenv('FUNCTION_SOURCE', true)
+            ));
+        }
+        require_once $relativeSource;
+    } else {
+        require_once $functionSource;
     }
-    require_once $functionSource;
-} elseif (file_exists($functionSource = __DIR__ . '/../../../index.php')) {
+} elseif (file_exists($defaultSource = $documentRoot . 'index.php')) {
     // When running from vendor/google/cloud-functions-framework, default to
-    // "index.php" in the root project for the function source.
-    require_once $functionSource;
+    // "index.php" in the root of the application.
+    require_once $defaultSource;
 } else {
     // Do nothing - assume the function source is being autoloaded.
 }
@@ -51,6 +60,10 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
     $target = getenv('FUNCTION_TARGET', true);
     if (false === $target) {
         throw new RuntimeException('FUNCTION_TARGET is not set');
+    }
+    if (!is_callable($target)) {
+        throw new InvalidArgumentException(sprintf(
+            'Function target is not callable: "%s"', $target));
     }
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true);
     if (false === $signatureType) {

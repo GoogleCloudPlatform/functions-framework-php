@@ -30,7 +30,7 @@ class InvokerTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid signature type: "invalid-signature-type"');
-        new Invoker('httpFunction', 'invalid-signature-type');
+        new Invoker([$this, 'invokeThis'], 'invalid-signature-type');
     }
 
     public function testHttpInvoker()
