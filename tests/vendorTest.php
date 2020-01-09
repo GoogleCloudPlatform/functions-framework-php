@@ -32,13 +32,14 @@ class vendorTest extends TestCase
     public static function setUpBeforeClass()
     {
         mkdir($tmpDir = sys_get_temp_dir() . '/ff-php-test-' . rand());
+        chdir($tmpDir);
 
         // Copy Fixtures
-        file_put_contents($tmpDir . '/composer.json', sprintf(
+        file_put_contents('composer.json', sprintf(
             file_get_contents(__DIR__ . '/fixtures/composer.json'),
             dirname(__DIR__)
         ));
-        passthru(sprintf('composer install --prefer-dist -d %s', $tmpDir));
+        passthru('composer install');
 
         self::$tmpDir = $tmpDir;
     }
@@ -81,10 +82,11 @@ class vendorTest extends TestCase
         copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
         putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
-            'FUNCTION_SOURCE=/srv/absolute.php' .
+            'FUNCTION_SOURCE=%s/absolute.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
             ' FUNCTION_TARGET=helloDefault' .
             ' php %s/vendor/bin/router.php',
+            self::$tmpDir,
             self::$tmpDir
         );
         exec($cmd, $output);
