@@ -2,5 +2,5 @@
 
 function helloDefault()
 {
-    return "Hello Default!";
+    return "Hello Absolute!";
 }
