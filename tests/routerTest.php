@@ -26,6 +26,25 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class routerTest extends TestCase
 {
+    public function testInvalidFunctionTarget()	
+    {	
+        $this->expectException('RuntimeException');	
+        $this->expectExceptionMessage('FUNCTION_TARGET is not set');	
+        putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');	
+        putenv('FUNCTION_TARGET');	
+        putenv('FUNCTION_SIGNATURE_TYPE=http');	
+        require 'router.php';
+    }
+    
+    public function testDefaultFunctionSignatureType()	
+    {	
+        putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
+        putenv('FUNCTION_TARGET=Google\CloudFunctions\Tests\test_callable');
+        require 'router.php';
+
+        $this->expectOutputString('Invoked!');
+    }
+    
     public function testInvalidFunctionSource()
     {
         $this->expectException('RuntimeException');
