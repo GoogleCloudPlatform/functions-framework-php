@@ -65,10 +65,8 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
         throw new InvalidArgumentException(sprintf(
             'Function target is not callable: "%s"', $target));
     }
-    $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true);
-    if (false === $signatureType) {
-        throw new RuntimeException('FUNCTION_SIGNATURE_TYPE is not set');
-    }
+
+    $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
 
     $invoker = new Google\CloudFunctions\Invoker($target, $signatureType);
     $invoker->handle()->send();
