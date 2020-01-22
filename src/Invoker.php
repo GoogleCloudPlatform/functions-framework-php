@@ -25,7 +25,12 @@ class Invoker
 {
     private $function;
 
-    public function __construct($target, $signatureType)
+    /**
+     * @param $target callable The callable to be invoked
+     * @param $signatureType The signature type of the target callable, either
+     *                       "event" or "http".
+     */
+    public function __construct(callable $target, string $signatureType)
     {
         if ($signatureType === 'http') {
             $this->function = new HttpFunctionWrapper($target);
