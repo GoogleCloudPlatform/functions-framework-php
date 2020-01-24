@@ -66,8 +66,6 @@ Run the following commands:
 
 ```sh
 export FUNCTION_TARGET=helloHttp
-export FUNCTION_SIGNATURE_TYPE=http
-export FUNCTION_SOURCE=index.php
 php -S localhost:8080 vendor/bin/router.php
 ```
 
@@ -95,7 +93,7 @@ function helloHttp(Request $request)
 }
 ```
 
-Build the container using the example Dockerfile:
+Build the container using the example `Dockerfile`:
 
 ```
 docker build . \
@@ -108,7 +106,6 @@ Run the cloud functions framework container:
 ```
 docker run -p 8080:8080 \
     -e FUNCTION_TARGET=helloHttp \
-    -e FUNCTION_SIGNATURE_TYPE=http \
     my-cloud-function
 ```
 
@@ -119,6 +116,45 @@ send requests to this function using `curl` from another terminal window:
 curl localhost:8080
 # Output: Hello World from PHP HTTP function!
 ```
+
+# Run your function in Cloud Run
+
+First you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
+
+Additionally, you need to have a Google Cloud project ID for the
+[Google Cloud Project][gcp-project] you want to use.
+
+Next, build the container using the example `Dockerfile`:
+
+```sh
+docker build . \
+    -f vendor/google/cloud-functions-framework/examples/hello/Dockerfile \
+    -t gcr.io/$GCLOUD_PROJECT/my-cloud-function
+```
+
+> **NOTE**: Be sure to replace `$GCLOUD_PROJECT` with your Google Cloud project ID.
+
+Next, use the `gcloud` command-line tool to deploy to Cloud Run:
+
+```sh
+gcloud run deploy my-cloud-function \
+    --image=gcr.io/$GCLOUD_PROJECT/php-ff-example \
+    --platform managed \
+    --set-env-vars "FUNCTION_TARGET=helloHttp" \
+    --allow-unauthenticated \
+    --region $YOUR_REGION
+```
+
+> **NOTE**: Be sure to replace `$YOUR_REGION` with the correct region for your
+Cloud Run instance, for example `us-central1`.
+
+After your instance deploys, you can access it at the URL provided, or view it
+in the [Cloud Console][cloud-run-console].
+
+[gcloud]: https://cloud.google.com/sdk/gcloud/
+[gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
+[gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+[cloud-run-console]: https://console.cloud.google.com/run
 
 ## Accessing the HTTP Object
 
@@ -146,9 +182,11 @@ with the request object.
 
 To get around these restrictions, we can use a Knative-based hosting platform such as [Cloud Run](https://cloud.google.com/run/docs) or [Cloud Run on GKE](https://cloud.google.com/run/docs/gke/setup).
 
-## Cloud Run/Cloud Run on GKE
+## Cloud Run
 
 Once you've written your function and added the Functions Framework to `composer.json`, all that's left is to create a container image. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) for PHP to create a container image and deploy it to Cloud Run. You'll write a `Dockerfile` when you build your container. This `Dockerfile` allows you to specify exactly what goes into your container (including custom binaries, a specific operating system, and more).
+
+## Cloud Run on GKE
 
 If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
 
