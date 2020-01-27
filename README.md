@@ -41,11 +41,14 @@ handling logic.
 
 # Installation
 
-Add the Functions Framework to your `composer.json` file using `composer`.
+Add the Functions Framework to your `composer.json` file using
+[Composer][composer].
 
 ```sh
 composer require google/cloud-functions-framework
 ```
+
+[composer]: https://getcomposer.org/
 
 # Define your Function
 
@@ -142,8 +145,9 @@ gcloud run deploy my-cloud-function \
     --project $GCLOUD_PROJECT
 ```
 
-> **NOTE**: Be sure to replace `$CLOUD_RUN_REGION` with the correct region for
-your Cloud Run instance, for example `us-central1`.
+> **NOTE**: Be sure to replace `$CLOUD_RUN_REGION` with the
+[correct region][cloud-run-regions] for your Cloud Run instance, for example
+`us-central1`.
 
 After your instance deploys, you can access it at the URL provided, or view it
 in the [Cloud Console][cloud-run-console].
@@ -152,6 +156,7 @@ in the [Cloud Console][cloud-run-console].
 [gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
 [gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [gae-php7]: https://cloud.google.com/appengine/docs/standard/php7/runtime
+[cloud-run-regions]: https://cloud.google.com/run/docs/locations
 [cloud-run-console]: https://console.cloud.google.com/run
 
 ## Accessing the HTTP Object
