@@ -17,7 +17,7 @@ The framework allows you to go from:
 ```php
 function helloHttp()
 {
-    return "Hello World from PHP HTTP function!" . PHP_EOL;
+    return "Hello World from a PHP HTTP function!" . PHP_EOL;
 }
 ```
 
@@ -25,7 +25,7 @@ To:
 
 ```sh
 curl http://my-url
-# Output: "Hello World from PHP HTTP function!"
+# Output: "Hello World from a PHP HTTP function!"
 ```
 
 All without needing to worry about writing an HTTP server or complicated request
@@ -41,13 +41,16 @@ handling logic.
 
 # Installation
 
-Add the Functions Framework to your `composer.json` file using `composer`.
+Add the Functions Framework to your `composer.json` file using
+[Composer][composer].
 
 ```sh
 composer require google/cloud-functions-framework
 ```
 
-# Run your function locally on your local machine
+[composer]: https://getcomposer.org/
+
+# Define your Function
 
 Create an `index.php` file with the following contents:
 
@@ -58,44 +61,28 @@ use Symfony\Component\HttpFoundation\Request;
 
 function helloHttp(Request $request)
 {
-    return "Hello World from PHP HTTP function!" . PHP_EOL;
+    return "Hello World from a PHP HTTP function!" . PHP_EOL;
 }
 ```
 
-Run the following commands:
+# Quickstarts
+
+## Run your function locally
+
+After completing the steps under **Installation** and **Define your Function**,
+run the following commands:
 
 ```sh
 export FUNCTION_TARGET=helloHttp
-export FUNCTION_SIGNATURE_TYPE=http
-export FUNCTION_SOURCE=index.php
 php -S localhost:8080 vendor/bin/router.php
 ```
 
-Open `http://localhost:8080/` in your browser and see *Hello World...*.
+Open `http://localhost:8080/` in your browser and see *Hello World from a PHP HTTP function!*.
 
 
-# Run your function in a container
+## Run your function in a container
 
-Add the Functions Framework to your `composer.json` file using `composer`.
-
-```sh
-composer require google/cloud-functions-framework
-```
-
-Create an `index.php` file with the following contents:
-
-```php
-<?php
-
-use Symfony\Component\HttpFoundation\Request;
-
-function helloHttp(Request $request)
-{
-    return "Hello World from PHP HTTP function!" . PHP_EOL;
-}
-```
-
-Build the container using the example Dockerfile:
+After completing the steps under **Installation** and **Define your Function**, build the container using the example `Dockerfile`:
 
 ```
 docker build . \
@@ -108,17 +95,69 @@ Run the cloud functions framework container:
 ```
 docker run -p 8080:8080 \
     -e FUNCTION_TARGET=helloHttp \
-    -e FUNCTION_SIGNATURE_TYPE=http \
     my-cloud-function
 ```
 
-Open `http://localhost:8080/` in your browser and see *Hello World...*, or
-send requests to this function using `curl` from another terminal window:
+Open `http://localhost:8080/` in your browser and see *Hello World from a PHP
+HTTP function*. You can also send requests to this function using `curl` from
+another terminal window:
 
 ```sh
 curl localhost:8080
-# Output: Hello World from PHP HTTP function!
+# Output: Hello World from a PHP HTTP function!
 ```
+
+## Run your function in Cloud Run
+
+To run your function in Cloud Run, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
+
+Additionally, you need to have a Google Cloud project ID for the
+[Google Cloud Project][gcp-project] you want to use.
+
+After completing the steps under **Installation** and **Define your Function**, build the container using the example `Dockerfile`. This Dockerfile is
+built on top of the [App Engine runtime for PHP 7.3][gae-php7], but you can use
+any container you want as long as your application listens on **Port 8080**.
+
+```sh
+docker build . \
+    -f vendor/google/cloud-functions-framework/examples/hello/Dockerfile \
+    -t gcr.io/$GCLOUD_PROJECT/my-cloud-function
+```
+
+> **NOTE**: Be sure to replace `$GCLOUD_PROJECT` with your Google Cloud project
+ID, or set the environment variable using `export GCLOUD_PROJECT="some-project-id"`.
+
+Next, push your image to [Google Container Registry](https://cloud.google.com/container-registry). This will allow you to deploy it directly from Cloud Run.
+
+```sh
+docker push gcr.io/$GCLOUD_PROJECT/my-cloud-function
+```
+
+Finally, use the `gcloud` command-line tool to deploy to Cloud Run:
+
+```sh
+gcloud run deploy my-cloud-function \
+    --image=gcr.io/$GCLOUD_PROJECT/my-cloud-function \
+    --platform managed \
+    --set-env-vars "FUNCTION_TARGET=helloHttp" \
+    --allow-unauthenticated \
+    --region $CLOUD_RUN_REGION \
+    --project $GCLOUD_PROJECT
+```
+
+> **NOTE**: Be sure to replace `$CLOUD_RUN_REGION` with the
+[correct region][cloud-run-regions] for your Cloud Run instance, for example
+`us-central1`.
+
+After your instance deploys, you can access it at the URL provided, or view it
+in the [Cloud Console][cloud-run-console].
+
+[gcloud]: https://cloud.google.com/sdk/gcloud/
+[gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
+[gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+[gae-php7]: https://cloud.google.com/appengine/docs/standard/php7/runtime
+[cloud-run-regions]: https://cloud.google.com/run/docs/locations
+[cloud-run-console]: https://console.cloud.google.com/run
 
 ## Accessing the HTTP Object
 
@@ -140,21 +179,18 @@ with the request object.
 
 [httpfoundation]: https://symfony.com/doc/current/components/http_foundation.html
 
-# Run your function on serverless platforms
+## Run your function on Knative
 
-[Google Cloud Functions](https://cloud.google.com/functions/docs) does _not_ have native support for PHP. Furthermore, it _can not_ use custom Function Frameworks.
+Cloud Run and Cloud Run on GKE both implement the
+[Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is
+designed to be compatible with Knative environments. Just build and deploy your
+container to a Knative environment.
 
-To get around these restrictions, we can use a Knative-based hosting platform such as [Cloud Run](https://cloud.google.com/run/docs) or [Cloud Run on GKE](https://cloud.google.com/run/docs/gke/setup).
-
-## Cloud Run/Cloud Run on GKE
-
-Once you've written your function and added the Functions Framework to `composer.json`, all that's left is to create a container image. [Check out the Cloud Run quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) for PHP to create a container image and deploy it to Cloud Run. You'll write a `Dockerfile` when you build your container. This `Dockerfile` allows you to specify exactly what goes into your container (including custom binaries, a specific operating system, and more).
-
-If you want even more control over the environment, you can [deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run on GKE, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
-
-## Container environments based on Knative
-
-Cloud Run and Cloud Run on GKE both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
+If you want even more control over the environment, you can
+[deploy your container image to Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke).
+With Cloud Run on GKE, you can run your function on a GKE cluster, which gives
+you additional control over the environment (including use of GPU-based
+instances, longer timeouts and more).
 
 # Configure the Functions Framework
 
