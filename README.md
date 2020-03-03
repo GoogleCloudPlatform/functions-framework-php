@@ -212,8 +212,8 @@ Note that your function must use the event-style function signature:
 ```php
 function helloEvents($data, $context)
 {
-  var_dump($data);
-  var_dump($context);
+    var_dump($data);
+    var_dump($context);
 }
 ```
 
