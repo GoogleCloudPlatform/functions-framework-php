@@ -29,6 +29,13 @@ class HttpFunctionWrapper extends FunctionWrapper
 
     public function execute(Request $request): Response
     {
+        $path = $request->getPathInfo();
+        if ($path == '/robots.txt' || $path == '/favicon.ico') {
+            $response = new Response();
+            $response->setStatusCode(404);
+            return $response;
+        }
+
         $response = call_user_func($this->function, $request);
 
         if (is_string($response)) {

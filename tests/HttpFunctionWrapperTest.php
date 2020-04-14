@@ -34,6 +34,17 @@ class HttpFunctionWrapperTest extends TestCase
         $this->assertEquals((string) $response->getContent(), 'Invoked!');
     }
 
+    public function testHttpErrorPaths()
+    {
+        $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
+        $request = Request::create('/robots.txt');
+        $response = $httpFunctionWrapper->execute($request);
+        $this->assertEquals($response->getStatusCode(), 404);
+        $request = Request::create('/favicon.ico');
+        $response = $httpFunctionWrapper->execute($request);
+        $this->assertEquals($response->getStatusCode(), 404);
+    }
+
     public function invokeThis(Request $request)
     {
         return 'Invoked!';
