@@ -45,7 +45,6 @@ class HttpFunctionWrapperTest extends TestCase
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-
     public function invokeThis(Request $request)
     {
         return 'Invoked!';
