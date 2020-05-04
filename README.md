@@ -202,12 +202,12 @@ You can configure the Functions Framework using the environment variables shown 
 | `FUNCTION_SOURCE` | The name of the file containing the source code for your function to load. Default: **`index.php`** (if it exists)
 | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http` or `event`. Default: **`http`**
 
-# Enable CloudEvents
+# Enable Background Events
 
-The Functions Framework can unmarshall incoming
-[CloudEvents](http://cloudevents.io) payloads to `data` and `context` objects.
-These will be passed as arguments to your function when it receives a request.
-Note that your function must use the event-style function signature:
+The Functions Framework can unmarshall incoming event payloads to `data` and
+`context` objects. These will be passed as arguments to your function when it
+receives a request. Note that your function must use the event-style function
+signature:
 
 ```php
 function helloEvents($data, $context)
@@ -221,6 +221,11 @@ To enable automatic unmarshalling, set the `FUNCTION_SIGNATURE_TYPE` environment
 variable to `event`. For more details on this signature type, check out the Google Cloud Functions
 documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
+
+# CloudEvents Support
+
+The Functions Framework will soon support [CloudEvents](http://cloudevents.io).
+Please contact the repository owners if you're intersted in trying this feature.
 
 # Contributing
 
