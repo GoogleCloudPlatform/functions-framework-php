@@ -20,7 +20,7 @@ namespace Google\CloudFunctions\Tests;
 use Google\CloudFunctions\BackgroundFunctionWrapper;
 use Google\CloudFunctions\Context;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use GuzzleHttp\Psr7\ServerRequest;
 
 /**
  * @group gcf-framework
@@ -34,13 +34,13 @@ class BackgroundFunctionWrapperTest extends TestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Could not parse request body');
         $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
-        $backgroundFunctionWrapper->execute(new Request());
+        $backgroundFunctionWrapper->execute(new ServerRequest('GET', '/'));
     }
 
     public function testHttpBackgroundFunctionWrapper()
     {
         $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
-        $request = new Request([], [], [], [], [], [], json_encode([
+        $request = new ServerRequest('GET', '/', [], json_encode([
             'data' => 'foo',
             'context' => [
                 'eventId' => 'abc',

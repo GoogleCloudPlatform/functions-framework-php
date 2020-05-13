@@ -3,7 +3,8 @@
   "description": "Google Cloud Functions Framework for PHP",
   "license": "Apache-2.0",
   "require": {
-    "symfony/http-foundation": "^4.1"
+    "guzzlehttp/psr7": "^1.6",
+    "psr/http-message": "^1.0"
   },
   "autoload": {
     "psr-4": {

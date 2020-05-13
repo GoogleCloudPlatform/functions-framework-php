@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+use Google\CloudFunctions\Emitter;
+use Google\CloudFunctions\Invoker;
+
 /**
  * Determine the autoload file to load.
  */
@@ -68,6 +71,7 @@ if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
 
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
 
-    $invoker = new Google\CloudFunctions\Invoker($target, $signatureType);
-    $invoker->handle()->send();
+    $invoker = new Invoker($target, $signatureType);
+    $response = $invoker->handle();
+    (new Emitter())->emit($response);
 })();

@@ -18,8 +18,9 @@
 namespace Google\CloudFunctions;
 
 use InvalidArgumentException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use GuzzleHttp\Psr7\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Invoker
 {
@@ -42,10 +43,11 @@ class Invoker
         }
     }
 
-    public function handle(Request $request = null) : Response
-    {
+    public function handle(
+        ServerRequestInterface $request = null
+    ) : ResponseInterface {
         if ($request === null) {
-            $request = Request::createFromGlobals();
+            $request = ServerRequest::fromGlobals();
         }
 
         return $this->function->execute($request);

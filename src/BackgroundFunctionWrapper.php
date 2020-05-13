@@ -17,8 +17,9 @@
 
 namespace Google\CloudFunctions;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 class BackgroundFunctionWrapper extends FunctionWrapper
@@ -28,9 +29,9 @@ class BackgroundFunctionWrapper extends FunctionWrapper
         parent::__construct($function);
     }
 
-    public function execute(Request $request): Response
+    public function execute(ServerRequestInterface $request): ResponseInterface
     {
-        $event = json_decode($request->getContent(), true);
+        $event = json_decode((string) $request->getBody(), true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new RuntimeException('Could not parse request body: ' . json_last_error_msg());
         }
