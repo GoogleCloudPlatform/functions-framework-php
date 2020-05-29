@@ -21,31 +21,37 @@ use Psr\Http\Message\ResponseInterface;
 
 class Emitter
 {
+    /**
+     * Formats the response and sends to the web server.
+     *
+     * @param ResponseInterface $response
+     */
     public function emit(ResponseInterface $response): void
     {
         // Only send headers if they have not already been sent
         if (!headers_sent()) {
-            $this->statusLine();
-            $this->headers();
+            $this->statusLine($response);
+            $this->headers($response);
         }
 
         // Send the body.
         echo $response->getBody();
     }
 
-    private function statusLine(ResponseInterface $response) : void
+    private function statusLine(ResponseInterface $response): void
     {
         $statusCode = $response->getStatusCode();
+        $reasonPhrase = $response->getReasonPhrase();
         $statusLine = sprintf(
-            'HTTP/%s %s %s',
+            'HTTP/%s %s%s',
             $response->getProtocolVersion(),
             $statusCode,
-            $response->getReasonPhrase()
+            $reasonPhrase ? ' ' . $reasonPhrase : ''
         );
-        header($statusLine, true, $statusCode);
+        $this->header($statusLine, true, $statusCode);
     }
 
-    private function headers(ResponseInterface $response) : void
+    private function headers(ResponseInterface $response): void
     {
         $statusCode = $response->getStatusCode();
 
@@ -57,8 +63,19 @@ class Emitter
                 // Replace headers for first value only, except for cookies
                 $replace = $first && !$isCookie;
                 $first = false;
-                header($name . ':' . $value, $replace, $statusCode);
+                $this->header($name . ':' . $value, $replace, $statusCode);
             }
         }
+    }
+
+    /**
+     * Function used to test header output in unit tests.
+     */
+    protected function header(
+        string $headerLine,
+        bool $replace,
+        int $statusCode
+    ): void {
+        header($headerLine, $replace, $statusCode);
     }
 }
