@@ -18,8 +18,9 @@
 namespace Google\CloudFunctions\Tests;
 
 use Google\CloudFunctions\HttpFunctionWrapper;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @group gcf-framework
@@ -29,23 +30,25 @@ class HttpFunctionWrapperTest extends TestCase
     public function testHttpHttpFunctionWrapper()
     {
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
-        $request = new Request();
+        $request = new ServerRequest('GET', '/');
         $response = $httpFunctionWrapper->execute($request);
-        $this->assertEquals((string) $response->getContent(), 'Invoked!');
+        $this->assertEquals((string) $response->getBody(), 'Invoked!');
     }
 
     public function testHttpErrorPaths()
     {
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
-        $request = Request::create('/robots.txt');
+        $request = new ServerRequest('GET', '/robots.txt');
         $response = $httpFunctionWrapper->execute($request);
         $this->assertEquals($response->getStatusCode(), 404);
-        $request = Request::create('/favicon.ico');
+        $this->assertEquals('', (string) $response->getBody());
+        $request = new ServerRequest('GET', '/favicon.ico');
         $response = $httpFunctionWrapper->execute($request);
         $this->assertEquals($response->getStatusCode(), 404);
+        $this->assertEquals('', (string) $response->getBody());
     }
 
-    public function invokeThis(Request $request)
+    public function invokeThis(ServerRequestInterface $request)
     {
         return 'Invoked!';
     }

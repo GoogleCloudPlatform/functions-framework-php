@@ -18,7 +18,7 @@
 namespace Google\CloudFunctions\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @group gcf-framework
@@ -35,7 +35,7 @@ class routerTest extends TestCase
         putenv('FUNCTION_SIGNATURE_TYPE=http');
         require 'router.php';
     }
-    
+
     public function testDefaultFunctionSignatureType()
     {
         putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
@@ -44,7 +44,7 @@ class routerTest extends TestCase
 
         $this->expectOutputString('Invoked!');
     }
-    
+
     public function testInvalidFunctionSource()
     {
         $this->expectException('RuntimeException');
@@ -64,7 +64,7 @@ class routerTest extends TestCase
     }
 }
 
-function test_callable(Request $request)
+function test_callable(ServerRequestInterface $request)
 {
     return 'Invoked!';
 }

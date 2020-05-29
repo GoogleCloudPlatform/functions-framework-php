@@ -19,7 +19,7 @@ namespace Google\CloudFunctions\Tests;
 
 use Google\CloudFunctions\Invoker;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @group gcf-framework
@@ -37,10 +37,10 @@ class InvokerTest extends TestCase
     {
         $invoker = new Invoker([$this, 'invokeThis'], 'http');
         $response = $invoker->handle();
-        $this->assertEquals((string) $response->getContent(), 'Invoked!');
+        $this->assertEquals((string) $response->getBody(), 'Invoked!');
     }
 
-    public function invokeThis(Request $request)
+    public function invokeThis(ServerRequestInterface $request)
     {
         return 'Invoked!';
     }

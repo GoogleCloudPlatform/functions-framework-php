@@ -17,8 +17,9 @@
 
 namespace Google\CloudFunctions;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use GuzzleHttp\Psr7\Response;
 
 class HttpFunctionWrapper extends FunctionWrapper
 {
@@ -27,19 +28,17 @@ class HttpFunctionWrapper extends FunctionWrapper
         parent::__construct($function);
     }
 
-    public function execute(Request $request): Response
+    public function execute(ServerRequestInterface $request): ResponseInterface
     {
-        $path = $request->getPathInfo();
+        $path = $request->getUri()->getPath();
         if ($path == '/robots.txt' || $path == '/favicon.ico') {
-            $response = new Response();
-            $response->setStatusCode(404);
-            return $response;
+            return new Response(404);
         }
 
         $response = call_user_func($this->function, $request);
 
         if (is_string($response)) {
-            $response = new Response($response);
+            $response = new Response(200, [], $response);
         }
 
         return $response;

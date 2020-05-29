@@ -17,8 +17,8 @@
 
 namespace Google\CloudFunctions;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 abstract class FunctionWrapper
 {
@@ -31,5 +31,7 @@ abstract class FunctionWrapper
         // TODO: validate function signature, if present.
     }
 
-    abstract public function execute(Request $request): Response;
+    abstract public function execute(
+        ServerRequestInterface $request
+    ): ResponseInterface;
 }
