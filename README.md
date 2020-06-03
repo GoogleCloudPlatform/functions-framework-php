@@ -174,7 +174,7 @@ function helloHttp(ServerRequestInterface $request): string
 }
 ```
 
-You can return a PSR-7 compatible `ResponseInterfae` instead of a string. This
+You can return a PSR-7 compatible `ResponseInterface` instead of a string. This
 allows you to set additional request properties such as the HTTP Status Code
 and headers.
 
@@ -195,10 +195,12 @@ function helloHttp(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-A request to this function will result in a response similar to the following:
+A request to this function will produce a response similar to the following:
 
 ```
 HTTP/1.1 418 I'm a teapot
+Host: localhost:8080
+Date: Wed, 03 Jun 2020 00:48:38 GMT
 Foo:Bar
 
 Hello World from PHP HTTP function!
