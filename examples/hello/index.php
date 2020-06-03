@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-error_reporting(-1);
-ini_set('display_errors', 'On');
-
 use Psr\Http\Message\ServerRequestInterface;
 
 function helloHttp(ServerRequestInterface $request)
