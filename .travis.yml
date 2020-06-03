@@ -1,4 +1,7 @@
 language: php
+sudo: required
+services:
+  - docker
 
 branches:
   only: [master]
