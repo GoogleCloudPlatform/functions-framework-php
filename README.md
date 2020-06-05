@@ -57,9 +57,9 @@ Create an `index.php` file with the following contents:
 ```php
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
-function helloHttp(Request $request)
+function helloHttp(ServerRequestInterface $request)
 {
     return "Hello World from a PHP HTTP function!" . PHP_EOL;
 }
@@ -159,25 +159,57 @@ in the [Cloud Console][cloud-run-console].
 [cloud-run-regions]: https://cloud.google.com/run/docs/locations
 [cloud-run-console]: https://console.cloud.google.com/run
 
-## Accessing the HTTP Object
+## Working with PSR-7 HTTP Objects
 
-The first parameter of your function is a `Request` object from `symfony/http-foundation`:
+The first parameter of your function is a `Request` object which implements the
+PSR-7 `ServerRequestInterface`:
 
 ```php
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
-function helloHttp(Request $request)
+function helloHttp(ServerRequestInterface $request): string
 {
     return sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
-        $request->query->get('name') ?: 'World'
-    );
+        $request->getQueryParams()['name'] ?? 'World');
 }
 ```
 
-See the [HttpFoundation documentation][httpfoundation] documentation for more on working
-with the request object.
+You can return a PSR-7 compatible `ResponseInterface` instead of a string. This
+allows you to set additional request properties such as the HTTP Status Code
+and headers.
 
-[httpfoundation]: https://symfony.com/doc/current/components/http_foundation.html
+```php
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
+
+function helloHttp(ServerRequestInterface $request): ResponseInterface
+{
+    $body = sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
+        $request->getQueryParams()['name'] ?? 'World');
+
+    return (new Response())
+        ->withBody(GuzzleHttp\Psr7\stream_for($body))
+        ->withStatus(418) // I'm a teapot
+        ->withHeader('Foo', 'Bar');
+}
+```
+
+A request to this function will produce a response similar to the following:
+
+```
+HTTP/1.1 418 I'm a teapot
+Host: localhost:8080
+Date: Wed, 03 Jun 2020 00:48:38 GMT
+Foo: Bar
+
+Hello World from PHP HTTP function!
+```
+
+See the [PSR-7 documentation][psr7] documentation for more on working
+with the request and response objects.
+
+[psr7]: https://www.php-fig.org/psr/psr-7/
 
 ## Run your function on Knative
 

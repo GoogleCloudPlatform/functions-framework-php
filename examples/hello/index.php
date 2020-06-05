@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
-function helloHttp(Request $request)
+function helloHttp(ServerRequestInterface $request)
 {
     return sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
-        $request->query->get('name') ?: 'World'
-    );
+        $request->getQueryParams()['name'] ?? 'World');
 }
