@@ -201,7 +201,7 @@ A request to this function will produce a response similar to the following:
 HTTP/1.1 418 I'm a teapot
 Host: localhost:8080
 Date: Wed, 03 Jun 2020 00:48:38 GMT
-Foo:Bar
+Foo: Bar
 
 Hello World from PHP HTTP function!
 ```
