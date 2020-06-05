@@ -52,14 +52,8 @@ class exampleTest extends TestCase
 
         exec($cmd, $output);
         self::$containerId = $output[0];
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        if (self::$containerId) {
-            passthru('docker rm -f ' . self::$containerId);
-            passthru('docker rmi -f ' . self::$imageId);
-        }
+        // Tests fail if we do not wait before sending requests in
+        sleep(1);
     }
 
     public function testIndex(): void
@@ -72,5 +66,13 @@ class exampleTest extends TestCase
     {
         exec('curl -v http://localhost:8080?name=Foo', $output);
         $this->assertContains('Hello Foo from PHP HTTP function!', $output);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        if (self::$containerId) {
+            passthru('docker rm -f ' . self::$containerId);
+            passthru('docker rmi -f ' . self::$imageId);
+        }
     }
 }
