@@ -37,7 +37,7 @@ class BackgroundFunctionWrapperTest extends TestCase
         $backgroundFunctionWrapper->execute(new ServerRequest('GET', '/'));
     }
 
-    public function testHttpBackgroundFunctionWrapper()
+    public function testWithContextProperty()
     {
         $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('GET', '/', [], json_encode([
@@ -48,6 +48,20 @@ class BackgroundFunctionWrapperTest extends TestCase
                 'eventType' => 'ghi',
                 'resource' => 'jkl',
             ]
+        ]));
+        $backgroundFunctionWrapper->execute($request);
+        $this->assertTrue(self::$functionCalled);
+    }
+
+    public function testWrapperWithoutContextProperty()
+    {
+        $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
+        $request = new ServerRequest('GET', '/', [], json_encode([
+            'data' => 'foo',
+            'eventId' => 'abc',
+            'timestamp' => 'def',
+            'eventType' => 'ghi',
+            'resource' => 'jkl',
         ]));
         $backgroundFunctionWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);
