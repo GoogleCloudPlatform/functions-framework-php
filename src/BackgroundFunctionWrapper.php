@@ -41,7 +41,15 @@ class BackgroundFunctionWrapper extends FunctionWrapper
         }
 
         $data = $event['data'];
-        $context = Context::fromArray($event['context']);
+
+        if (array_key_exists('context', $event)) {
+            $context = $event['context'];
+        } else {
+            unset($event['data']);
+            $context = $event;
+        }
+
+        $context = Context::fromArray($context);
         call_user_func($this->function, $data, $context);
 
         return new Response();
