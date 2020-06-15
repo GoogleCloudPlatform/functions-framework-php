@@ -31,9 +31,13 @@ class BackgroundFunctionWrapper extends FunctionWrapper
 
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
-        $event = json_decode((string) $request->getBody(), true);
+        $body = (string) $request->getBody();
+        $event = json_decode($body, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            throw new RuntimeException('Could not parse request body: ' . json_last_error_msg());
+            throw new RuntimeException(sprintf(
+                'Could not parse request body: %s',
+                '' !== $body ? json_last_error_msg() : 'Missing event payload'
+            ));
         }
 
         $data = $event['data'];

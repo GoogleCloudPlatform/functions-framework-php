@@ -32,9 +32,19 @@ class BackgroundFunctionWrapperTest extends TestCase
     public function testInvalidRequestBody()
     {
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not parse request body');
+        $this->expectExceptionMessage('Could not parse request body: Syntax error');
+        $request = new ServerRequest('GET', '/', [], 'notjson');
         $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
-        $backgroundFunctionWrapper->execute(new ServerRequest('GET', '/'));
+        $backgroundFunctionWrapper->execute($request);
+    }
+
+    public function testEmptyRequestBody()
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Could not parse request body: Missing event payload');
+        $request = new ServerRequest('GET', '/', [], '');
+        $backgroundFunctionWrapper = new BackgroundFunctionWrapper([$this, 'invokeThis']);
+        $backgroundFunctionWrapper->execute($request);
     }
 
     public function testHttpBackgroundFunctionWrapper()
