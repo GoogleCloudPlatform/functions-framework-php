@@ -42,8 +42,7 @@ class CloudEvent
         $subject,
         $time,
         $data
-    )
-    {
+    ) {
         $this->id = $id;
         $this->source = $source;
         $this->specversion = $specversion;

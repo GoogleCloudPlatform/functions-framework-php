@@ -52,8 +52,8 @@ class CloudEventFunctionWrapperTest extends TestCase
             'ce-time' => '2020-12-08T20:03:19.162Z',
         ], json_encode([
             "message" => [
-                "data" => "SGVsbG8gdGhlcmU=", 
-                "messageId" => "1408577928008405", 
+                "data" => "SGVsbG8gdGhlcmU=",
+                "messageId" => "1408577928008405",
                 "publishTime" => "2020-08-06T22:31:14.536Z"
             ],
             "subscription" => "projects/MY-PROJECT/subscriptions/MY-SUB"
