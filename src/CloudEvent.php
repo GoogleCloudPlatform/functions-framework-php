@@ -1,0 +1,86 @@
+<?php
+/**
+ * Copyright 2019 Google LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Google\CloudFunctions;
+
+class CloudEvent
+{
+    // Required Fields
+    public $id;
+    public $source;
+    public $specversion;
+    public $type;
+    
+    // Optional Fields
+    public $datacontenttype;
+    public $dataschema;
+    public $subject;
+    public $time;
+    public $data;
+
+    public function __construct(
+        $id,
+        $source,
+        $specversion,
+        $type,
+        $datacontenttype,
+        $dataschema,
+        $subject,
+        $time,
+        $data
+    )
+    {
+        $this->id = $id;
+        $this->source = $source;
+        $this->specversion = $specversion;
+        $this->type = $type;
+        $this->datacontenttype = $datacontenttype;
+        $this->dataschema = $dataschema;
+        $this->subject = $subject;
+        $this->time = $time;
+        $this->data = $data;
+    }
+
+    public static function fromArray(array $arr)
+    {
+        $argKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time', 'data'];
+        $args = [];
+        foreach ($argKeys as $key) {
+            $args[] = $arr[$key];
+        }
+
+        return new static(...$args);
+    }
+
+    public function __toString()
+    {
+        $data_as_json = json_encode($this->data);
+        $output = implode("\n",[
+            'CLOUDEVENT:',
+            "- id: $this->id",
+            "- source: $this->source",
+            "- specversion: $this->specversion",
+            "- type: $this->type",
+            "- datacontenttype: $this->datacontenttype",
+            "- dataschema: $this->dataschema",
+            "- subject: $this->subject",
+            "- time: $this->time",
+            "- data: $data_as_json",
+        ]);
+        return $output;
+    }
+}
