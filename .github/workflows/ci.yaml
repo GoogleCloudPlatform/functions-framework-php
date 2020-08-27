@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        operating-system: [ubuntu-latest]
         # php-versions: ['7.1', '7.2', '7.3', '7.4']
         php-versions: ['7.4']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
@@ -19,10 +19,6 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: mbstring, intl
-        ini-values: post_max_size=256M, short_open_tag=On
-        coverage: xdebug
-        tools: php-cs-fixer, phpunit
     - name: Install Dependencies
       uses: nick-invision/retry@v1
       with:
