@@ -22,13 +22,11 @@ jobs:
         ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug
         tools: php-cs-fixer, phpunit
-    #   env:
-    #     COMPOSER_BIN_DIR: ${{composer global config bin-dir --absolute}}
-    # - name: Install dependencies
-    #   run: composer install --prefer-dist
-    # - name: Install linter
-    #   run: composer global require friendsofphp/php-cs-fixer:^2
-    # - name: Run linter
-    #   run: $COMPOSER_BIN_DIR/php-cs-fixer fix --dry-run --diff .
-    # - name: Run tests
-    #   run: $COMPOSER_BIN_DIR/phpunit -v
+    - name: Install Dependencies
+      uses: nick-invision/retry@v1
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: composer install
+    - name: Run Script
+      run: vendor/bin/phpunit
