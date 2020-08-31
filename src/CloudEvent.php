@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -20,28 +21,28 @@ namespace Google\CloudFunctions;
 class CloudEvent
 {
     // Required Fields
-    public $id;
-    public $source;
-    public $specversion;
-    public $type;
-    
+    private $id;
+    private $source;
+    private $specversion;
+    private $type;
+
     // Optional Fields
-    public $datacontenttype;
-    public $dataschema;
-    public $subject;
-    public $time;
-    public $data;
+    private $datacontenttype;
+    private $dataschema;
+    private $subject;
+    private $time;
+    private $data;
 
     public function __construct(
-        $id,
-        $source,
-        $specversion,
-        $type,
-        $datacontenttype,
-        $dataschema,
-        $subject,
-        $time,
-        $data
+        string $id,
+        string $source,
+        string $specversion,
+        string $type,
+        ?string $datacontenttype,
+        ?string $dataschema,
+        ?string $subject,
+        ?string $time,
+        ?array $data
     ) {
         $this->id = $id;
         $this->source = $source;
@@ -54,12 +55,85 @@ class CloudEvent
         $this->data = $data;
     }
 
+    public function setId(string $id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setSource(string $source)
+    {
+        $this->source = $source;
+    }
+    public function getSource()
+    {
+        return $this->source;
+    }
+    public function setSpecVersion(string $specversion)
+    {
+        $this->specversion = $specversion;
+    }
+    public function getSpecVersion()
+    {
+        return $this->specversion;
+    }
+    public function setType(string $type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
+    }
+    public function setDataContentType(string $datacontenttype)
+    {
+        $this->datacontenttype = $datacontenttype;
+    }
+    public function getDataContentType()
+    {
+        return $this->datacontenttype;
+    }
+    public function setDataSchema(string $dataschema)
+    {
+        $this->dataschema = $dataschema;
+    }
+    public function getDataSchema()
+    {
+        return $this->dataschema;
+    }
+    public function setSubject(string $subject)
+    {
+        $this->subject = $subject;
+    }
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+    public function setTime(string $time)
+    {
+        $this->time = $time;
+    }
+    public function getTime()
+    {
+        return $this->time;
+    }
+    public function setData(string $data)
+    {
+        $this->data = $data;
+    }
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public static function fromArray(array $arr)
     {
         $argKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time', 'data'];
         $args = [];
         foreach ($argKeys as $key) {
-            $args[] = $arr[$key];
+            $args[] = $arr[$key] ?? null;
         }
 
         return new static(...$args);
@@ -68,7 +142,7 @@ class CloudEvent
     public function __toString()
     {
         $data_as_json = json_encode($this->data);
-        $output = implode("\n",[
+        $output = implode("\n", [
             'CLOUDEVENT:',
             "- id: $this->id",
             "- source: $this->source",

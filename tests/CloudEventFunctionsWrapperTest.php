@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -38,7 +39,7 @@ class CloudEventFunctionWrapperTest extends TestCase
         $cloudEventFunctionWrapper->execute($request);
     }
 
-    public function testWithCloudEvent()
+    public function testWithFullCloudEvent()
     {
         $CloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('POST', '/', [
@@ -65,13 +66,37 @@ class CloudEventFunctionWrapperTest extends TestCase
     public function invokeThis(CloudEvent $cloudevent)
     {
         self::$functionCalled = true;
-        $this->assertEquals('1413058901901494', $cloudevent->id);
-        $this->assertEquals('//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC', $cloudevent->source);
-        $this->assertEquals('1.0', $cloudevent->specversion);
-        $this->assertEquals('com.google.cloud.pubsub.topic.publish', $cloudevent->type);
-        $this->assertEquals('application/json', $cloudevent->datacontenttype);
-        $this->assertEquals('type.googleapis.com/google.logging.v2.LogEntry', $cloudevent->dataschema);
-        $this->assertEquals('My Subject', $cloudevent->subject);
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->time);
+        $this->assertEquals('1413058901901494', $cloudevent->getId());
+        $this->assertEquals('//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC', $cloudevent->getSource());
+        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
+        $this->assertEquals('com.google.cloud.pubsub.topic.publish', $cloudevent->getType());
+        $this->assertEquals('application/json', $cloudevent->getDataContentType());
+        $this->assertEquals('type.googleapis.com/google.logging.v2.LogEntry', $cloudevent->getDataSchema());
+        $this->assertEquals('My Subject', $cloudevent->getSubject());
+        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+    }
+    
+    public function testWithNotFullButValidCloudEvent()
+    {
+        $CloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisPartial']);
+        $request = new ServerRequest('POST', '/', [
+            'ce-id' => 'fooBar',
+            'ce-source' => 'my-source',
+            'ce-specversion' => '1.0',
+            'ce-type' => 'my.type',
+        ], json_encode([
+            "key" => "value"
+        ]));
+        $CloudEventFunctionWrapper->execute($request);
+        $this->assertTrue(self::$functionCalled);
+    }
+
+    public function invokeThisPartial(CloudEvent $cloudevent)
+    {
+        self::$functionCalled = true;
+        $this->assertEquals('fooBar', $cloudevent->getId());
+        $this->assertEquals('my-source', $cloudevent->getSource());
+        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
+        $this->assertEquals('my.type', $cloudevent->getType());
     }
 }

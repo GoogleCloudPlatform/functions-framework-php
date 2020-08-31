@@ -24,11 +24,6 @@ use RuntimeException;
 
 class CloudEventFunctionWrapper extends FunctionWrapper
 {
-    public function __construct(callable $function)
-    {
-        parent::__construct($function);
-    }
-
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $body = (string) $request->getBody();
@@ -52,11 +47,10 @@ class CloudEventFunctionWrapper extends FunctionWrapper
             'subject' => $headers["ce-subject"][0],
             'time' => $headers["ce-time"][0]
         ];
-        echo "\n== START ==\n";
         $cloudevent = CloudEvent::fromArray($cloudevent_content);
-        // echo "\n:cloudevent:\n";
-        echo $cloudevent;
-        echo "\n== END ==\n";
+        // echo "\n== START ==\n";
+        // echo $cloudevent;
+        // echo "\n== END ==\n";
         call_user_func($this->function, $cloudevent);
         return new Response();
     }
