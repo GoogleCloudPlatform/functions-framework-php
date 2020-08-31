@@ -26,6 +26,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 {
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
+        // Get Body
         $body = (string) $request->getBody();
         $cloudevent_data = json_decode($body, true);
         if (json_last_error() != JSON_ERROR_NONE) {
@@ -35,22 +36,21 @@ class CloudEventFunctionWrapper extends FunctionWrapper
             ));
         }
         
+        // Get Headers
         $headers = $request->getHeaders();
-        $cloudevent_content = [
-            'data' => $cloudevent_data,
-            'id' => $headers["ce-id"][0],
-            'source' => $headers["ce-source"][0],
-            'specversion' => $headers["ce-specversion"][0],
-            'type' => $headers["ce-type"][0],
-            'datacontenttype' => $headers["ce-datacontenttype"][0],
-            'dataschema' => $headers["ce-dataschema"][0],
-            'subject' => $headers["ce-subject"][0],
-            'time' => $headers["ce-time"][0]
-        ];
+        $cloudevent_content = [];
+        $validKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time'];
+        foreach ($validKeys as $key) {
+            $ceKey = 'ce-' . $key;
+            if (isset($headers[$ceKey])) {
+                $cloudevent_content[$key] = $headers[$ceKey][0];
+            }
+        }
+        $cloudevent_content['data'] = $cloudevent_data;
         $cloudevent = CloudEvent::fromArray($cloudevent_content);
-        // echo "\n== START ==\n";
-        // echo $cloudevent;
-        // echo "\n== END ==\n";
+        echo "\n== START ==\n";
+        echo $cloudevent;
+        echo "\n== END ==\n";
         call_user_func($this->function, $cloudevent);
         return new Response();
     }
