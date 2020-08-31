@@ -37,7 +37,7 @@ class Context
         $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
         $args = [];
         foreach ($argKeys as $key) {
-            $args[] = $arr[$key];
+            $args[] = $arr[$key] ?? null;
         }
 
         return new static(...$args);

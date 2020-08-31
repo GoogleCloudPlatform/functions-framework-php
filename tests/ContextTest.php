@@ -38,4 +38,13 @@ class ContextTest extends TestCase
         $this->assertEquals('ghi', $context->eventType);
         $this->assertEquals('jkl', $context->resource);
     }
+
+    public function testFromEmptyArray()
+    {
+        $context = Context::fromArray([]);
+        $this->assertEquals(null, $context->eventId);
+        $this->assertEquals(null, $context->timestamp);
+        $this->assertEquals(null, $context->eventType);
+        $this->assertEquals(null, $context->resource);
+    }
 }
