@@ -48,9 +48,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         }
         $cloudevent_content['data'] = $cloudevent_data;
         $cloudevent = CloudEvent::fromArray($cloudevent_content);
-        echo "\n== START ==\n";
-        echo $cloudevent;
-        echo "\n== END ==\n";
         call_user_func($this->function, $cloudevent);
         return new Response();
     }
