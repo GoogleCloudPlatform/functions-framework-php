@@ -19,7 +19,7 @@ namespace Google\CloudFunctions;
 
 class Context
 {
-    public  $eventId;
+    public $eventId;
     public $timestamp;
     public $eventType;
     public $resource;
