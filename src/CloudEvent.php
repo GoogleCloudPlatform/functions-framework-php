@@ -55,39 +55,39 @@ class CloudEvent
         $this->data = $data;
     }
 
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
-    public function getSource()
+    public function getSource() : string
     {
         return $this->source;
     }
-    public function getSpecVersion()
+    public function getSpecVersion() : string
     {
         return $this->specversion;
     }
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
-    public function getDataContentType()
+    public function getDataContentType() : ?string
     {
         return $this->datacontenttype;
     }
-    public function getDataSchema()
+    public function getDataSchema() : ?string
     {
         return $this->dataschema;
     }
-    public function getSubject()
+    public function getSubject() : ?string
     {
         return $this->subject;
     }
-    public function getTime()
+    public function getTime() : ?string
     {
         return $this->time;
     }
-    public function getData()
+    public function getData() : ?array
     {
         return $this->data;
     }
