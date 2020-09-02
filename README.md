@@ -263,9 +263,14 @@ receives a request. Note that your function must use the cloudevent-style functi
 signature:
 
 ```php
-function helloCloudEvents($cloudevent)
+function helloCloudEvents(CloudEvent $cloudevent)
 {
-    var_dump($cloudevent);
+    // Get a single property
+    printf('id: %s', $cloudevent->getId());
+    printf('type: %s', $cloudevent->getType());
+
+    // Print the whole CloudEvent
+    print($cloudevent);
 }
 ```
 
