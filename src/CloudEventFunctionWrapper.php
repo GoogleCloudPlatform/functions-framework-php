@@ -28,7 +28,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
     {
         // Get Body
         $body = (string) $request->getBody();
-        $cloudevent_data = json_decode($body, true);
+        $cloudeventData = json_decode($body, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new RuntimeException(sprintf(
                 'Could not parse CloudEvent: %s',
@@ -38,16 +38,16 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         
         // Get Headers
         $headers = $request->getHeaders();
-        $cloudevent_content = [];
+        $cloudeventContent = [];
         $validKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time'];
         foreach ($validKeys as $key) {
             $ceKey = 'ce-' . $key;
             if (isset($headers[$ceKey])) {
-                $cloudevent_content[$key] = $headers[$ceKey][0];
+                $cloudeventContent[$key] = $headers[$ceKey][0];
             }
         }
-        $cloudevent_content['data'] = $cloudevent_data;
-        $cloudevent = CloudEvent::fromArray($cloudevent_content);
+        $cloudeventContent['data'] = $cloudeventData;
+        $cloudevent = CloudEvent::fromArray($cloudeventContent);
         call_user_func($this->function, $cloudevent);
         return new Response();
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Google LLC.
+ * Copyright 2020 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,73 +55,37 @@ class CloudEvent
         $this->data = $data;
     }
 
-    public function setId(string $id)
-    {
-        $this->id = $id;
-    }
     public function getId()
     {
         return $this->id;
-    }
-    public function setSource(string $source)
-    {
-        $this->source = $source;
     }
     public function getSource()
     {
         return $this->source;
     }
-    public function setSpecVersion(string $specversion)
-    {
-        $this->specversion = $specversion;
-    }
     public function getSpecVersion()
     {
         return $this->specversion;
-    }
-    public function setType(string $type)
-    {
-        $this->type = $type;
     }
     public function getType()
     {
         return $this->type;
     }
-    public function setDataContentType(string $datacontenttype)
-    {
-        $this->datacontenttype = $datacontenttype;
-    }
     public function getDataContentType()
     {
         return $this->datacontenttype;
-    }
-    public function setDataSchema(string $dataschema)
-    {
-        $this->dataschema = $dataschema;
     }
     public function getDataSchema()
     {
         return $this->dataschema;
     }
-    public function setSubject(string $subject)
-    {
-        $this->subject = $subject;
-    }
     public function getSubject()
     {
         return $this->subject;
     }
-    public function setTime(string $time)
-    {
-        $this->time = $time;
-    }
     public function getTime()
     {
         return $this->time;
-    }
-    public function setData(string $data)
-    {
-        $this->data = $data;
     }
     public function getData()
     {

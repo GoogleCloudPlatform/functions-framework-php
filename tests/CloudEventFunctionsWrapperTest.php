@@ -41,7 +41,8 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testWithFullCloudEvent()
     {
-        $CloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
+        self:$functionCalled = false;
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('POST', '/', [
             'ce-id' => '1413058901901494',
             'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
@@ -59,7 +60,7 @@ class CloudEventFunctionWrapperTest extends TestCase
             ],
             "subscription" => "projects/MY-PROJECT/subscriptions/MY-SUB"
         ]));
-        $CloudEventFunctionWrapper->execute($request);
+        $cloudEventFunctionWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);
     }
 
@@ -78,7 +79,8 @@ class CloudEventFunctionWrapperTest extends TestCase
     
     public function testWithNotFullButValidCloudEvent()
     {
-        $CloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisPartial']);
+        self:$functionCalled = false;
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisPartial']);
         $request = new ServerRequest('POST', '/', [
             'ce-id' => 'fooBar',
             'ce-source' => 'my-source',
@@ -87,7 +89,7 @@ class CloudEventFunctionWrapperTest extends TestCase
         ], json_encode([
             "key" => "value"
         ]));
-        $CloudEventFunctionWrapper->execute($request);
+        $cloudEventFunctionWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);
     }
 
