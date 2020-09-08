@@ -42,8 +42,7 @@ class CloudEvent
         ?string $dataschema,
         ?string $subject,
         ?string $time,
-        // TODO data can be any valid JSON, should be mixed type.
-        ?array $data
+        $data
     ) {
         $this->id = $id;
         $this->source = $source;
@@ -88,7 +87,7 @@ class CloudEvent
     {
         return $this->time;
     }
-    public function getData(): ?array
+    public function getData()
     {
         return $this->data;
     }
