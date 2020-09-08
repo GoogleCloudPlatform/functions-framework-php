@@ -43,7 +43,7 @@ class CloudEvent
         ?string $subject,
         ?string $time,
         // TODO data can be any valid JSON, should be mixed type.
-        ?array $data 
+        ?array $data
     ) {
         $this->id = $id;
         $this->source = $source;
