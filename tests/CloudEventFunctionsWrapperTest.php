@@ -64,23 +64,23 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertTrue(self::$functionCalled);
     }
 
-    // public function testWithNonJSONData()
-    // {
-    //     self:$functionCalled = false;
-    //     $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
-    //     $request = new ServerRequest('POST', '/', [
-    //         'ce-id' => '1413058901901494',
-    //         'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
-    //         'ce-specversion' => '1.0',
-    //         'ce-type' => 'com.google.cloud.pubsub.topic.publish',
-    //         'ce-datacontenttype' => 'application/json',
-    //         'ce-dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
-    //         'ce-subject' => 'My Subject',
-    //         'ce-time' => '2020-12-08T20:03:19.162Z',
-    //     ], '123');
-    //     $cloudEventFunctionWrapper->execute($request);
-    //     $this->assertTrue(self::$functionCalled);
-    // }
+    public function testWithNonJSONData()
+    {
+        self:$functionCalled = false;
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
+        $request = new ServerRequest('POST', '/', [
+            'ce-id' => '1413058901901494',
+            'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
+            'ce-specversion' => '1.0',
+            'ce-type' => 'com.google.cloud.pubsub.topic.publish',
+            'ce-datacontenttype' => 'application/json',
+            'ce-dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
+            'ce-subject' => 'My Subject',
+            'ce-time' => '2020-12-08T20:03:19.162Z',
+        ], '123');
+        $cloudEventFunctionWrapper->execute($request);
+        $this->assertTrue(self::$functionCalled);
+    }
 
     public function invokeThis(CloudEvent $cloudevent)
     {
