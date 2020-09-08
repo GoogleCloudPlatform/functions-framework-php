@@ -106,9 +106,8 @@ class CloudEvent
 
     public function __toString()
     {
-        $data_as_json = json_encode($this->data);
         $output = implode("\n", [
-            'CLOUDEVENT:',
+            'CLOUDEVENT metadata:',
             "- id: $this->id",
             "- source: $this->source",
             "- specversion: $this->specversion",
@@ -117,7 +116,6 @@ class CloudEvent
             "- dataschema: $this->dataschema",
             "- subject: $this->subject",
             "- time: $this->time",
-            "- data: $data_as_json",
         ]);
         return $output;
     }
