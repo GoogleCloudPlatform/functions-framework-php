@@ -263,6 +263,8 @@ receives a request. Note that your function must use the cloudevent-style functi
 signature:
 
 ```php
+use Google\CloudFunctions\CloudEvent;
+
 function helloCloudEvents(CloudEvent $cloudevent)
 {
     // Get a single property
