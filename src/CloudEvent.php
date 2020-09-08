@@ -31,6 +31,7 @@ class CloudEvent
     private $dataschema;
     private $subject;
     private $time;
+    /** @property mixed $data */
     private $data;
 
     public function __construct(
@@ -87,6 +88,9 @@ class CloudEvent
     {
         return $this->time;
     }
+    /**
+     * @return mixed
+     */
     public function getData()
     {
         return $this->data;
