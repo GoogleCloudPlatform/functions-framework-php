@@ -81,9 +81,9 @@ class BackgroundFunctionWrapperTest extends TestCase
     {
         self::$functionCalled = true;
         $this->assertEquals('foo', $data);
-        $this->assertEquals('abc', $context->eventId);
-        $this->assertEquals('def', $context->timestamp);
-        $this->assertEquals('ghi', $context->eventType);
-        $this->assertEquals('jkl', $context->resource);
+        $this->assertEquals('abc', $context->getEventId());
+        $this->assertEquals('def', $context->getTimestamp());
+        $this->assertEquals('ghi', $context->getEventType());
+        $this->assertEquals('jkl', $context->getResource());
     }
 }

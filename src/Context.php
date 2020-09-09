@@ -19,23 +19,47 @@ namespace Google\CloudFunctions;
 
 class Context
 {
-    public $eventId;
-    public $timestamp;
-    public $eventType;
-    public $resource;
+    private $eventId;
+    private $timestamp;
+    private $eventType;
+    private $resource;
 
-    public function __construct($eventId, $timestamp, $eventType, $resource)
-    {
+    public function __construct(
+        ?string $eventId,
+        ?string $timestamp,
+        ?string $eventType,
+        ?string $resource
+    ) {
         $this->eventId = $eventId;
         $this->timestamp = $timestamp;
         $this->eventType = $eventType;
         $this->resource = $resource;
     }
 
+    public function getEventId(): ?string
+    {
+        return $this->eventId;
+    }
+
+    public function getEventType(): ?string
+    {
+        return $this->eventType;
+    }
+
+    public function getTimestamp(): ?string
+    {
+        return $this->timestamp;
+    }
+
+    public function getResource(): ?string
+    {
+        return $this->resource;
+    }
+
     public static function fromArray(array $arr)
     {
-        $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
         $args = [];
+        $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
         foreach ($argKeys as $key) {
             $args[] = $arr[$key] ?? null;
         }
