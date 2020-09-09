@@ -37,6 +37,7 @@ handling logic.
 
 *   Spin up a local development server for quick testing
 *   Invoke a function in response to a request
+*   Automatically unmarshal events conforming to the [CloudEvents](https://cloudevents.io/) spec
 *   Portable between serverless platforms
 
 # Installation
@@ -232,7 +233,7 @@ You can configure the Functions Framework using the environment variables shown 
 | ------------------------- | -----------
 | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests.
 | `FUNCTION_SOURCE` | The name of the file containing the source code for your function to load. Default: **`index.php`** (if it exists)
-| `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http` or `event`. Default: **`http`**
+| `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http`, `event`, or `cloudevent`. Default: **`http`**
 
 # Enable Background Events
 
@@ -254,10 +255,29 @@ variable to `event`. For more details on this signature type, check out the Goog
 documentation on
 [background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
 
-# CloudEvents Support
+# Enable CloudEvents
 
-The Functions Framework will soon support [CloudEvents](http://cloudevents.io).
-Please contact the repository owners if you're intersted in trying this feature.
+The Functions Framework can unmarshall incoming [CloudEvents](http://cloudevents.io)
+payloads to a `cloudevent` object. This will be passed as arguments to your function when it
+receives a request. Note that your function must use the cloudevent-style function
+signature:
+
+```php
+use Google\CloudFunctions\CloudEvent;
+
+function helloCloudEvents(CloudEvent $cloudevent)
+{
+    // Get a single property
+    printf('id: %s', $cloudevent->getId());
+    printf('type: %s', $cloudevent->getType());
+
+    // Print the whole CloudEvent
+    print($cloudevent);
+}
+```
+
+To enable automatic unmarshalling, set the `FUNCTION_SIGNATURE_TYPE` environment
+variable to `cloudevent`.
 
 # Contributing
 
