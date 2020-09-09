@@ -98,8 +98,19 @@ class CloudEvent
 
     public static function fromArray(array $arr)
     {
-        $argKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time', 'data'];
         $args = [];
+        $argKeys = [
+            'id',
+            'source',
+            'specversion',
+            'type',
+            'datacontenttype',
+            'dataschema',
+            'subject',
+            'time',
+            'data'
+        ];
+
         foreach ($argKeys as $key) {
             $args[] = $arr[$key] ?? null;
         }
