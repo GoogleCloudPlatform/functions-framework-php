@@ -31,7 +31,9 @@ class CloudEvent
     private $dataschema;
     private $subject;
     private $time;
-    /** @property mixed $data */
+    /**
+     * @var mixed $data
+     */
     private $data;
 
     public function __construct(
