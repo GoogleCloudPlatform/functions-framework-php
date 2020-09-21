@@ -1,5 +1,5 @@
 name: PHP Unit CI
-on: [push, pull_request]
+on: [push]
 jobs:
   build:
     runs-on: ${{ matrix.operating-system }}
