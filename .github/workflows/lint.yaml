@@ -1,11 +1,5 @@
-name: Lint
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-
+name: PHP Lint CI
+on: [push]
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
