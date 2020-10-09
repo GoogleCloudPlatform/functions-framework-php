@@ -20,6 +20,8 @@ namespace Google\CloudFunctions;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionFunctionAbstract;
+use LogicException;
 use RuntimeException;
 
 class CloudEventFunctionWrapper extends FunctionWrapper
@@ -238,5 +240,10 @@ class CloudEventFunctionWrapper extends FunctionWrapper
             }
         }
         return null;
+    }
+
+    protected function getFunctionParameterClassName(): string
+    {
+        return CloudEvent::class;
     }
 }
