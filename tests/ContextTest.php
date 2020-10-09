@@ -31,12 +31,12 @@ class ContextTest extends TestCase
             'eventId' => 'abc',
             'timestamp' => 'def',
             'eventType' => 'ghi',
-            'resource' => 'jkl',
+            'resource' => ['name' => 'jkl'],
         ]);
         $this->assertEquals('abc', $context->getEventId());
         $this->assertEquals('def', $context->getTimestamp());
         $this->assertEquals('ghi', $context->getEventType());
-        $this->assertEquals('jkl', $context->getResource());
+        $this->assertEquals(['name' => 'jkl'], $context->getResource());
     }
 
     public function testFromEmptyArray()
