@@ -70,7 +70,7 @@ abstract class FunctionWrapper
     ) {
         $parameters = $reflection->getParameters();
         if (count($parameters) != 1) {
-            throw new \LogicException(
+            throw new LogicException(
                 'Wrong number of parameters to your function, must be exactly 1'
             );
         }
@@ -78,7 +78,7 @@ abstract class FunctionWrapper
         $class = $this->getFunctionParameterClassName();
         $type = $parameters[0]->getType();
         if (!$type || $type->getName() !== $class) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     'Your function must have "%s" as the typehint for the first argument',
                     $class

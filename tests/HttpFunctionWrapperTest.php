@@ -35,7 +35,8 @@ class HttpFunctionWrapperTest extends TestCase
         );
         $request = new ServerRequest('POST', '/', []);
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function () {}
+            function () {
+            }
         );
     }
 
@@ -46,7 +47,8 @@ class HttpFunctionWrapperTest extends TestCase
             'Wrong number of parameters to your function, must be exactly 1'
         );
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function ($foo, $bar) {}
+            function ($foo, $bar) {
+            }
         );
     }
 
@@ -57,7 +59,8 @@ class HttpFunctionWrapperTest extends TestCase
             'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
         );
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function ($foo) {}
+            function ($foo) {
+            }
         );
     }
 
@@ -68,7 +71,8 @@ class HttpFunctionWrapperTest extends TestCase
             'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
         );
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function (NotTheRightThing $foo) {}
+            function (NotTheRightThing $foo) {
+            }
         );
     }
 
@@ -76,12 +80,14 @@ class HttpFunctionWrapperTest extends TestCase
     {
         $request = new ServerRequest('POST', '/', []);
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function (ServerRequestInterface $foo) {}
+            function (ServerRequestInterface $foo) {
+            }
         );
         $this->assertTrue(true, 'No exception was thrown');
         // Optional parameters are ok
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function (ServerRequestInterface $foo = null) {}
+            function (ServerRequestInterface $foo = null) {
+            }
         );
         $this->assertTrue(true, 'No exception was thrown');
     }
