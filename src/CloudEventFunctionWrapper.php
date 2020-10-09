@@ -77,7 +77,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         }
     }
 
-    private function parseJsonData(ServerRequestInterface $request): array
+    private function parseJsonData(ServerRequestInterface $request)
     {
         // Get Body
         $body = (string) $request->getBody();
@@ -119,14 +119,17 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         $resourceName = $context->getResourceName();
 
         $ceId = $context->getEventId();
+
         // mapped from eventType
         $ceType = $this->ceType($eventType);
+
         // from context/resource/service, or mapped from eventType
         $ceService = $context->getService() ?: $this->ceService($eventType);
-        // mapped from eventType & resource name
-        $ceSource = sprintf('//%s/%s', $ceService, $resourceName);
 
-        $ceSubject = $this->ceSubject($ceService, $resourceName);
+        // mapped from eventType & resource name
+        $ceSource = $this->ceSource($eventType, $ceService, $resourceName);
+
+        $ceSubject = $this->ceSubject($eventType, $resourceName);
 
         $ceTime = $context->getTimestamp();
 
@@ -145,10 +148,10 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     private function getLegacyEventContextAndData(
         ServerRequestInterface $request
-    ): CloudEvent {
+    ): array {
         $jsonData = $this->parseJsonData($request);
 
-        $data = $jsonData['data'];
+        $data = $jsonData['data'] ?? null;
 
         if (array_key_exists('context', $jsonData)) {
             $context = $jsonData['context'];
@@ -189,7 +192,8 @@ class CloudEventFunctionWrapper extends FunctionWrapper
             return $ceTypeMap[$eventType];
         }
 
-        throw new \Exception('Could not derive CE type from event type');
+        // Defaut to the legacy event type if no mapping is found
+        return $eventType;
     }
 
     private function ceService(string $eventType): string
@@ -209,10 +213,24 @@ class CloudEventFunctionWrapper extends FunctionWrapper
             }
         }
 
-        throw new \Exception('Could not derive CE service name from event type');
+        // Defaut to the legacy event type if no service mapping is found
+        return $eventType;
     }
 
-    private function ceSubject(string $service, string $resourceName): string
+    private function ceSource(
+        string $eventType,
+        string $service, string
+        $resourceName
+    ): string {
+        if (0 === strpos($eventType, 'google.storage')) {
+            if (null !== $pos = strpos($resourceName, '/objects/')) {
+                $resourceName = substr($resourceName, 0, $pos);
+            }
+        }
+        return sprintf('//%s/%s', $service, $resourceName);
+    }
+
+    private function ceSubject(string $eventType, string $resourceName): ?string
     {
         if (0 === strpos($service, 'google.storage')) {
             if (null !== $pos = strpos($resourceName, 'objects/')) {
