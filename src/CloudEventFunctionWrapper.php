@@ -234,7 +234,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     private function ceSubject(string $eventType, string $resourceName): ?string
     {
-        if (0 === strpos($service, 'google.storage')) {
+        if (0 === strpos($eventType, 'google.storage')) {
             if (null !== $pos = strpos($resourceName, 'objects/')) {
                 return substr($resourceName, $pos);
             }

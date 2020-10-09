@@ -291,10 +291,16 @@ class CloudEventFunctionWrapperTest extends TestCase
             $cloudevent->getSource()
         );
         $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals('google.cloud.storage.object.v1.finalized', $cloudevent->getType());
+        $this->assertEquals(
+            'google.cloud.storage.object.v1.finalized',
+            $cloudevent->getType()
+        );
         $this->assertEquals('application/json', $cloudevent->getDataContentType());
         $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(null, $cloudevent->getSubject());
+        $this->assertEquals(
+            'objects/MyFile#1588778055917163',
+            $cloudevent->getSubject()
+        );
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 }
