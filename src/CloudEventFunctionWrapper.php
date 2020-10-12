@@ -45,13 +45,13 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         switch ($this->getEventType($request)) {
             case self::TYPE_LEGACY:
                 $mapper = new LegacyEventMapper();
-                $cloudevent = $mapper->fromLegacyEvent($request);
+                $cloudevent = $mapper->fromRequest($request);
                 break;
 
             case self::TYPE_STRUCTURED:
             case self::TYPE_BINARY:
                 // no difference between structured or binary for now
-                $cloudevent = $this->fromCloudEvent($request);
+                $cloudevent = $this->fromRequest($request);
                 break;
 
             default:
@@ -95,7 +95,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         return $jsonData;
     }
 
-    private function fromCloudEvent(
+    private function fromRequest(
         ServerRequestInterface $request
     ): CloudEvent {
         $jsonData = $this->parseJsonData($request);

@@ -22,7 +22,7 @@ use RuntimeException;
 
 class LegacyEventMapper
 {
-    public function fromLegacyEvent(
+    public function fromRequest(
         ServerRequestInterface $request
     ): CloudEvent {
         list($context, $data) = $this->getLegacyEventContextAndData($request);

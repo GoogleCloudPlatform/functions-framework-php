@@ -33,7 +33,7 @@ class LegacyEventMapperTest extends TestCase
         $this->expectExceptionMessage('Could not parse request body: Syntax error');
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $mapper = new LegacyEventMapper();
-        $mapper->fromLegacyEvent($request);
+        $mapper->fromRequest($request);
     }
 
     public function testWithContextProperty()
@@ -51,7 +51,7 @@ class LegacyEventMapperTest extends TestCase
                 ],
             ]
         ]));
-        $cloudevent = $mapper->fromLegacyEvent($request);
+        $cloudevent = $mapper->fromRequest($request);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -81,7 +81,7 @@ class LegacyEventMapperTest extends TestCase
                 'service' => 'pubsub.googleapis.com'
             ],
         ]));
-        $cloudevent = $mapper->fromLegacyEvent($request);
+        $cloudevent = $mapper->fromRequest($request);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -109,7 +109,7 @@ class LegacyEventMapperTest extends TestCase
             'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
             'resource' => 'projects/MY-PROJECT/topics/MY-TOPIC',
         ]));
-        $cloudevent = $mapper->fromLegacyEvent($request);
+        $cloudevent = $mapper->fromRequest($request);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -142,7 +142,7 @@ class LegacyEventMapperTest extends TestCase
                 ],
             ]
         ]));
-        $cloudevent = $mapper->fromLegacyEvent($request);
+        $cloudevent = $mapper->fromRequest($request);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
