@@ -35,10 +35,20 @@ class CloudEventFunctionWrapperTest extends TestCase
         self::$functionCalled = false;
     }
 
-    public function testInvalidRequestBody()
+    public function testInvalidCloudEventRequestBody()
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Could not parse CloudEvent: Syntax error');
+        $headers = ['content-type' => 'application/cloudevents+json'];
+        $request = new ServerRequest('POST', '/', $headers, 'notjson');
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
+        $cloudEventFunctionWrapper->execute($request);
+    }
+
+    public function testInvalidLegacyEventRequestBody()
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Could not parse request body: Syntax error');
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $cloudEventFunctionWrapper->execute($request);
@@ -194,7 +204,9 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testFromLegacyEventWithContextProperty()
     {
-        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisLegacy']);
+        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
+            [$this, 'invokeThisLegacy']
+        );
         $request = new ServerRequest('GET', '/', [], json_encode([
             'data' => 'foo',
             'context' => [
@@ -206,41 +218,6 @@ class CloudEventFunctionWrapperTest extends TestCase
                     'service' => 'pubsub.googleapis.com'
                 ],
             ]
-        ]));
-        $cloudEventFunctionsWrapper->execute($request);
-        $this->assertTrue(self::$functionCalled);
-    }
-
-    public function testFromLegacyEventWithoutContextProperty()
-    {
-        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
-            [$this, 'invokeThisLegacy']
-        );
-        $request = new ServerRequest('GET', '/', [], json_encode([
-            'data' => 'foo',
-            'eventId' => '1413058901901494',
-            'timestamp' => '2020-12-08T20:03:19.162Z',
-            'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
-            'resource' => [
-                'name' => 'projects/MY-PROJECT/topics/MY-TOPIC',
-                'service' => 'pubsub.googleapis.com'
-            ],
-        ]));
-        $cloudEventFunctionsWrapper->execute($request);
-        $this->assertTrue(self::$functionCalled);
-    }
-
-    public function testFromLegacyEventWithResourceAsString()
-    {
-        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
-            [$this, 'invokeThisLegacy']
-        );
-        $request = new ServerRequest('GET', '/', [], json_encode([
-            'data' => 'foo',
-            'eventId' => '1413058901901494',
-            'timestamp' => '2020-12-08T20:03:19.162Z',
-            'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
-            'resource' => 'projects/MY-PROJECT/topics/MY-TOPIC',
         ]));
         $cloudEventFunctionsWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);
@@ -263,50 +240,6 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertEquals('application/json', $cloudevent->getDataContentType());
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
-    }
-
-    public function testFromLegacyEventForCloudStorage()
-    {
-        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
-            [$this, 'invokeThisLegacyCloudStorage']
-        );
-        $request = new ServerRequest('GET', '/', [], json_encode([
-            'data' => 'foo',
-            'context' => [
-                'eventId' => '1413058901901494',
-                'timestamp' => '2020-12-08T20:03:19.162Z',
-                'eventType' => 'google.storage.object.finalize',
-                'resource' => [
-                    'name' => 'projects/_/buckets/sample-bucket/objects/MyFile#1588778055917163',
-                    'service' => 'storage.googleapis.com'
-                ],
-            ]
-        ]));
-        $cloudEventFunctionsWrapper->execute($request);
-        $this->assertTrue(self::$functionCalled);
-    }
-
-    public function invokeThisLegacyCloudStorage(CloudEvent $cloudevent)
-    {
-        $this->assertFalse(self::$functionCalled);
-        self::$functionCalled = true;
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
-            '//storage.googleapis.com/projects/_/buckets/sample-bucket',
-            $cloudevent->getSource()
-        );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
-            'google.cloud.storage.object.v1.finalized',
-            $cloudevent->getType()
-        );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(
-            'objects/MyFile#1588778055917163',
-            $cloudevent->getSubject()
-        );
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 }
