@@ -28,15 +28,95 @@ use GuzzleHttp\Psr7\ServerRequest;
  */
 class CloudEventFunctionWrapperTest extends TestCase
 {
-    private static $functionCalled = false;
+    private static $functionCalled;
 
-    public function testInvalidRequestBody()
+    public function setUp(): void
+    {
+        self::$functionCalled = false;
+    }
+
+    public function testInvalidCloudEventRequestBody()
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Could not parse CloudEvent: Syntax error');
+        $headers = ['content-type' => 'application/cloudevents+json'];
+        $request = new ServerRequest('POST', '/', $headers, 'notjson');
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
+        $cloudEventFunctionWrapper->execute($request);
+    }
+
+    public function testInvalidLegacyEventRequestBody()
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Could not parse request body: Syntax error');
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $cloudEventFunctionWrapper->execute($request);
+    }
+
+    public function testNoFunctionParameters()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Wrong number of parameters to your function, must be exactly 1'
+        );
+        $request = new ServerRequest('POST', '/', []);
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function () {
+            }
+        );
+    }
+
+    public function testTooManyFunctionParameters()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Wrong number of parameters to your function, must be exactly 1'
+        );
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function ($foo, $bar) {
+            }
+        );
+    }
+
+    public function testNoTypehintInFunctionParameter()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
+        );
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function ($foo) {
+            }
+        );
+    }
+
+    public function testWrongTypehintInFunctionParameter()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
+        );
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function (NotTheRightThing $foo) {
+            }
+        );
+    }
+
+    public function testCorrectTypehintsInFunctionParameter()
+    {
+        $request = new ServerRequest('POST', '/', []);
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function (CloudEvent $foo) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
+        // Optional parameters are ok
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function (CloudEvent $foo = null) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
     }
 
     public function testWithFullCloudEvent()
@@ -84,6 +164,7 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function invokeThis(CloudEvent $cloudevent)
     {
+        $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals('//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC', $cloudevent->getSource());
@@ -94,7 +175,7 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertEquals('My Subject', $cloudevent->getSubject());
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
-    
+
     public function testWithNotFullButValidCloudEvent()
     {
         self:$functionCalled = false;
@@ -113,10 +194,52 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function invokeThisPartial(CloudEvent $cloudevent)
     {
+        $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
         $this->assertEquals('fooBar', $cloudevent->getId());
         $this->assertEquals('my-source', $cloudevent->getSource());
         $this->assertEquals('1.0', $cloudevent->getSpecVersion());
         $this->assertEquals('my.type', $cloudevent->getType());
+    }
+
+    public function testFromLegacyEventWithContextProperty()
+    {
+        $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
+            [$this, 'invokeThisLegacy']
+        );
+        $request = new ServerRequest('GET', '/', [], json_encode([
+            'data' => 'foo',
+            'context' => [
+                'eventId' => '1413058901901494',
+                'timestamp' => '2020-12-08T20:03:19.162Z',
+                'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
+                'resource' => [
+                    'name' => 'projects/MY-PROJECT/topics/MY-TOPIC',
+                    'service' => 'pubsub.googleapis.com'
+                ],
+            ]
+        ]));
+        $cloudEventFunctionsWrapper->execute($request);
+        $this->assertTrue(self::$functionCalled);
+    }
+
+    public function invokeThisLegacy(CloudEvent $cloudevent)
+    {
+        $this->assertFalse(self::$functionCalled);
+        self::$functionCalled = true;
+        $this->assertEquals('1413058901901494', $cloudevent->getId());
+        $this->assertEquals(
+            '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
+            $cloudevent->getSource()
+        );
+        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
+        $this->assertEquals(
+            'google.cloud.pubsub.topic.v1.messagePublished',
+            $cloudevent->getType()
+        );
+        $this->assertEquals('application/json', $cloudevent->getDataContentType());
+        $this->assertEquals(null, $cloudevent->getDataSchema());
+        $this->assertEquals(null, $cloudevent->getSubject());
+        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 }

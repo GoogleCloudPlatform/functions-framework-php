@@ -43,4 +43,9 @@ class HttpFunctionWrapper extends FunctionWrapper
 
         return $response;
     }
+
+    protected function getFunctionParameterClassName(): string
+    {
+        return ServerRequestInterface::class;
+    }
 }

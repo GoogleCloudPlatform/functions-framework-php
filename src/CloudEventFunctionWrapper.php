@@ -20,35 +20,100 @@ namespace Google\CloudFunctions;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use LogicException;
 use RuntimeException;
 
 class CloudEventFunctionWrapper extends FunctionWrapper
 {
+    private const TYPE_LEGACY = 1;
+    private const TYPE_BINARY = 2;
+    private const TYPE_STRUCTURED = 3;
+
+    private static $validKeys = [
+        'id',
+        'source',
+        'specversion',
+        'type',
+        'datacontenttype',
+        'dataschema',
+        'subject',
+        'time'
+    ];
+
     public function execute(ServerRequestInterface $request): ResponseInterface
+    {
+        switch ($this->getEventType($request)) {
+            case self::TYPE_LEGACY:
+                $mapper = new LegacyEventMapper();
+                $cloudevent = $mapper->fromRequest($request);
+                break;
+
+            case self::TYPE_STRUCTURED:
+            case self::TYPE_BINARY:
+                // no difference between structured or binary for now
+                $cloudevent = $this->fromRequest($request);
+                break;
+
+            default:
+                throw new LogicException('Invalid event type');
+                break;
+        }
+
+        call_user_func($this->function, $cloudevent);
+        return new Response();
+    }
+
+    private function getEventType(ServerRequestInterface $request)
+    {
+        if (
+            $request->hasHeader('ce-type')
+            && $request->hasHeader('ce-specversion')
+            && $request->hasHeader('ce-source')
+            && $request->hasHeader('ce-id')
+        ) {
+            return self::TYPE_BINARY;
+        } elseif ($request->getHeaderLine('content-type') === 'application/cloudevents+json') {
+            return self::TYPE_STRUCTURED;
+        } else {
+            return self::TYPE_LEGACY;
+        }
+    }
+
+    private function parseJsonData(ServerRequestInterface $request)
     {
         // Get Body
         $body = (string) $request->getBody();
-        $cloudeventData = json_decode($body, true);
+
+        $jsonData = json_decode($body, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new RuntimeException(sprintf(
                 'Could not parse CloudEvent: %s',
                 '' !== $body ? json_last_error_msg() : 'Missing cloudevent payload'
             ));
         }
-        
-        // Get Headers
-        $headers = $request->getHeaders();
-        $cloudeventContent = [];
-        $validKeys = ['id', 'source', 'specversion', 'type', 'datacontenttype', 'dataschema', 'subject', 'time'];
-        foreach ($validKeys as $key) {
+
+        return $jsonData;
+    }
+
+    private function fromRequest(
+        ServerRequestInterface $request
+    ): CloudEvent {
+        $jsonData = $this->parseJsonData($request);
+
+        $content = [];
+
+        foreach (self::$validKeys as $key) {
             $ceKey = 'ce-' . $key;
-            if (isset($headers[$ceKey])) {
-                $cloudeventContent[$key] = $headers[$ceKey][0];
+            if ($request->hasHeader($ceKey)) {
+                $content[$key] = $request->getHeaderLine($ceKey);
             }
         }
-        $cloudeventContent['data'] = $cloudeventData;
-        $cloudevent = CloudEvent::fromArray($cloudeventContent);
-        call_user_func($this->function, $cloudevent);
-        return new Response();
+        $content['data'] = $jsonData;
+        return CloudEvent::fromArray($content);
+    }
+
+    protected function getFunctionParameterClassName(): string
+    {
+        return CloudEvent::class;
     }
 }

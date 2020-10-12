@@ -28,7 +28,7 @@ class Context
         ?string $eventId,
         ?string $timestamp,
         ?string $eventType,
-        ?string $resource
+        ?array $resource
     ) {
         $this->eventId = $eventId;
         $this->timestamp = $timestamp;
@@ -51,13 +51,29 @@ class Context
         return $this->timestamp;
     }
 
-    public function getResource(): ?string
+    public function getResource(): ?array
     {
         return $this->resource;
     }
 
+    public function getService(): ?string
+    {
+        return $this->resource['service'] ?? null;
+    }
+
+    public function getResourceName(): ?string
+    {
+        return $this->resource['name'] ?? null;
+    }
+
     public static function fromArray(array $arr)
     {
+        // When "resource" is defined in the root (instead of in "context") it
+        // is a string representing the resource name
+        if (isset($arr['resource']) && is_string($arr['resource'])) {
+            $arr['resource'] = ['name' => $arr['resource']];
+        }
+
         $args = [];
         $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
         foreach ($argKeys as $key) {

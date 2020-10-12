@@ -35,9 +35,10 @@ class Invoker
     {
         if ($signatureType === 'http') {
             $this->function = new HttpFunctionWrapper($target);
-        } elseif ($signatureType === 'event') {
-            $this->function = new BackgroundFunctionWrapper($target);
-        } elseif ($signatureType === 'cloudevent') {
+        } elseif (
+            $signatureType === 'event'
+            || $signatureType === 'cloudevent'
+        ) {
             $this->function = new CloudEventFunctionWrapper($target);
         } else {
             throw new InvalidArgumentException(sprintf(

@@ -27,6 +27,71 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class HttpFunctionWrapperTest extends TestCase
 {
+    public function testNoFunctionParameters()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Wrong number of parameters to your function, must be exactly 1'
+        );
+        $request = new ServerRequest('POST', '/', []);
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function () {
+            }
+        );
+    }
+
+    public function testTooManyFunctionParameters()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Wrong number of parameters to your function, must be exactly 1'
+        );
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function ($foo, $bar) {
+            }
+        );
+    }
+
+    public function testNoTypehintInFunctionParameter()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
+        );
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function ($foo) {
+            }
+        );
+    }
+
+    public function testWrongTypehintInFunctionParameter()
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage(
+            'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
+        );
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function (NotTheRightThing $foo) {
+            }
+        );
+    }
+
+    public function testCorrectTypehintsInFunctionParameter()
+    {
+        $request = new ServerRequest('POST', '/', []);
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function (ServerRequestInterface $foo) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
+        // Optional parameters are ok
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function (ServerRequestInterface $foo = null) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
+    }
+
     public function testHttpHttpFunctionWrapper()
     {
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);

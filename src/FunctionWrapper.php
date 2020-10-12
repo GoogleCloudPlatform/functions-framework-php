@@ -19,6 +19,11 @@ namespace Google\CloudFunctions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Closure;
+use LogicException;
+use ReflectionFunction;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
 
 abstract class FunctionWrapper
 {
@@ -26,6 +31,10 @@ abstract class FunctionWrapper
 
     public function __construct(callable $function, array $signature = null)
     {
+        $this->validateFunctionSignature(
+            $this->getFunctionReflection($function)
+        );
+
         $this->function = $function;
 
         // TODO: validate function signature, if present.
@@ -34,4 +43,47 @@ abstract class FunctionWrapper
     abstract public function execute(
         ServerRequestInterface $request
     ): ResponseInterface;
+
+    abstract protected function getFunctionParameterClassName(): string;
+
+    private function getFunctionReflection(
+        callable $function
+    ): ReflectionFunctionAbstract {
+        if ($function instanceof Closure) {
+            return new ReflectionFunction($function);
+        }
+        if (is_string($function)) {
+            $parts = explode('::', $function);
+            return count($parts) > 1
+                ? new ReflectionMethod($parts[0], $parts[1])
+                : new ReflectionFunction($function);
+        }
+        if (is_array($function)) {
+            return new ReflectionMethod($function[0], $function[1]);
+        }
+
+        return new ReflectionMethod($function, '__invoke');
+    }
+
+    private function validateFunctionSignature(
+        ReflectionFunctionAbstract $reflection
+    ) {
+        $parameters = $reflection->getParameters();
+        if (count($parameters) != 1) {
+            throw new LogicException(
+                'Wrong number of parameters to your function, must be exactly 1'
+            );
+        }
+
+        $class = $this->getFunctionParameterClassName();
+        $type = $parameters[0]->getType();
+        if (!$type || $type->getName() !== $class) {
+            throw new LogicException(
+                sprintf(
+                    'Your function must have "%s" as the typehint for the first argument',
+                    $class
+                )
+            );
+        }
+    }
 }

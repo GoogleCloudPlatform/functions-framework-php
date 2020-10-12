@@ -31,12 +31,17 @@ class ContextTest extends TestCase
             'eventId' => 'abc',
             'timestamp' => 'def',
             'eventType' => 'ghi',
-            'resource' => 'jkl',
+            'resource' => ['name' => 'jkl', 'service' => 'mno'],
         ]);
         $this->assertEquals('abc', $context->getEventId());
         $this->assertEquals('def', $context->getTimestamp());
         $this->assertEquals('ghi', $context->getEventType());
-        $this->assertEquals('jkl', $context->getResource());
+        $this->assertEquals([
+            'name' => 'jkl',
+            'service' => 'mno'
+        ], $context->getResource());
+        $this->assertEquals('jkl', $context->getResourceName());
+        $this->assertEquals('mno', $context->getService());
     }
 
     public function testFromEmptyArray()
@@ -46,5 +51,7 @@ class ContextTest extends TestCase
         $this->assertEquals(null, $context->getTimestamp());
         $this->assertEquals(null, $context->getEventType());
         $this->assertEquals(null, $context->getResource());
+        $this->assertEquals(null, $context->getResourceName());
+        $this->assertEquals(null, $context->getService());
     }
 }
