@@ -19,7 +19,6 @@
 namespace Google\CloudFunctions\Tests;
 
 use Google\CloudFunctions\LegacyEventMapper;
-use Google\CloudFunctions\CloudEvent;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
 
