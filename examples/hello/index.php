@@ -15,10 +15,30 @@
  * limitations under the License.
  */
 
+/**
+ * To use this, set the following environment variables:
+ *   FUNCTION_TARGET=helloHttp
+ *   FUNCTION_EVENT_TYPE=http
+ */
+
 use Psr\Http\Message\ServerRequestInterface;
 
 function helloHttp(ServerRequestInterface $request)
 {
     return sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
         $request->getQueryParams()['name'] ?? 'World');
+}
+
+/**
+ * To use this, set the following environment variables:
+ *   FUNCTION_TARGET=helloCloudEvent
+ *   FUNCTION_EVENT_TYPE=cloudevent
+ */
+
+use Google\CloudFunctions\CloudEvent;
+
+function helloCloudEvent(CloudEvent $cloudevent)
+{
+    $stdout = fopen('php://stdout', 'wb');
+    fwrite($stdout, $cloudevent);
 }

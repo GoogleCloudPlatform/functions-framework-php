@@ -45,33 +45,77 @@ class exampleTest extends TestCase
         $cmd = sprintf('docker build %s -t %s', $exampleDir, self::$imageId);
 
         passthru($cmd, $output);
+    }
 
+    public function testHttp(): void
+    {
         $cmd = 'docker run -d -p 8080:8080 '
             . '-e FUNCTION_TARGET=helloHttp '
             . self::$imageId;
 
         exec($cmd, $output);
         self::$containerId = $output[0];
+
         // Tests fail if we do not wait before sending requests in
         sleep(1);
-    }
 
-    public function testIndex(): void
-    {
         exec('curl -v http://localhost:8080', $output);
         $this->assertContains('Hello World from PHP HTTP function!', $output);
-    }
 
-    public function testIndexWithQuery(): void
-    {
         exec('curl -v http://localhost:8080?name=Foo', $output);
         $this->assertContains('Hello Foo from PHP HTTP function!', $output);
+
+        passthru('docker rm -f ' . self::$containerId);
+        self::$containerId = null;
+    }
+
+    public function testCloudEvent(): void
+    {
+        $cmd = 'docker run -d -t -p 8080:8080 '
+            . '-e FUNCTION_TARGET=helloCloudEvent '
+            . '-e FUNCTION_SIGNATURE_TYPE=cloudevent '
+            . self::$imageId;
+
+        exec($cmd, $output);
+        self::$containerId = $output[0];
+
+        // Tests fail if we do not wait before sending requests in
+        sleep(1);
+
+        $curl = 'curl -v localhost:8080 '
+            . '-H "ce-id: 1234567890" '
+            . ' -H "ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC" '
+            . '-H "ce-specversion: 1.0" '
+            . '-H "ce-type: com.google.cloud.pubsub.topic.publish" '
+            . '-d \'{"foo": "bar"}\' &> /dev/stdout';
+
+        exec($curl);
+
+        exec('docker logs ' . self::$containerId, $output);
+
+        $outputAsString = implode("\n", $output);
+        $this->assertStringContainsString('- id: 1234567890', $outputAsString);
+        $this->assertStringContainsString(
+            '- type: com.google.cloud.pubsub.topic.publish',
+            $outputAsString
+        );
+        $this->assertStringContainsString(
+            '- source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC"',
+            $outputAsString
+        );
+
+        passthru('docker rm -f ' . self::$containerId);
+        self::$containerId = null;
     }
 
     public static function tearDownAfterClass(): void
     {
+        // If a test failed before it could delete its container
         if (self::$containerId) {
             passthru('docker rm -f ' . self::$containerId);
+        }
+        // Remove the test image
+        if (self::$imageId) {
             passthru('docker rmi -f ' . self::$imageId);
         }
     }
