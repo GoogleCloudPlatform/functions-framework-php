@@ -69,21 +69,34 @@ abstract class FunctionWrapper
         ReflectionFunctionAbstract $reflection
     ) {
         $parameters = $reflection->getParameters();
-        if (count($parameters) != 1) {
-            throw new LogicException(
-                'Wrong number of parameters to your function, must be exactly 1'
-            );
+        // Check there is at least one parameter
+        if (count($parameters) < 1) {
+            $this->throwInvalidFunctionException();
+        }
+        // Check the first parameter has the proper typehint
+        $type = $parameters[0]->getType();
+        $class = $this->getFunctionParameterClassName();
+        if (!$type || $type->getName() !== $class) {
+            $this->throwInvalidFunctionException();
         }
 
-        $class = $this->getFunctionParameterClassName();
-        $type = $parameters[0]->getType();
-        if (!$type || $type->getName() !== $class) {
-            throw new LogicException(
-                sprintf(
-                    'Your function must have "%s" as the typehint for the first argument',
-                    $class
-                )
-            );
+        if (count($parameters) > 1) {
+            for ($i = 1; $i < count($parameters); $i++) {
+                if (!$parameters[$i]->isOptional()) {
+                    throw new LogicException(
+                        'If your function accepts more than one parameter the '
+                        . 'additional parameters must be optional'
+                    );
+                }
+            }
         }
+    }
+
+    private function throwInvalidFunctionException()
+    {
+        throw new LogicException(sprintf(
+            'Your function must have "%s" as the typehint for the first argument',
+            $this->getFunctionParameterClassName()
+        ));
     }
 }

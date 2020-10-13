@@ -58,7 +58,7 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'Wrong number of parameters to your function, must be exactly 1'
+            'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
         );
         $request = new ServerRequest('POST', '/', []);
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
@@ -71,10 +71,10 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'Wrong number of parameters to your function, must be exactly 1'
+            'If your function accepts more than one parameter the additional parameters must be optional'
         );
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
-            function ($foo, $bar) {
+            function (CloudEvent $foo, $bar) {
             }
         );
     }
@@ -114,6 +114,12 @@ class CloudEventFunctionWrapperTest extends TestCase
         // Optional parameters are ok
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
             function (CloudEvent $foo = null) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
+        // additional optional parameters are ok
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function (CloudEvent $foo, $bar = null) {
             }
         );
         $this->assertTrue(true, 'No exception was thrown');

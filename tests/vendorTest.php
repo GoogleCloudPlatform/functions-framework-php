@@ -31,9 +31,10 @@ class vendorTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        if ('true' === getenv('TRAVIS')) {
-            self::markTestSkipped('These tests do not pass on travis');
+        if ('true' === getenv('SKIP_EXAMPLE_TESTS')) {
+            self::markTestSkipped('Explicitly skipping the example tests');
         }
+
         mkdir($tmpDir = sys_get_temp_dir() . '/ff-php-test-' . rand());
         chdir($tmpDir);
 

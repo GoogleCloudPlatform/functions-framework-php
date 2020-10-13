@@ -31,7 +31,7 @@ class HttpFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'Wrong number of parameters to your function, must be exactly 1'
+            'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
         );
         $request = new ServerRequest('POST', '/', []);
         $httpFunctionWrapper = new HttpFunctionWrapper(
@@ -44,10 +44,10 @@ class HttpFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'Wrong number of parameters to your function, must be exactly 1'
+            'If your function accepts more than one parameter the additional parameters must be optional'
         );
         $httpFunctionWrapper = new HttpFunctionWrapper(
-            function ($foo, $bar) {
+            function (ServerRequestInterface $foo, $bar) {
             }
         );
     }
@@ -87,6 +87,12 @@ class HttpFunctionWrapperTest extends TestCase
         // Optional parameters are ok
         $httpFunctionWrapper = new HttpFunctionWrapper(
             function (ServerRequestInterface $foo = null) {
+            }
+        );
+        $this->assertTrue(true, 'No exception was thrown');
+        // additional optional parameters are ok
+        $httpFunctionWrapper = new HttpFunctionWrapper(
+            function (ServerRequestInterface $foo, $bar = null) {
             }
         );
         $this->assertTrue(true, 'No exception was thrown');
