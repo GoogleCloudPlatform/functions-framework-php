@@ -84,7 +84,7 @@ abstract class FunctionWrapper
             for ($i = 1; $i < count($parameters); $i++) {
                 if (!$parameters[$i]->isOptional()) {
                     throw new LogicException(
-                        'If your function acceps more than one parameter the '
+                        'If your function accepts more than one parameter the '
                         . 'additional parameters must be optional'
                     );
                 }

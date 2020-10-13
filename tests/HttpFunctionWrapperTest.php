@@ -44,7 +44,7 @@ class HttpFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'If your function acceps more than one parameter the additional parameters must be optional'
+            'If your function accepts more than one parameter the additional parameters must be optional'
         );
         $httpFunctionWrapper = new HttpFunctionWrapper(
             function (ServerRequestInterface $foo, $bar) {

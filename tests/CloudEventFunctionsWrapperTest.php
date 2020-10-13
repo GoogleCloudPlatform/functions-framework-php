@@ -71,7 +71,7 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
-            'If your function acceps more than one parameter the additional parameters must be optional'
+            'If your function accepts more than one parameter the additional parameters must be optional'
         );
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
             function (CloudEvent $foo, $bar) {
