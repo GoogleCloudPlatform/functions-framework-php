@@ -31,8 +31,8 @@ class exampleTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        if ('true' === getenv('TRAVIS')) {
-            self::markTestSkipped('These tests do not pass on travis');
+        if ('true' === getenv('SKIP_EXAMPLE_TESTS')) {
+            self::markTestSkipped('Explicitly skipping the example tests');
         }
 
         $exampleDir = __DIR__ . '/../examples/hello';
