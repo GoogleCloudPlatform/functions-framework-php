@@ -15,7 +15,9 @@ different environments, including:
 The framework allows you to go from:
 
 ```php
-function helloHttp()
+use Psr\Http\Message\ServerRequestInterface;
+
+function helloHttp(ServerRequestInterface $request)
 {
     return "Hello World from a PHP HTTP function!" . PHP_EOL;
 }
@@ -234,26 +236,6 @@ You can configure the Functions Framework using the environment variables shown 
 | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests.
 | `FUNCTION_SOURCE` | The name of the file containing the source code for your function to load. Default: **`index.php`** (if it exists)
 | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http`, `event`, or `cloudevent`. Default: **`http`**
-
-# Enable Background Events
-
-The Functions Framework can unmarshall incoming event payloads to `data` and
-`context` objects. These will be passed as arguments to your function when it
-receives a request. Note that your function must use the event-style function
-signature:
-
-```php
-function helloEvents($data, $context)
-{
-    var_dump($data);
-    var_dump($context);
-}
-```
-
-To enable automatic unmarshalling, set the `FUNCTION_SIGNATURE_TYPE` environment
-variable to `event`. For more details on this signature type, check out the Google Cloud Functions
-documentation on
-[background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
 
 # Enable CloudEvents
 
