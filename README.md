@@ -167,7 +167,7 @@ in the [Cloud Console][cloud-run-console].
 The Functions Framework can unmarshall incoming [CloudEvents][cloud-events]
 payloads to a `cloudevent` object. This will be passed as arguments to your
 function when it receives a request. Note that your function must use the
-cloudevent-style function signature:
+cloudevent function signature:
 
 ```php
 use Google\CloudFunctions\CloudEvent;
