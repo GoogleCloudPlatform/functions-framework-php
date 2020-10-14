@@ -162,6 +162,64 @@ in the [Cloud Console][cloud-run-console].
 [cloud-run-regions]: https://cloud.google.com/run/docs/locations
 [cloud-run-console]: https://console.cloud.google.com/run
 
+## Use CloudEvents
+
+The Functions Framework can unmarshall incoming [CloudEvents][cloud-events]
+payloads to a `cloudevent` object. This will be passed as arguments to your
+function when it receives a request. Note that your function must use the
+cloudevent function signature:
+
+```php
+use Google\CloudFunctions\CloudEvent;
+
+function helloCloudEvents(CloudEvent $cloudevent)
+{
+    // Print the whole CloudEvent
+    $stdout = fopen('php://stdout', 'wb');
+    fwrite($stdout, $cloudevent);
+}
+```
+
+You will also need to set the `FUNCTION_SIGNATURE_TYPE` environment
+variable to `cloudevent`.
+
+```sh
+export FUNCTION_TARGET=helloCloudEvent
+export FUNCTION_SIGNATURE_TYPE=cloudevent
+php -S localhost:8080 vendor/bin/router.php
+```
+
+In a separate tab, make a cURL request in Cloud Event format to your function:
+
+```
+curl localhost:8080 \
+    -H "ce-id: 1234567890" \
+    -H "ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC" \
+    -H "ce-specversion: 1.0" \
+    -H "ce-type: com.google.cloud.pubsub.topic.publish" \
+    -d '{"foo": "bar"}'
+```
+
+Your original process should output the following:
+
+```
+CLOUDEVENT metadata:
+- id: 1234567890
+- source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC
+- specversion: 1.0
+- type: com.google.cloud.pubsub.topic.publish
+- datacontenttype:
+- dataschema:
+- subject:
+- time:
+```
+
+**IMPORTANT**: The above tutorials to deploy to a docker container and to
+Cloud Run work for CloudEvents as well, as long as `FUNCTION_TARGET` and
+`FUNCTION_SIGNATURE_TYPE` are set appropriately.
+
+[cloud-events]: http://cloudevents.io
+
 ## Working with PSR-7 HTTP Objects
 
 The first parameter of your function is a `Request` object which implements the
@@ -236,30 +294,6 @@ You can configure the Functions Framework using the environment variables shown 
 | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests.
 | `FUNCTION_SOURCE` | The name of the file containing the source code for your function to load. Default: **`index.php`** (if it exists)
 | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Can be either `http`, `event`, or `cloudevent`. Default: **`http`**
-
-# Enable CloudEvents
-
-The Functions Framework can unmarshall incoming [CloudEvents](http://cloudevents.io)
-payloads to a `cloudevent` object. This will be passed as arguments to your function when it
-receives a request. Note that your function must use the cloudevent-style function
-signature:
-
-```php
-use Google\CloudFunctions\CloudEvent;
-
-function helloCloudEvents(CloudEvent $cloudevent)
-{
-    // Get a single property
-    printf('id: %s', $cloudevent->getId());
-    printf('type: %s', $cloudevent->getType());
-
-    // Print the whole CloudEvent
-    print($cloudevent);
-}
-```
-
-To enable automatic unmarshalling, set the `FUNCTION_SIGNATURE_TYPE` environment
-variable to `cloudevent`.
 
 # Contributing
 
