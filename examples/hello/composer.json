@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-functions-framework": "dev-master as 0.6.0"
+        "google/cloud-functions-framework": "^0.6"
     }
 }

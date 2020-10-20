@@ -38,10 +38,6 @@ class exampleTest extends TestCase
         $exampleDir = __DIR__ . '/../examples/hello';
         self::$imageId = 'test-image-' . time();
 
-        $cmd = 'composer update -d ' . $exampleDir;
-
-        passthru($cmd, $output);
-
         $cmd = sprintf('docker build %s -t %s', $exampleDir, self::$imageId);
 
         passthru($cmd, $output);
