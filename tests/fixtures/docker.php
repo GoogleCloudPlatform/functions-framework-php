@@ -1,7 +1,7 @@
 <?php
 
 use Psr\Http\Message\ServerRequestInterface;
-use GuzzleHttp\Psr7\Response;;
+use GuzzleHttp\Psr7\Response;
 
 function testStatusCode(ServerRequestInterface $request)
 {

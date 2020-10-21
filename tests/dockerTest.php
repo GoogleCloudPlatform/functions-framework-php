@@ -18,6 +18,7 @@
 namespace Google\CloudFunctions\Tests;
 
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client;
 
 /**
  * Tests for when this framework is run in a docker container
@@ -29,6 +30,7 @@ class dockerTest extends TestCase
 {
     private static $containerId;
     private static $imageId;
+    private static $client;
 
     public static function setUpBeforeClass(): void
     {
@@ -48,6 +50,11 @@ class dockerTest extends TestCase
         $cmd = sprintf('docker build %s -t %s', $tmpDir, self::$imageId);
 
         passthru($cmd, $output);
+
+        self::$client = new Client([
+            'base_uri' => 'http://localhost:8080',
+            'http_errors' => false,
+        ]);
     }
 
     public function testHttpStatusCode(): void
@@ -63,9 +70,10 @@ class dockerTest extends TestCase
         // Tests fail if we do not wait before sending requests in
         sleep(1);
 
-        exec('curl -s -v http://localhost:8080 &> /dev/stdout', $output);
+        $response = self::$client->get('/');
 
-        $this->assertContains('< HTTP/1.1 418 I\'m a teapot', $output);
+        $this->assertEquals(418, $response->getStatusCode());
+        $this->assertEquals("I'm a teapot", $response->getReasonPhrase());
 
         passthru('docker rm -f ' . self::$containerId);
         self::$containerId = null;
