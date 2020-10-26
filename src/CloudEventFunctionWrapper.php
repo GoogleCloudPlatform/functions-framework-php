@@ -59,8 +59,8 @@ class CloudEventFunctionWrapper extends FunctionWrapper
                 break;
         }
 
-        call_user_func($this->function, $cloudevent);
-        return new Response();
+        $optionalResponse = call_user_func($this->function, $cloudevent);
+        return $optionalResponse ?: new Response();
     }
 
     private function getEventType(ServerRequestInterface $request)

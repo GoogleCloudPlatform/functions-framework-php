@@ -22,6 +22,8 @@ use Google\CloudFunctions\CloudEventFunctionWrapper;
 use Google\CloudFunctions\CloudEvent;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @group gcf-framework
@@ -247,5 +249,27 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+    }
+
+    public function testReturningResponse()
+    {
+        $request = new ServerRequest(
+            'POST',
+            '/',
+            [
+                'ce-id' => 'fooBar',
+                'ce-type' => 'my-type',
+                'ce-source' => 'my-source',
+                'ce-specversion' => '1.0',
+            ],
+            '{"foo":"bar"}'
+        );
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            function (CloudEvent $foo): ResponseInterface {
+                return new Response(418);
+            }
+        );
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(418, $response->getStatusCode());
     }
 }
