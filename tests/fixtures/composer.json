@@ -9,6 +9,7 @@
         }
     ],
     "require": {
-        "google/cloud-functions-framework": "dev-master"
-    }
+        "google/cloud-functions-framework": "*"
+    },
+    "minimum-stability": "dev"
 }
