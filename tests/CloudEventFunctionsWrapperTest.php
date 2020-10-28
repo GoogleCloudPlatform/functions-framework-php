@@ -127,7 +127,7 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testWithFullCloudEvent()
     {
-        self:$functionCalled = false;
+        self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('POST', '/', [
             'ce-id' => '1413058901901494',
@@ -152,7 +152,7 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testWithNonJSONData()
     {
-        self:$functionCalled = false;
+        self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('POST', '/', [
             'ce-id' => '1413058901901494',
@@ -184,7 +184,7 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testWithNotFullButValidCloudEvent()
     {
-        self:$functionCalled = false;
+        self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisPartial']);
         $request = new ServerRequest('POST', '/', [
             'ce-id' => 'fooBar',
@@ -247,5 +247,26 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+    }
+
+    public function testFromStructuredEventRequest()
+    {
+        self::$functionCalled = false;
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
+        $request = new ServerRequest('POST', '/', [
+            'content-type' => 'application/cloudevents+json',
+        ], json_encode([
+            'id' => '1413058901901494',
+            'source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
+            'specversion' => '1.0',
+            'type' => 'com.google.cloud.pubsub.topic.publish',
+            'datacontenttype' => 'application/json',
+            'dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
+            'subject' => 'My Subject',
+            'time' => '2020-12-08T20:03:19.162Z',
+            'data' => 'foo',
+        ]));
+        $cloudEventFunctionWrapper->execute($request);
+        $this->assertTrue(self::$functionCalled);
     }
 }
