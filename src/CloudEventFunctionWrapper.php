@@ -49,9 +49,11 @@ class CloudEventFunctionWrapper extends FunctionWrapper
                 break;
 
             case self::TYPE_STRUCTURED:
+                $cloudevent = $this->fromStructuredRequest($request);
+                break;
+
             case self::TYPE_BINARY:
-                // no difference between structured or binary for now
-                $cloudevent = $this->fromRequest($request);
+                $cloudevent = $this->fromBinaryRequest($request);
                 break;
 
             default:
@@ -95,7 +97,14 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         return $jsonData;
     }
 
-    private function fromRequest(
+    private function fromStructuredRequest(
+        ServerRequestInterface $request
+    ): CloudEvent {
+        $jsonData = $this->parseJsonData($request);
+        return CloudEvent::fromArray($jsonData);
+    }
+
+    private function fromBinaryRequest(
         ServerRequestInterface $request
     ): CloudEvent {
         $jsonData = $this->parseJsonData($request);
