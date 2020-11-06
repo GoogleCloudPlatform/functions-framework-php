@@ -66,7 +66,7 @@ class InvokerTest extends TestCase
 
         // Verify the error message response
         $this->assertEquals((string) $response->getBody(), 'This is an error');
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(500, $response->getStatusCode());
         $this->assertTrue(
             $response->hasHeader(FunctionWrapper::FUNCTION_STATUS_HEADER)
         );

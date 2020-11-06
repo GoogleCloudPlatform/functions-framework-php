@@ -27,19 +27,10 @@ use GuzzleHttp\Psr7\ServerRequest;
  */
 class LegacyEventMapperTest extends TestCase
 {
-    public function testInvalidRequestBody()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not parse request body: Syntax error');
-        $request = new ServerRequest('POST', '/', [], 'notjson');
-        $mapper = new LegacyEventMapper();
-        $mapper->fromRequest($request);
-    }
-
     public function testWithContextProperty()
     {
         $mapper = new LegacyEventMapper();
-        $request = new ServerRequest('GET', '/', [], json_encode([
+        $jsonData = [
             'data' => 'foo',
             'context' => [
                 'eventId' => '1413058901901494',
@@ -50,8 +41,8 @@ class LegacyEventMapperTest extends TestCase
                     'service' => 'pubsub.googleapis.com'
                 ],
             ]
-        ]));
-        $cloudevent = $mapper->fromRequest($request);
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -71,7 +62,7 @@ class LegacyEventMapperTest extends TestCase
     public function testWithoutContextProperty()
     {
         $mapper = new LegacyEventMapper();
-        $request = new ServerRequest('GET', '/', [], json_encode([
+        $jsonData = [
             'data' => 'foo',
             'eventId' => '1413058901901494',
             'timestamp' => '2020-12-08T20:03:19.162Z',
@@ -80,8 +71,8 @@ class LegacyEventMapperTest extends TestCase
                 'name' => 'projects/MY-PROJECT/topics/MY-TOPIC',
                 'service' => 'pubsub.googleapis.com'
             ],
-        ]));
-        $cloudevent = $mapper->fromRequest($request);
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -102,14 +93,14 @@ class LegacyEventMapperTest extends TestCase
     public function testResourceAsString()
     {
         $mapper = new LegacyEventMapper();
-        $request = new ServerRequest('GET', '/', [], json_encode([
+        $jsonData = [
             'data' => 'foo',
             'eventId' => '1413058901901494',
             'timestamp' => '2020-12-08T20:03:19.162Z',
             'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
             'resource' => 'projects/MY-PROJECT/topics/MY-TOPIC',
-        ]));
-        $cloudevent = $mapper->fromRequest($request);
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(
@@ -130,7 +121,7 @@ class LegacyEventMapperTest extends TestCase
     public function testCloudStorage()
     {
         $mapper = new LegacyEventMapper();
-        $request = new ServerRequest('GET', '/', [], json_encode([
+        $jsonData = [
             'data' => 'foo',
             'context' => [
                 'eventId' => '1413058901901494',
@@ -141,8 +132,8 @@ class LegacyEventMapperTest extends TestCase
                     'service' => 'storage.googleapis.com'
                 ],
             ]
-        ]));
-        $cloudevent = $mapper->fromRequest($request);
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
 
         $this->assertEquals('1413058901901494', $cloudevent->getId());
         $this->assertEquals(

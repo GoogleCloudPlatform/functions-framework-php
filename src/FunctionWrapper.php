@@ -38,8 +38,6 @@ abstract class FunctionWrapper
         );
 
         $this->function = $function;
-
-        // TODO: validate function signature, if present.
     }
 
     abstract public function execute(

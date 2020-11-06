@@ -71,7 +71,7 @@ class Invoker
             $statusHeader = $this->function instanceof HttpFunctionWrapper
                 ? 'crash'
                 : 'error';
-            return new Response(200, [
+            return new Response(500, [
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
             ], $e->getMessage());
         }
