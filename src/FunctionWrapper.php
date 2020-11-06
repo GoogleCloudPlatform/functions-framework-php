@@ -27,6 +27,8 @@ use ReflectionMethod;
 
 abstract class FunctionWrapper
 {
+    const FUNCTION_STATUS_HEADER = 'X-Google-Status';
+
     protected $function;
 
     public function __construct(callable $function, array $signature = null)
@@ -45,6 +47,8 @@ abstract class FunctionWrapper
     ): ResponseInterface;
 
     abstract protected function getFunctionParameterClassName(): string;
+
+    abstract public function errorStatusHeader(): string;
 
     private function getFunctionReflection(
         callable $function

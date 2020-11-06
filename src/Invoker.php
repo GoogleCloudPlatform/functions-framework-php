@@ -18,6 +18,7 @@
 namespace Google\CloudFunctions;
 
 use InvalidArgumentException;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,6 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Invoker
 {
     private $function;
+    private $errorLogFunc;
 
     /**
      * @param $target callable The callable to be invoked
@@ -44,6 +46,12 @@ class Invoker
             throw new InvalidArgumentException(sprintf(
                 'Invalid signature type: "%s"', $signatureType));
         }
+        $this->errorLogFunc = function (string $error) {
+            fwrite(fopen('php://stderr', 'wb'), json_encode([
+              'message' => $error,
+              'severity' => 'error'
+            ]));
+        };
     }
 
     public function handle(
@@ -53,6 +61,15 @@ class Invoker
             $request = ServerRequest::fromGlobals();
         }
 
-        return $this->function->execute($request);
+        try {
+            return $this->function->execute($request);
+        } catch (\Exception $e) {
+            // Log the full error and stack trace
+            ($this->errorLogFunc)((string) $e);
+            $statusHeader = $this->function->errorStatusHeader();
+            return new Response(200, [
+                FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
+            ], $e->getMessage());
+        }
     }
 }

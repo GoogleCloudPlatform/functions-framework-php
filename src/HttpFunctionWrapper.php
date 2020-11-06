@@ -38,10 +38,19 @@ class HttpFunctionWrapper extends FunctionWrapper
         $response = call_user_func($this->function, $request);
 
         if (is_string($response)) {
-            $response = new Response(200, [], $response);
+            return new Response(200, [], $response);
+        } elseif ($response instanceof ResponseInterface) {
+            return $response;
         }
 
-        return $response;
+        throw new \UnexpectedValueException(
+            'Function response must be string or ' . ResponseInterface::class
+        );
+    }
+
+    public function errorStatusHeader(): string
+    {
+        return 'crash';
     }
 
     protected function getFunctionParameterClassName(): string
