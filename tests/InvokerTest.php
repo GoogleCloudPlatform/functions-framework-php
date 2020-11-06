@@ -65,7 +65,7 @@ class InvokerTest extends TestCase
         $response = $invoker->handle($request);
 
         // Verify the error message response
-        $this->assertEquals((string) $response->getBody(), 'This is an error');
+        $this->assertEquals('', (string) $response->getBody());
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertTrue(
             $response->hasHeader(FunctionWrapper::FUNCTION_STATUS_HEADER)
@@ -103,7 +103,7 @@ class InvokerTest extends TestCase
         throw new \Exception('This is an error');
     }
 
-    public function invokeCloudEventError(CloudEvent $event)
+    public function invokeCloudeventError(CloudEvent $event)
     {
         throw new \Exception('This is an error');
     }
