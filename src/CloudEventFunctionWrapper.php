@@ -41,30 +41,42 @@ class CloudEventFunctionWrapper extends FunctionWrapper
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $body = (string) $request->getBody();
-        $jsonData = json_decode($body, true);
+        $eventType = $this->getEventType($request);
+        // We expect JSON if the content-type ends in "json" or if the event
+        // type is legacy or structured Cloud Event.
+        $shouldValidateJson = in_array($eventType, [
+            self::TYPE_LEGACY,
+            self::TYPE_STRUCTURED
+        ]) || 'json' === substr($request->getHeaderLine('content-type'), -4);
 
-        // Validate JSON, return 400 Bad Request on error
-        if (json_last_error() != JSON_ERROR_NONE) {
-            return new Response(400, [
-                self::FUNCTION_STATUS_HEADER => 'crash'
-            ], sprintf(
-                'Could not parse CloudEvent: %s',
-                '' !== $body ? json_last_error_msg() : 'Missing cloudevent payload'
-            ));
+        if ($shouldValidateJson) {
+            $data = json_decode($body, true);
+
+            // Validate JSON, return 400 Bad Request on error
+            if (json_last_error() != JSON_ERROR_NONE) {
+                return new Response(400, [
+                    self::FUNCTION_STATUS_HEADER => 'crash'
+                ], sprintf(
+                    'Could not parse CloudEvent: %s',
+                    '' !== $body ? json_last_error_msg() : 'Missing cloudevent payload'
+                ));
+            }
+        } else {
+            $data = $body;
         }
 
         switch ($this->getEventType($request)) {
             case self::TYPE_LEGACY:
                 $mapper = new LegacyEventMapper();
-                $cloudevent = $mapper->fromJsonData($jsonData);
+                $cloudevent = $mapper->fromJsonData($data);
                 break;
 
             case self::TYPE_STRUCTURED:
-                $cloudevent = CloudEvent::fromArray($jsonData);
+                $cloudevent = CloudEvent::fromArray($data);
                 break;
 
             case self::TYPE_BINARY:
-                $cloudevent = $this->fromBinaryRequest($request, $jsonData);
+                $cloudevent = $this->fromBinaryRequest($request, $data);
                 break;
 
             default:
@@ -95,7 +107,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     private function fromBinaryRequest(
         ServerRequestInterface $request,
-        $jsonData
+        string $data
     ): CloudEvent {
         $content = [];
 
@@ -105,7 +117,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
                 $content[$key] = $request->getHeaderLine($ceKey);
             }
         }
-        $content['data'] = $jsonData;
+        $content['data'] = $data;
         return CloudEvent::fromArray($content);
     }
 
