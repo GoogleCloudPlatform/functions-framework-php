@@ -43,7 +43,7 @@ class HttpFunctionWrapper extends FunctionWrapper
             return $response;
         }
 
-        throw new \UnexpectedValueException(
+        throw new \LogicException(
             'Function response must be string or ' . ResponseInterface::class
         );
     }
