@@ -73,7 +73,7 @@ class Invoker
                 : 'error';
             return new Response(500, [
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
-            ], $e->getMessage());
+            ]);
         }
     }
 }
