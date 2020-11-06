@@ -110,6 +110,50 @@ curl localhost:8080
 # Output: Hello World from a PHP HTTP function!
 ```
 
+## Run your function on Google Cloud Functions
+
+To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
+
+Additionally, you need to have a Google Cloud project ID for the
+[Google Cloud Project][gcp-project] you want to use.
+
+> **Note:** PHP support on Cloud Functions is currently in limited alpha.
+> It is not yet suitable for production workloads, and support is best-effort
+> only. Access is currently limited to selected early-access users.
+
+Make sure your source file (which defines your function) is called
+`index.php`. The Functions Framework lets you choose a function source file,
+but Cloud Functions currently uses the default of `index.php`.
+
+Decide _which_ function in the source file to invoke, that is, the name that you
+used when writing the function. This is called the **target**.
+
+Choose a Cloud Functions **name** for your function. The **name** identifies
+this function deployment (e.g. in the cloud console) and is also part of the
+function's default URL. (Note: the **name** and the **target** do not have to
+be the same value.)
+
+Then, from the directory containing your function source, issue the gcloud command to deploy:
+
+```sh
+gcloud functions deploy $YOUR_FUNCTION_NAME \
+    --project=$YOUR_PROJECT_ID \
+    --runtime=php74 \
+    --trigger-http \
+    --entry-point=$YOUR_FUNCTION_TARGET
+```
+
+The `--entry-point` flag can be omitted if the **target** has the same value
+as the **name**. Additionally, the `--project` flag can be omitted if you've
+set your default project using `gcloud config set project`.
+
+If your function handles events rather than HTTP requests, you'll need to
+replace `--trigger-http` with a different trigger. For details, see the
+[reference documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
+for `gcloud functions deploy`.
+
+To update your deployment, just redeploy using the same function **name**.
+
 ## Run your function in Cloud Run
 
 To run your function in Cloud Run, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
