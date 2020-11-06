@@ -121,11 +121,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         return CloudEvent::fromArray($content);
     }
 
-    public function errorStatusHeader(): string
-    {
-        return 'error';
-    }
-
     protected function getFunctionParameterClassName(): string
     {
         return CloudEvent::class;

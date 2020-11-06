@@ -48,11 +48,6 @@ class HttpFunctionWrapper extends FunctionWrapper
         );
     }
 
-    public function errorStatusHeader(): string
-    {
-        return 'crash';
-    }
-
     protected function getFunctionParameterClassName(): string
     {
         return ServerRequestInterface::class;

@@ -48,8 +48,6 @@ abstract class FunctionWrapper
 
     abstract protected function getFunctionParameterClassName(): string;
 
-    abstract public function errorStatusHeader(): string;
-
     private function getFunctionReflection(
         callable $function
     ): ReflectionFunctionAbstract {

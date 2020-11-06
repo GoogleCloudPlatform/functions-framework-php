@@ -66,7 +66,11 @@ class Invoker
         } catch (\Exception $e) {
             // Log the full error and stack trace
             ($this->errorLogFunc)((string) $e);
-            $statusHeader = $this->function->errorStatusHeader();
+            // Set "X-Google-Status" to "crash" for Http functions and "error"
+            // for Cloud Events
+            $statusHeader = $this->function instanceof HttpFunctionWrapper
+                ? 'crash'
+                : 'error';
             return new Response(200, [
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
             ], $e->getMessage());
