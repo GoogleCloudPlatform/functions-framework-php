@@ -37,21 +37,65 @@ class CloudEventFunctionWrapperTest extends TestCase
 
     public function testInvalidCloudEventRequestBody()
     {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not parse CloudEvent: Syntax error');
         $headers = ['content-type' => 'application/cloudevents+json'];
         $request = new ServerRequest('POST', '/', $headers, 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
-        $cloudEventFunctionWrapper->execute($request);
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(
+            'Could not parse CloudEvent: Syntax error',
+            (string) $response->getBody()
+        );
+        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
     public function testInvalidLegacyEventRequestBody()
     {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not parse request body: Syntax error');
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
-        $cloudEventFunctionWrapper->execute($request);
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(
+            'Could not parse CloudEvent: Syntax error',
+            (string) $response->getBody()
+        );
+        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
+    }
+
+    public function testNonJsonIsValidInBinaryCloudEventRequestBody()
+    {
+        $request = new ServerRequest('POST', '/', [
+            'ce-id' => 'fooBar',
+            'ce-source' => 'my-source',
+            'ce-specversion' => '1.0',
+            'ce-type' => 'my.type',
+        ], 'notjson');
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            [$this, 'invokeThisPartial']
+        );
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testInvalidJsonBinaryCloudEventRequestBody()
+    {
+        $request = new ServerRequest('POST', '/', [
+            'ce-id' => 'fooBar',
+            'ce-source' => 'my-source',
+            'ce-specversion' => '1.0',
+            'ce-type' => 'my.type',
+            'Content-Type' => 'application/json',
+        ], 'notjson');
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            [$this, 'invokeThisPartial']
+        );
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(
+            'Could not parse CloudEvent: Syntax error',
+            (string) $response->getBody()
+        );
+        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
     public function testNoFunctionParameters()

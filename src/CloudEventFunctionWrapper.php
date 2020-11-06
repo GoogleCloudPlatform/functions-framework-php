@@ -20,8 +20,6 @@ namespace Google\CloudFunctions;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use LogicException;
-use RuntimeException;
 
 class CloudEventFunctionWrapper extends FunctionWrapper
 {
@@ -42,23 +40,49 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
+        $body = (string) $request->getBody();
+        $eventType = $this->getEventType($request);
+        // We expect JSON if the content-type ends in "json" or if the event
+        // type is legacy or structured Cloud Event.
+        $shouldValidateJson = in_array($eventType, [
+            self::TYPE_LEGACY,
+            self::TYPE_STRUCTURED
+        ]) || 'json' === substr($request->getHeaderLine('content-type'), -4);
+
+        if ($shouldValidateJson) {
+            $data = json_decode($body, true);
+
+            // Validate JSON, return 400 Bad Request on error
+            if (json_last_error() != JSON_ERROR_NONE) {
+                return new Response(400, [
+                    self::FUNCTION_STATUS_HEADER => 'crash'
+                ], sprintf(
+                    'Could not parse CloudEvent: %s',
+                    '' !== $body ? json_last_error_msg() : 'Missing cloudevent payload'
+                ));
+            }
+        } else {
+            $data = $body;
+        }
+
         switch ($this->getEventType($request)) {
             case self::TYPE_LEGACY:
                 $mapper = new LegacyEventMapper();
-                $cloudevent = $mapper->fromRequest($request);
+                $cloudevent = $mapper->fromJsonData($data);
                 break;
 
             case self::TYPE_STRUCTURED:
-                $cloudevent = $this->fromStructuredRequest($request);
+                $cloudevent = CloudEvent::fromArray($data);
                 break;
 
             case self::TYPE_BINARY:
-                $cloudevent = $this->fromBinaryRequest($request);
+                $cloudevent = $this->fromBinaryRequest($request, $data);
                 break;
 
             default:
-                throw new LogicException('Invalid event type');
-                break;
+                return new Response(400, [
+                    self::FUNCTION_STATUS_HEADER => 'crash'
+                ], 'invalid event type');
         }
 
         call_user_func($this->function, $cloudevent);
@@ -81,34 +105,10 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         }
     }
 
-    private function parseJsonData(ServerRequestInterface $request)
-    {
-        // Get Body
-        $body = (string) $request->getBody();
-
-        $jsonData = json_decode($body, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new RuntimeException(sprintf(
-                'Could not parse CloudEvent: %s',
-                '' !== $body ? json_last_error_msg() : 'Missing cloudevent payload'
-            ));
-        }
-
-        return $jsonData;
-    }
-
-    private function fromStructuredRequest(
-        ServerRequestInterface $request
-    ): CloudEvent {
-        $jsonData = $this->parseJsonData($request);
-        return CloudEvent::fromArray($jsonData);
-    }
-
     private function fromBinaryRequest(
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
+        string $data
     ): CloudEvent {
-        $jsonData = $this->parseJsonData($request);
-
         $content = [];
 
         foreach (self::$validKeys as $key) {
@@ -117,7 +117,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
                 $content[$key] = $request->getHeaderLine($ceKey);
             }
         }
-        $content['data'] = $jsonData;
+        $content['data'] = $data;
         return CloudEvent::fromArray($content);
     }
 

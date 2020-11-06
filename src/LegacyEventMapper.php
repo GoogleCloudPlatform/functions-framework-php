@@ -17,15 +17,11 @@
 
 namespace Google\CloudFunctions;
 
-use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
-
 class LegacyEventMapper
 {
-    public function fromRequest(
-        ServerRequestInterface $request
-    ): CloudEvent {
-        list($context, $data) = $this->getLegacyEventContextAndData($request);
+    public function fromJsonData(array $jsonData): CloudEvent
+    {
+        list($context, $data) = $this->getLegacyEventContextAndData($jsonData);
 
         $eventType = $context->getEventType();
         $resourceName = $context->getResourceName();
@@ -58,27 +54,8 @@ class LegacyEventMapper
         ]);
     }
 
-    private function parseJsonData(ServerRequestInterface $request)
+    private function getLegacyEventContextAndData(array $jsonData): array
     {
-        // Get Body
-        $body = (string) $request->getBody();
-
-        $jsonData = json_decode($body, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new RuntimeException(sprintf(
-                'Could not parse request body: %s',
-                '' !== $body ? json_last_error_msg() : 'Missing event payload'
-            ));
-        }
-
-        return $jsonData;
-    }
-
-    private function getLegacyEventContextAndData(
-        ServerRequestInterface $request
-    ): array {
-        $jsonData = $this->parseJsonData($request);
-
         $data = $jsonData['data'] ?? null;
 
         if (array_key_exists('context', $jsonData)) {
