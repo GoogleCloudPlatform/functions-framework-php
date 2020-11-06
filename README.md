@@ -118,9 +118,6 @@ on function deployment is available in the
 
 To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
 
-Additionally, you need to have a Google Cloud project ID for the
-[Google Cloud Project][gcp-project] you want to use.
-
 > **Note:** PHP support on Cloud Functions is currently in limited alpha.
 > It is not yet suitable for production workloads, and support is best-effort
 > only. Access is currently limited to selected early-access users.
@@ -143,8 +140,8 @@ Then, from the directory containing your function source, issue the gcloud comma
 gcloud functions deploy $YOUR_FUNCTION_NAME \
     --project=$YOUR_PROJECT_ID \
     --runtime=php74 \
-    --trigger-http \
-    --entry-point=$YOUR_FUNCTION_TARGET
+    --entry-point=$YOUR_FUNCTION_TARGET \
+    --trigger-http
 ```
 
 The `--entry-point` flag can be omitted if the **target** has the same value
@@ -157,6 +154,7 @@ replace `--trigger-http` with a different trigger. For details, see the
 for `gcloud functions deploy`.
 
 To update your deployment, just redeploy using the same function **name**.
+Configuration flags are not required.
 
 ## Run your function in Cloud Run
 
