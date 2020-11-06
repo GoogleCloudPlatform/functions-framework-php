@@ -18,6 +18,7 @@
 namespace Google\CloudFunctions\Tests;
 
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client;
 
 /**
  * Tests for when this package is installed in a vendored directory
@@ -28,6 +29,7 @@ class exampleTest extends TestCase
 {
     private static $containerId;
     private static $imageId;
+    private static $client;
 
     public static function setUpBeforeClass(): void
     {
@@ -38,13 +40,14 @@ class exampleTest extends TestCase
         $exampleDir = __DIR__ . '/../examples/hello';
         self::$imageId = 'test-image-' . time();
 
-        $cmd = 'composer update -d ' . $exampleDir;
-
-        passthru($cmd, $output);
-
         $cmd = sprintf('docker build %s -t %s', $exampleDir, self::$imageId);
 
         passthru($cmd, $output);
+
+        self::$client = new Client([
+            'base_uri' => 'http://localhost:8080',
+            'http_errors' => false,
+        ]);
     }
 
     public function testHttp(): void
@@ -59,11 +62,17 @@ class exampleTest extends TestCase
         // Tests fail if we do not wait before sending requests in
         sleep(1);
 
-        exec('curl -v http://localhost:8080', $output);
-        $this->assertContains('Hello World from PHP HTTP function!', $output);
+        $response = self::$client->get('/');
+        $this->assertEquals(
+            'Hello World from PHP HTTP function!' . PHP_EOL,
+            $response->getBody()->getContents()
+        );
 
-        exec('curl -v http://localhost:8080?name=Foo', $output);
-        $this->assertContains('Hello Foo from PHP HTTP function!', $output);
+        $response = self::$client->get('/?name=Foo');
+        $this->assertEquals(
+            'Hello Foo from PHP HTTP function!' . PHP_EOL,
+            $response->getBody()->getContents()
+        );
 
         passthru('docker rm -f ' . self::$containerId);
         self::$containerId = null;
@@ -82,14 +91,18 @@ class exampleTest extends TestCase
         // Tests fail if we do not wait before sending requests in
         sleep(1);
 
-        $curl = 'curl -v localhost:8080 '
-            . '-H "ce-id: 1234567890" '
-            . ' -H "ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC" '
-            . '-H "ce-specversion: 1.0" '
-            . '-H "ce-type: com.google.cloud.pubsub.topic.publish" '
-            . '-d \'{"foo": "bar"}\' &> /dev/stdout';
+        $response = self::$client->request('POST', '/', [
+            'headers' => [
+                'ce-id' => '1234567890',
+                'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
+                'ce-specversion' => '1.0',
+                'ce-type' => 'com.google.cloud.pubsub.topic.publish',
+            ],
+            'json' => ['foo' => 'bar']
+        ]);
 
-        exec($curl);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('', $response->getBody()->getContents());
 
         exec('docker logs ' . self::$containerId, $output);
 
