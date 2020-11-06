@@ -112,6 +112,10 @@ curl localhost:8080
 
 ## Run your function on Google Cloud Functions
 
+Follow the steps below to deploy to Google Cloud Functions. More information
+on function deployment is available in the
+[GCF documentation](https://cloud.google.com/functions/docs/deploying).
+
 To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
 
 Additionally, you need to have a Google Cloud project ID for the
