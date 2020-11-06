@@ -138,15 +138,13 @@ Then, from the directory containing your function source, issue the gcloud comma
 
 ```sh
 gcloud functions deploy $YOUR_FUNCTION_NAME \
-    --project=$YOUR_PROJECT_ID \
     --runtime=php74 \
     --entry-point=$YOUR_FUNCTION_TARGET \
     --trigger-http
 ```
 
 The `--entry-point` flag can be omitted if the **target** has the same value
-as the **name**. Additionally, the `--project` flag can be omitted if you've
-set your default project using `gcloud config set project`.
+as the **name**.
 
 If your function handles events rather than HTTP requests, you'll need to
 replace `--trigger-http` with a different trigger. For details, see the
