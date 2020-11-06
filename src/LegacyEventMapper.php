@@ -17,11 +17,10 @@
 
 namespace Google\CloudFunctions;
 
-use RuntimeException;
-
 class LegacyEventMapper
 {
-    public function fromJsonData(array $jsonData): CloudEvent {
+    public function fromJsonData(array $jsonData): CloudEvent
+    {
         list($context, $data) = $this->getLegacyEventContextAndData($jsonData);
 
         $eventType = $context->getEventType();
@@ -55,7 +54,8 @@ class LegacyEventMapper
         ]);
     }
 
-    private function getLegacyEventContextAndData(array $jsonData): array {
+    private function getLegacyEventContextAndData(array $jsonData): array
+    {
         $data = $jsonData['data'] ?? null;
 
         if (array_key_exists('context', $jsonData)) {
