@@ -50,7 +50,7 @@ class Invoker
             fwrite(fopen('php://stderr', 'wb'), json_encode([
               'message' => $error,
               'severity' => 'error'
-            ]));
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         };
     }
 
