@@ -40,6 +40,11 @@ class exampleTest extends TestCase
         $exampleDir = __DIR__ . '/../examples/hello';
         self::$imageId = 'test-image-' . time();
 
+        // Remove lockfile to ensure docker deps are up-to-date
+        if (file_exists($lockFile = sprintf('%s/composer.lock', $exampleDir))) {
+            passthru('rm %s', $lockFile);
+        }
+
         $cmd = sprintf('docker build %s -t %s', $exampleDir, self::$imageId);
 
         passthru($cmd, $output);
@@ -97,6 +102,7 @@ class exampleTest extends TestCase
                 'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
                 'ce-specversion' => '1.0',
                 'ce-type' => 'com.google.cloud.pubsub.topic.publish',
+                'content-type' => 'application/json',
             ],
             'json' => ['foo' => 'bar']
         ]);
