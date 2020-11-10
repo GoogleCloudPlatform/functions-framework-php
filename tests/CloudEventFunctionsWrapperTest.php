@@ -98,6 +98,22 @@ class CloudEventFunctionWrapperTest extends TestCase
         $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
+    public function testValidJsonBinaryCloudEventRequestBody()
+    {
+        $request = new ServerRequest('POST', '/', [
+            'ce-id' => 'fooBar',
+            'ce-source' => 'my-source',
+            'ce-specversion' => '1.0',
+            'ce-type' => 'my.type',
+            'Content-Type' => 'application/json',
+        ], '{"this":"isjson"}');
+        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+            [$this, 'invokeThisPartial']
+        );
+        $response = $cloudEventFunctionWrapper->execute($request);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testNoFunctionParameters()
     {
         $this->expectException('LogicException');
