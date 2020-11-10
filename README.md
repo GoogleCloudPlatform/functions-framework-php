@@ -121,6 +121,7 @@ To run your function on Cloud Functions, first you must have the [gcloud SDK][gc
 > **Note:** PHP support on Cloud Functions is currently in limited alpha.
 > It is not yet suitable for production workloads, and support is best-effort
 > only. Access is currently limited to selected early-access users.
+> To request access please fill out [this form][gcf-early-access-form].
 
 Make sure your source file (which defines your function) is called
 `index.php`. The Functions Framework lets you choose a function source file,
@@ -153,6 +154,8 @@ for `gcloud functions deploy`.
 
 To update your deployment, just redeploy using the same function **name**.
 Configuration flags are not required.
+
+[gcf-early-access-form]: https://docs.google.com/forms/d/e/1FAIpQLSc3-nfJEPpFk1XHy5FsQJ6c709bto9uhdgnnTX5VLbOvpq9yw/viewform?usp=sf_link
 
 ## Run your function in Cloud Run
 
