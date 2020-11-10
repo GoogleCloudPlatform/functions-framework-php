@@ -107,7 +107,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     private function fromBinaryRequest(
         ServerRequestInterface $request,
-        string $data
+        $data // mixed, can be "string" or "array"
     ): CloudEvent {
         $content = [];
 
