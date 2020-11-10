@@ -110,6 +110,53 @@ curl localhost:8080
 # Output: Hello World from a PHP HTTP function!
 ```
 
+## Run your function on Google Cloud Functions
+
+Follow the steps below to deploy to Google Cloud Functions. More information
+on function deployment is available in the
+[GCF documentation](https://cloud.google.com/functions/docs/deploying).
+
+To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
+
+> **Note:** PHP support on Cloud Functions is currently in limited alpha.
+> It is not yet suitable for production workloads, and support is best-effort
+> only. Access is currently limited to selected early-access users.
+> To request access please fill out [this form][gcf-early-access-form].
+
+Make sure your source file (which defines your function) is called
+`index.php`. The Functions Framework lets you choose a function source file,
+but Cloud Functions currently uses the default of `index.php`.
+
+Decide _which_ function in the source file to invoke, that is, the name that you
+used when writing the function. This is called the **target**.
+
+Choose a Cloud Functions **name** for your function. The **name** identifies
+this function deployment (e.g. in the cloud console) and is also part of the
+function's default URL. (Note: the **name** and the **target** do not have to
+be the same value.)
+
+Then, from the directory containing your function source, issue the gcloud command to deploy:
+
+```sh
+gcloud functions deploy $YOUR_FUNCTION_NAME \
+    --runtime=php74 \
+    --entry-point=$YOUR_FUNCTION_TARGET \
+    --trigger-http
+```
+
+The `--entry-point` flag can be omitted if the **target** has the same value
+as the **name**.
+
+If your function handles events rather than HTTP requests, you'll need to
+replace `--trigger-http` with a different trigger. For details, see the
+[reference documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
+for `gcloud functions deploy`.
+
+To update your deployment, just redeploy using the same function **name**.
+Configuration flags are not required.
+
+[gcf-early-access-form]: https://docs.google.com/forms/d/e/1FAIpQLSc3-nfJEPpFk1XHy5FsQJ6c709bto9uhdgnnTX5VLbOvpq9yw/viewform?usp=sf_link
+
 ## Run your function in Cloud Run
 
 To run your function in Cloud Run, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
