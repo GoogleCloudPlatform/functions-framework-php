@@ -165,7 +165,7 @@ Additionally, you need to have a Google Cloud project ID for the
 [Google Cloud Project][gcp-project] you want to use.
 
 After completing the steps under **Installation** and **Define your Function**, build the container using the example `Dockerfile`. This Dockerfile is
-built on top of the [App Engine runtime for PHP 7.3][gae-php7], but you can use
+built on top of the [App Engine runtime for PHP 7.4][gae-php7], but you can use
 any container you want as long as your application listens on **Port 8080**.
 
 ```sh
