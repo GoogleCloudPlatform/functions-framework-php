@@ -1,4 +1,4 @@
-FROM gcr.io/gae-runtimes/php73:php73_20191020_7_3_10_RC00
+FROM gcr.io/gae-runtimes/php74:php74_20210216_7_4_15_RC00
 
 WORKDIR /srv/
 
@@ -21,4 +21,4 @@ RUN composer install --no-dev
 COPY . .
 
 # Set a runtime name (required by the base image)
-ENV GAE_RUNTIME php73
+ENV GAE_RUNTIME php74
