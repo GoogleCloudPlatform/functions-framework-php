@@ -27,12 +27,16 @@ class CloudEventFunctionWrapper extends FunctionWrapper
     private const TYPE_BINARY = 2;
     private const TYPE_STRUCTURED = 3;
 
-    private static $validKeys = [
+    // These are CloudEvent context attribute names that map to binary mode
+    // HTTP headers when prefixed with 'ce-'. 'datacontenttype' is notably absent
+    // from this list because the header 'ce-datacontenttype' is not permitted;
+    // that data comes from the 'Content-Type' header instead. For more info see
+    // https://github.com/cloudevents/spec/blob/v1.0.1/http-protocol-binding.md#311-http-content-type
+    private static $binaryModeHeaderAttrs = [
         'id',
         'source',
         'specversion',
         'type',
-        'datacontenttype',
         'dataschema',
         'subject',
         'time'
@@ -111,13 +115,20 @@ class CloudEventFunctionWrapper extends FunctionWrapper
     ): CloudEvent {
         $content = [];
 
-        foreach (self::$validKeys as $key) {
-            $ceKey = 'ce-' . $key;
-            if ($request->hasHeader($ceKey)) {
-                $content[$key] = $request->getHeaderLine($ceKey);
+        foreach (self::$binaryModeHeaderAttrs as $attr) {
+            $ceHeader = 'ce-' . $attr;
+            if ($request->hasHeader($ceHeader)) {
+                $content[$attr] = $request->getHeaderLine($ceHeader);
             }
         }
         $content['data'] = $data;
+
+        // For binary mode events the 'Content-Type' header corresponds to the
+        // 'datacontenttype' attribute. There is no 'ce-datacontenttype' header.
+        if ($request->hasHeader('content-type')) {
+            $content['datacontenttype'] = $request->getHeaderLine('content-type');
+        }
+
         return CloudEvent::fromArray($content);
     }
 
