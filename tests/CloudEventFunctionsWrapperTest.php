@@ -194,10 +194,10 @@ class CloudEventFunctionWrapperTest extends TestCase
             'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             'ce-specversion' => '1.0',
             'ce-type' => 'com.google.cloud.pubsub.topic.publish',
-            'ce-datacontenttype' => 'application/json',
             'ce-dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
             'ce-subject' => 'My Subject',
             'ce-time' => '2020-12-08T20:03:19.162Z',
+            'Content-Type' => 'application/json',
         ], json_encode([
             "message" => [
                 "data" => "SGVsbG8gdGhlcmU=",
@@ -219,10 +219,10 @@ class CloudEventFunctionWrapperTest extends TestCase
             'ce-source' => '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             'ce-specversion' => '1.0',
             'ce-type' => 'com.google.cloud.pubsub.topic.publish',
-            'ce-datacontenttype' => 'application/json',
             'ce-dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
             'ce-subject' => 'My Subject',
             'ce-time' => '2020-12-08T20:03:19.162Z',
+            'Content-Type' => 'application/json',
         ], '123');
         $cloudEventFunctionWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);
