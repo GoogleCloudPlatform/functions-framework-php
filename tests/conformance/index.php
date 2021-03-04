@@ -32,7 +32,8 @@ function httpFunc(ServerRequestInterface $request)
 // problematic. The function below addresses specific known cases of this
 // problem in the conformance test suite by changing the PHP representation
 // of the CloudEvent's data to use types that will encode correctly.
-function fixCloudEventData(CloudEvent $cloudevent): CloudEvent {
+function fixCloudEventData(CloudEvent $cloudevent): CloudEvent
+{
     $data = $cloudevent->getData();
     $dataModified = false;
 
