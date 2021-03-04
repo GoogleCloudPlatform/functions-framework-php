@@ -41,8 +41,8 @@ function fixCloudEventData(CloudEvent $cloudevent): CloudEvent {
     $fields = ['oldValue', 'updateMask'];
     foreach ($fields as $f) {
         if (array_key_exists($f, $data) && empty($data[$f])) {
-          $data[$f] = new stdClass;
-          $dataModified = true;
+            $data[$f] = new stdClass;
+            $dataModified = true;
         }
     }
 
