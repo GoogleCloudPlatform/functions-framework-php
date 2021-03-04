@@ -39,7 +39,7 @@ jobs:
       env:
         FUNCTION_TARGET: 'httpFunc'
         FUNCTION_SIGNATURE_TYPE: 'http'
-        FUNCTION_SOURCE: ${PWD}/tests/conformance/index.php
+        FUNCTION_SOURCE: /home/runner/work/functions-framework-php/functions-framework-php/tests/conformance/index.php
       with:
         functionType: 'http'
         useBuildpacks: false
@@ -50,7 +50,7 @@ jobs:
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
-        FUNCTION_SOURCE: ${PWD}/tests/conformance/index.php
+        FUNCTION_SOURCE: /home/runner/work/functions-framework-php/functions-framework-php/tests/conformance/index.php
       with:
         functionType: 'cloudevent'
         useBuildpacks: false
