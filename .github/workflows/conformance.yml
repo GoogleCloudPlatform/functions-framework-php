@@ -1,0 +1,58 @@
+name: PHP Conformance CI
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [7.2, 7.3, 7.4]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.15'
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+
+    - name: Install Dependencies
+      uses: nick-invision/retry@v1
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: composer install
+
+    - name: Run HTTP conformance tests
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.6
+      env:
+        FUNCTION_TARGET: 'httpFunc'
+        FUNCTION_SIGNATURE_TYPE: 'http'
+        FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
+      with:
+        functionType: 'http'
+        useBuildpacks: false
+        cmd: "'php -S localhost:8080 router.php'"
+
+    - name: Run CloudEvent conformance tests
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.6
+      env:
+        FUNCTION_TARGET: 'cloudEventFunc'
+        FUNCTION_SIGNATURE_TYPE: 'cloudevent'
+        FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
+      with:
+        functionType: 'cloudevent'
+        useBuildpacks: false
+        validateMapping: false
+        cmd: "'php -S localhost:8080 router.php'"

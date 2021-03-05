@@ -18,7 +18,7 @@
 
 namespace Google\CloudFunctions;
 
-class CloudEvent
+class CloudEvent implements \JsonSerializable
 {
     // Required Fields
     private $id;
@@ -118,6 +118,21 @@ class CloudEvent
         }
 
         return new static(...$args);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'source' => $this->source,
+            'specversion' => $this->specversion,
+            'type' => $this->type,
+            'datacontenttype' => $this->datacontenttype,
+            'dataschema' => $this->dataschema,
+            'subject' => $this->subject,
+            'time' => $this->time,
+            'data' => $this->data,
+        ];
     }
 
     public function __toString()
