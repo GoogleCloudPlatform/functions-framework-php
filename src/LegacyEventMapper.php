@@ -67,7 +67,8 @@ class LegacyEventMapper
         'lastSignedInAt' => 'lastSignInTime',
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->ceServiceMap = [
             'providers/cloud.firestore/' => $this->firestoreCEService,
             'providers/google.firebase.analytics/' => $this->firebaseCEService,
