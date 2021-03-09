@@ -29,22 +29,22 @@ class CloudEventTest extends TestCase
     public function testJsonSerialize()
     {
         $event = new CloudEvent(
-          '1413058901901494',
-          '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
-          '1.0',
-          'com.google.cloud.pubsub.topic.publish',
-          'application/json',
-          'type.googleapis.com/google.logging.v2.LogEntry',
-          'My Subject',
-          '2020-12-08T20:03:19.162Z',
-          [
-              "message" => [
-                  "data" => "SGVsbG8gdGhlcmU=",
-                  "messageId" => "1408577928008405",
-                  "publishTime" => "2020-08-06T22:31:14.536Z"
-              ],
-              "subscription" => "projects/MY-PROJECT/subscriptions/MY-SUB"
-          ]
+            '1413058901901494',
+            '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
+            '1.0',
+            'com.google.cloud.pubsub.topic.publish',
+            'application/json',
+            'type.googleapis.com/google.logging.v2.LogEntry',
+            'My Subject',
+            '2020-12-08T20:03:19.162Z',
+            [
+                "message" => [
+                    "data" => "SGVsbG8gdGhlcmU=",
+                    "messageId" => "1408577928008405",
+                    "publishTime" => "2020-08-06T22:31:14.536Z"
+                ],
+                "subscription" => "projects/MY-PROJECT/subscriptions/MY-SUB"
+            ]
         );
 
         $want = '{

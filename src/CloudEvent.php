@@ -18,7 +18,9 @@
 
 namespace Google\CloudFunctions;
 
-class CloudEvent implements \JsonSerializable
+use JsonSerializable;
+
+class CloudEvent implements JsonSerializable
 {
     // Required Fields
     private $id;
