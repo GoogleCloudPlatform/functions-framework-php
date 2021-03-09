@@ -22,7 +22,7 @@ class LegacyEventMapper
     // Maps background/legacy event types to their equivalent CloudEvent types.
     // For more info on event mappings see
     // https://github.com/GoogleCloudPlatform/functions-framework-conformance/blob/master/docs/mapping.md
-    private $ceTypeMap = [
+    private static $ceTypeMap = [
         'google.pubsub.topic.publish' => 'google.cloud.pubsub.topic.v1.messagePublished',
         'providers/cloud.pubsub/eventTypes/topic.publish' => 'google.cloud.pubsub.topic.v1.messagePublished',
         'google.storage.object.finalize' => 'google.cloud.storage.object.v1.finalized',
@@ -44,47 +44,40 @@ class LegacyEventMapper
     ];
 
     // CloudEvent service names.
-    private $firebaseAuthCEService = 'firebaseauth.googleapis.com';
-    private $firebaseCEService = 'firebase.googleapis.com';
-    private $firebaseDBCEService = 'firebasedatabase.googleapis.com';
-    private $firestoreCEService = 'firestore.googleapis.com';
-    private $pubSubCEService = 'pubsub.googleapis.com';
-    private $storageCEService = 'storage.googleapis.com';
+    private const FIREBASE_AUTH_CE_SERVICE = 'firebaseauth.googleapis.com';
+    private const FIREBASE_CE_SERVICE = 'firebase.googleapis.com';
+    private const FIREBASE_DB_CE_SERVICE = 'firebasedatabase.googleapis.com';
+    private const FIRESTORE_CE_SERVICE = 'firestore.googleapis.com';
+    private const PUBSUB_CE_SERVICE = 'pubsub.googleapis.com';
+    private const STORAGE_CE_SERVICE = 'storage.googleapis.com';
 
     // Maps background event services to their equivalent CloudEvent services.
-    private $ceServiceMap;
+    private static $ceServiceMap = [
+        'providers/cloud.firestore/' => self::FIRESTORE_CE_SERVICE,
+        'providers/google.firebase.analytics/' => self::FIREBASE_CE_SERVICE,
+        'providers/firebase.auth/' => self::FIREBASE_AUTH_CE_SERVICE,
+        'providers/google.firebase.database/' => self::FIREBASE_DB_CE_SERVICE,
+        'providers/cloud.pubsub/' => self::PUBSUB_CE_SERVICE,
+        'providers/cloud.storage/' => self::STORAGE_CE_SERVICE,
+    ];
 
     // Maps CloudEvent service strings to regular expressions used to split a background
     // event resource string into CloudEvent resource and subject strings. Each regex
     // must have exactly two capture groups: the first for the resource and the second
     // for the subject.
-    private $ceResourceRegexMap;
+    private static $ceResourceRegexMap = [
+        self::FIREBASE_CE_SERVICE => '#^(projects/[^/]+)/(events/[^/]+)$#',
+        self::FIREBASE_DB_CE_SERVICE => '#^(projects/_/instances/[^/]+)/(refs/.+)$#',
+        self::FIRESTORE_CE_SERVICE => '#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#',
+        self::STORAGE_CE_SERVICE => '#^(projects/_/buckets/[^/]+)/(objects/.+)$#',
+    ];
 
     // Maps Firebase Auth background event metadata field names to their equivalent
     // CloudEvent field names.
-    private $firebaseAuthMetadataFieldMap = [
+    private static $firebaseAuthMetadataFieldMap = [
         'createdAt' => 'createTime',
         'lastSignedInAt' => 'lastSignInTime',
     ];
-
-    public function __construct()
-    {
-        $this->ceServiceMap = [
-            'providers/cloud.firestore/' => $this->firestoreCEService,
-            'providers/google.firebase.analytics/' => $this->firebaseCEService,
-            'providers/firebase.auth/' => $this->firebaseAuthCEService,
-            'providers/google.firebase.database/' => $this->firebaseDBCEService,
-            'providers/cloud.pubsub/' => $this->pubSubCEService,
-            'providers/cloud.storage/' => $this->storageCEService,
-        ];
-
-        $this->ceResourceRegexMap = [
-            $this->firebaseCEService => '#^(projects/[^/]+)/(events/[^/]+)$#',
-            $this->firebaseDBCEService => '#^(projects/_/instances/[^/]+)/(refs/.+)$#',
-            $this->firestoreCEService => '#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#',
-            $this->storageCEService => '#^(projects/_/buckets/[^/]+)/(objects/.+)$#',
-        ];
-    }
 
     public function fromJsonData(array $jsonData): CloudEvent
     {
@@ -109,14 +102,14 @@ class LegacyEventMapper
         $ceTime = $context->getTimestamp();
 
         // Handle Pub/Sub events.
-        if ($ceService === $this->pubSubCEService) {
+        if ($ceService === self::PUBSUB_CE_SERVICE) {
             $data = ['message' => $data];
         }
 
         // Handle Firebase Auth events.
-        if ($ceService === $this->firebaseAuthCEService) {
+        if ($ceService === self::FIREBASE_AUTH_CE_SERVICE) {
             if (array_key_exists('metadata', $data)) {
-                foreach ($this->firebaseAuthMetadataFieldMap as $old => $new) {
+                foreach (self::$firebaseAuthMetadataFieldMap as $old => $new) {
                     if (array_key_exists($old, $data['metadata'])) {
                         $data['metadata'][$new] = $data['metadata'][$old];
                         unset($data['metadata'][$old]);
@@ -160,8 +153,8 @@ class LegacyEventMapper
 
     private function ceType(string $eventType): string
     {
-        if (isset($this->ceTypeMap[$eventType])) {
-            return $this->ceTypeMap[$eventType];
+        if (isset(self::$ceTypeMap[$eventType])) {
+            return self::$ceTypeMap[$eventType];
         }
 
         // Default to the legacy event type if no mapping is found.
@@ -170,7 +163,7 @@ class LegacyEventMapper
 
     private function ceService(string $eventType): string
     {
-        foreach ($this->ceServiceMap as $prefix => $ceService) {
+        foreach (self::$ceServiceMap as $prefix => $ceService) {
             if (0 === strpos($eventType, $prefix)) {
                 return $ceService;
             }
@@ -182,11 +175,11 @@ class LegacyEventMapper
 
     private function ceResourceAndSubject(string $ceService, string $resource): array
     {
-        if (!array_key_exists($ceService, $this->ceResourceRegexMap)) {
+        if (!array_key_exists($ceService, self::$ceResourceRegexMap)) {
             return [$resource, null];
         }
 
-        $ret = preg_match($this->ceResourceRegexMap[$ceService], $resource, $matches);
+        $ret = preg_match(self::$ceResourceRegexMap[$ceService], $resource, $matches);
         if ($ret === 0) {
             throw new \RuntimeException('Resource regex did not match');
         } elseif ($ret === false) {
