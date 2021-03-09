@@ -56,6 +56,9 @@ class LegacyEventMapperTest extends TestCase
         $this->assertEquals('application/json', $cloudevent->getDataContentType());
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
+
+        // Verify Pub/Sub-specific data transformation.
+        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testWithoutContextProperty()
@@ -87,6 +90,9 @@ class LegacyEventMapperTest extends TestCase
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+
+        // Verify Pub/Sub-specific data transformation.
+        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testResourceAsString()
@@ -115,6 +121,9 @@ class LegacyEventMapperTest extends TestCase
         $this->assertEquals(null, $cloudevent->getDataSchema());
         $this->assertEquals(null, $cloudevent->getSubject());
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+
+        // Verify Pub/Sub-specific data transformation.
+        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testCloudStorage()
@@ -151,5 +160,54 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getSubject()
         );
         $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertEquals('foo', $cloudevent->getData());
+    }
+
+    public function testFirebaseAuth()
+    {
+        $mapper = new LegacyEventMapper();
+        $jsonData = [
+            'data' => [
+            'email' => 'test@nowhere.com',
+            'metadata' => [
+              'createdAt' => '2020-05-26T10:42:27Z',
+              'lastSignedInAt' => '2020-10-24T11:00:00Z'
+            ],
+            'providerData' => [
+              [
+                'email' => 'test@nowhere.com',
+                'providerId' => 'password',
+                'uid' => 'test@nowhere.com',
+              ],
+            ],
+            'uid' => 'UUpby3s4spZre6kHsgVSPetzQ8l2'
+          ],
+          'eventId' => 'aaaaaa-1111-bbbb-2222-cccccccccccc',
+          'eventType' => 'providers/firebase.auth/eventTypes/user.create',
+          'notSupported' => new \stdClass,
+          'resource' => 'projects/my-project-id',
+          'timestamp' => '2020-09-29T11:32:00.000Z',
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
+
+        $this->assertEquals('aaaaaa-1111-bbbb-2222-cccccccccccc', $cloudevent->getId());
+        $this->assertEquals(
+            '//firebaseauth.googleapis.com/projects/my-project-id',
+            $cloudevent->getSource()
+        );
+        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
+        $this->assertEquals(
+            'google.firebase.auth.user.v1.created',
+            $cloudevent->getType()
+        );
+        $this->assertEquals('application/json', $cloudevent->getDataContentType());
+        $this->assertEquals(null, $cloudevent->getDataSchema());
+        $this->assertEquals(
+            'users/UUpby3s4spZre6kHsgVSPetzQ8l2',
+            $cloudevent->getSubject()
+        );
+        $this->assertEquals('2020-09-29T11:32:00.000Z', $cloudevent->getTime());
+        $this->assertEquals('2020-05-26T10:42:27Z', $cloudevent->getData()['metadata']['createTime']);
+        $this->assertEquals('2020-10-24T11:00:00Z', $cloudevent->getData()['metadata']['lastSignInTime']);
     }
 }
