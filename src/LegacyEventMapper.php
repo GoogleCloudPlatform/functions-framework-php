@@ -95,19 +95,15 @@ class LegacyEventMapper
         $ceService = $context->getService() ?: $this->ceService($eventType);
 
         // Split the background event resource into a CloudEvent resource and subject.
-        $resourceAndSubject = $this->ceResourceAndSubject($ceService, $resourceName);
-        $ceResource = $resourceAndSubject[0];
-        $ceSubject = $resourceAndSubject[1];
+        list($ceResource, $ceSubject) = $this->ceResourceAndSubject($ceService, $resourceName);
 
         $ceTime = $context->getTimestamp();
 
-        // Handle Pub/Sub events.
         if ($ceService === self::PUBSUB_CE_SERVICE) {
+            // Handle Pub/Sub events.
             $data = ['message' => $data];
-        }
-
-        // Handle Firebase Auth events.
-        if ($ceService === self::FIREBASE_AUTH_CE_SERVICE) {
+        } elseif ($ceService === self::FIREBASE_AUTH_CE_SERVICE) {
+            // Handle Firebase Auth events.
             if (array_key_exists('metadata', $data)) {
                 foreach (self::$firebaseAuthMetadataFieldMap as $old => $new) {
                     if (array_key_exists($old, $data['metadata'])) {
@@ -180,10 +176,10 @@ class LegacyEventMapper
         }
 
         $ret = preg_match(self::$ceResourceRegexMap[$ceService], $resource, $matches);
-        if ($ret === 0) {
-            throw new \RuntimeException('Resource regex did not match');
-        } elseif ($ret === false) {
-            throw new \RuntimeException('Failed while matching resource regex');
+        if (!$ret) {
+            throw new \RuntimeException(
+                $ret === 0 ? 'Resource regex did not match' : 'Failed while matching resource regex'
+            );
         }
 
         return [$matches[1], $matches[2]];
