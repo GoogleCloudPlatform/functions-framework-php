@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         php-version: [7.2, 7.3, 7.4]
+    name: PHP ${{ matrix.php-version }} Conformance Test
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
