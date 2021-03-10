@@ -67,7 +67,6 @@ class vendorTest extends TestCase
     public function testRelativeFunctionSource()
     {
         copy(__DIR__ . '/fixtures/relative.php', self::$tmpDir . '/relative.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=relative.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
@@ -83,7 +82,6 @@ class vendorTest extends TestCase
     public function testAbsoluteFunctionSource()
     {
         copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=%s/absolute.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
@@ -100,7 +98,6 @@ class vendorTest extends TestCase
     public function testGcsIsNotRegistered()
     {
         copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=%s/gcs.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
@@ -122,7 +119,6 @@ class vendorTest extends TestCase
         passthru('composer require google/cloud-storage');
 
         copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=%s/gcs.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
