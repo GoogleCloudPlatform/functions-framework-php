@@ -318,6 +318,31 @@ with the request and response objects.
 
 [psr7]: https://www.php-fig.org/psr/psr-7/
 
+## Use Google Cloud Storage
+
+When you require the `google/cloud-storage` package with composer, the functions
+framework will register the `gs://` stream wrapper. This enables your function
+to read and write to Google Cloud Storage as you would any filesystem:
+
+```php
+// Get the contents of an object in GCS
+$object = file_get_contents('gs://{YOUR_BUCKET_NAME}/object.txt');
+// Make modifications
+$object .= "\nadd a line";
+// Write the new contents back to GCS
+file_put_contents('gs://{YOUR_BUCKET_NAME}/object.txt', $object);
+```
+
+You can unregister this at any time by using
+[`stream_wrapper_unregister`][stream_wrapper_unregister]:
+
+```php
+// unregister the automatically registered one
+stream_wrapper_unregister('gs');
+```
+
+[stream_wrapper_unregister]: https://www.php.net/manual/en/function.stream-wrapper-unregister.php
+
 ## Run your function on Knative
 
 Cloud Run and Cloud Run on GKE both implement the
