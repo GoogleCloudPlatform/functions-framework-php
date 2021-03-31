@@ -19,6 +19,9 @@ use Google\CloudFunctions\Emitter;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\ProjectContext;
 
+// ProjectContext finds the autoload file, so we must manually include it first
+require_once __DIR__ . '/src/ProjectContext.php';
+
 $projectContext = new ProjectContext();
 
 if ($autoloadFile = $projectContext->locateAutoloadFile()) {
