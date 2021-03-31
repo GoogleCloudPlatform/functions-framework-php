@@ -35,7 +35,8 @@ class vendorTest extends TestCase
             self::markTestSkipped('Explicitly skipping the example tests');
         }
 
-        mkdir($tmpDir = sys_get_temp_dir() . '/ff-php-test-' . rand());
+        $tmpDir = sprintf('%s/ff-php-test-%s', sys_get_temp_dir(), rand());
+        mkdir($tmpDir);
         chdir($tmpDir);
         echo "Running tests in $tmpDir\n";
 
