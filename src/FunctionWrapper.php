@@ -69,8 +69,10 @@ abstract class FunctionWrapper
         ReflectionFunctionAbstract $reflection
     ) {
         $parameters = $reflection->getParameters();
+        $parametersCount = count($parameters);
+
         // Check there is at least one parameter
-        if (count($parameters) < 1) {
+        if ($parametersCount === 0) {
             $this->throwInvalidFunctionException();
         }
         // Check the first parameter has the proper typehint
@@ -80,8 +82,8 @@ abstract class FunctionWrapper
             $this->throwInvalidFunctionException();
         }
 
-        if (count($parameters) > 1) {
-            for ($i = 1; $i < count($parameters); $i++) {
+        if ($parametersCount > 1) {
+            for ($i = 1; $i < $parametersCount; $i++) {
                 if (!$parameters[$i]->isOptional()) {
                     throw new LogicException(
                         'If your function accepts more than one parameter the '
