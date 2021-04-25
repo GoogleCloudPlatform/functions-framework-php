@@ -29,8 +29,8 @@ class Invoker
     private $errorLogFunc;
 
     /**
-     * @param $target callable The callable to be invoked
-     * @param $signatureType The signature type of the target callable, either
+     * @param callable $target The callable to be invoked
+     * @param string $signatureType The signature type of the target callable, either
      *                       "event" or "http".
      */
     public function __construct(callable $target, string $signatureType)
