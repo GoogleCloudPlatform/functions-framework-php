@@ -290,6 +290,7 @@ and headers.
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 
 function helloHttp(ServerRequestInterface $request): ResponseInterface
 {
@@ -297,7 +298,7 @@ function helloHttp(ServerRequestInterface $request): ResponseInterface
         $request->getQueryParams()['name'] ?? 'World');
 
     return (new Response())
-        ->withBody(GuzzleHttp\Psr7\stream_for($body))
+        ->withBody(Utils::streamFor($body))
         ->withStatus(418) // I'm a teapot
         ->withHeader('Foo', 'Bar');
 }
