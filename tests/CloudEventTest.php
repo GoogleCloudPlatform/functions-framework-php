@@ -66,6 +66,6 @@ class CloudEventTest extends TestCase
     }
 }';
 
-        $this->assertEquals(json_encode($event, JSON_PRETTY_PRINT), $want);
+        $this->assertSame(json_encode($event, JSON_PRETTY_PRINT), $want);
     }
 }

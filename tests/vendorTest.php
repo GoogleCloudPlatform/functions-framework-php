@@ -60,7 +60,7 @@ class vendorTest extends TestCase
         );
         exec($cmd, $output);
 
-        $this->assertEquals(['Hello Default!'], $output);
+        $this->assertSame(['Hello Default!'], $output);
     }
 
     public function testRelativeFunctionSource()
@@ -76,7 +76,7 @@ class vendorTest extends TestCase
         );
         exec($cmd, $output);
 
-        $this->assertEquals(['Hello Relative!'], $output);
+        $this->assertSame(['Hello Relative!'], $output);
     }
 
     public function testAbsoluteFunctionSource()
@@ -93,6 +93,6 @@ class vendorTest extends TestCase
         );
         exec($cmd, $output);
 
-        $this->assertEquals(['Hello Absolute!'], $output);
+        $this->assertSame(['Hello Absolute!'], $output);
     }
 }
