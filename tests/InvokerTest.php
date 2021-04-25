@@ -41,7 +41,7 @@ class InvokerTest extends TestCase
     {
         $invoker = new Invoker([$this, 'invokeThis'], 'http');
         $response = $invoker->handle();
-        $this->assertEquals((string) $response->getBody(), 'Invoked!');
+        $this->assertEquals('Invoked!', (string) $response->getBody());
     }
 
     /**

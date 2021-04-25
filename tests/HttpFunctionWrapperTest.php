@@ -103,7 +103,7 @@ class HttpFunctionWrapperTest extends TestCase
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('GET', '/');
         $response = $httpFunctionWrapper->execute($request);
-        $this->assertEquals((string) $response->getBody(), 'Invoked!');
+        $this->assertEquals('Invoked!', (string) $response->getBody());
     }
 
     public function testHttpErrorPaths()
@@ -111,11 +111,11 @@ class HttpFunctionWrapperTest extends TestCase
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('GET', '/robots.txt');
         $response = $httpFunctionWrapper->execute($request);
-        $this->assertEquals($response->getStatusCode(), 404);
+        $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('', (string) $response->getBody());
         $request = new ServerRequest('GET', '/favicon.ico');
         $response = $httpFunctionWrapper->execute($request);
-        $this->assertEquals($response->getStatusCode(), 404);
+        $this->assertEquals(404, $response->getStatusCode());
         $this->assertEquals('', (string) $response->getBody());
     }
 
