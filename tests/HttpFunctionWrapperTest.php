@@ -112,11 +112,11 @@ class HttpFunctionWrapperTest extends TestCase
         $request = new ServerRequest('GET', '/robots.txt');
         $response = $httpFunctionWrapper->execute($request);
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('', (string) $response->getBody());
+        $this->assertEmpty((string) $response->getBody());
         $request = new ServerRequest('GET', '/favicon.ico');
         $response = $httpFunctionWrapper->execute($request);
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('', (string) $response->getBody());
+        $this->assertEmpty((string) $response->getBody());
     }
 
     public function invokeThis(ServerRequestInterface $request)

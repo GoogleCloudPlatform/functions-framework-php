@@ -108,7 +108,7 @@ class exampleTest extends TestCase
         ]);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('', $response->getBody()->getContents());
+        $this->assertEmpty($response->getBody()->getContents());
 
         exec('docker logs ' . self::$containerId, $output);
 
