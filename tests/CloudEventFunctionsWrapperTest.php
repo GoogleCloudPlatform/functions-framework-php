@@ -304,8 +304,8 @@ class CloudEventFunctionWrapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
-        $this->assertSame(null, $cloudevent->getSubject());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 

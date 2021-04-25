@@ -54,8 +54,8 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
-        $this->assertSame(null, $cloudevent->getSubject());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
 
         // Verify Pub/Sub-specific data transformation.
         $this->assertSame(['message' => 'foo'], $cloudevent->getData());
@@ -87,8 +87,8 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
-        $this->assertSame(null, $cloudevent->getSubject());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
@@ -118,8 +118,8 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
-        $this->assertSame(null, $cloudevent->getSubject());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
@@ -154,7 +154,7 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getDataSchema());
         $this->assertSame(
             'objects/MyFile#1588778055917163',
             $cloudevent->getSubject()
@@ -201,7 +201,7 @@ class LegacyEventMapperTest extends TestCase
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
-        $this->assertSame(null, $cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getDataSchema());
         $this->assertSame(
             'users/UUpby3s4spZre6kHsgVSPetzQ8l2',
             $cloudevent->getSubject()

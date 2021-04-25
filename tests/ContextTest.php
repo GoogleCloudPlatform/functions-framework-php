@@ -47,11 +47,11 @@ class ContextTest extends TestCase
     public function testFromEmptyArray()
     {
         $context = Context::fromArray([]);
-        $this->assertSame(null, $context->getEventId());
-        $this->assertSame(null, $context->getTimestamp());
-        $this->assertSame(null, $context->getEventType());
-        $this->assertSame(null, $context->getResource());
-        $this->assertSame(null, $context->getResourceName());
-        $this->assertSame(null, $context->getService());
+        $this->assertNull($context->getEventId());
+        $this->assertNull($context->getTimestamp());
+        $this->assertNull($context->getEventType());
+        $this->assertNull($context->getResource());
+        $this->assertNull($context->getResourceName());
+        $this->assertNull($context->getService());
     }
 }
