@@ -33,7 +33,7 @@ class ProjectContext
             return $vendored;
         }
 
-        if (file_exists($cloned = __DIR__ . '/vendor/autoload.php')) {
+        if (file_exists($cloned = __DIR__ . '/../vendor/autoload.php')) {
             // when running from git clone.
             return $cloned;
         }
