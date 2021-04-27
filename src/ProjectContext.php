@@ -77,12 +77,14 @@ class ProjectContext
         return null;
     }
 
+    /**
+     * Register the "gs://" stream wrapper for Cloud Storage if the package
+     * "google/cloud-storage" is installed and the "gs" protocol has not been
+     * registered.
+     */
     public function registerCloudStorageStreamWrapperIfPossible()
     {
         if (class_exists(StreamWrapper::class)) {
-            // Register the "gs://" stream wrapper for Cloud Storage if the package
-            // "google/cloud-storage" is installed and the "gs" protocol has not been
-            // registered.
             if (!in_array('gs', stream_get_wrappers())) {
                 // Create a default GCS client and register the stream wrapper
                 $storage = new StorageClient();
