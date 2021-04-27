@@ -17,7 +17,6 @@
 
 namespace Google\CloudFunctions;
 
-use Google\Cloud\Storage\StorageClient;
 use RuntimeException;
 
 /**
