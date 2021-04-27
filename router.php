@@ -17,43 +17,23 @@
 
 use Google\CloudFunctions\Emitter;
 use Google\CloudFunctions\Invoker;
+use Google\CloudFunctions\ProjectContext;
 
-/**
- * Determine the autoload file to load.
- */
-if (file_exists(__DIR__ . '/../../autoload.php')) {
-    // when running from vendor/google/cloud-functions-framework
-    require_once __DIR__ . '/../../autoload.php';
-} elseif (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    // when running from git clone.
-    require_once __DIR__ . '/vendor/autoload.php';
+// ProjectContext finds the autoload file, so we must manually include it first
+require_once __DIR__ . '/src/ProjectContext.php';
+
+$projectContext = new ProjectContext();
+
+if ($autoloadFile = $projectContext->locateAutoloadFile()) {
+    require_once $autoloadFile;
 }
 
 /**
  * Determine the function source file to load
  */
-// Ensure function source is loaded relative to the application root directory
-$documentRoot = __DIR__ . '/../../../';
-if ($functionSource = getenv('FUNCTION_SOURCE', true)) {
-    if (0 !== strpos($functionSource, '/')) {
-        // Make the path relative
-        $relativeSource = $documentRoot . $functionSource;
-        if (!file_exists($relativeSource)) {
-            throw new RuntimeException(sprintf(
-                'Unable to load function from "%s"',
-                getenv('FUNCTION_SOURCE', true)
-            ));
-        }
-        require_once $relativeSource;
-    } else {
-        require_once $functionSource;
-    }
-} elseif (file_exists($defaultSource = $documentRoot . 'index.php')) {
-    // When running from vendor/google/cloud-functions-framework, default to
-    // "index.php" in the root of the application.
-    require_once $defaultSource;
-} else {
-    // Do nothing - assume the function source is being autoloaded.
+$functionSourceEnv = getenv('FUNCTION_SOURCE', true);
+if ($source = $projectContext->locateFunctionSource($functionSourceEnv)) {
+    require_once $source;
 }
 
 /**
