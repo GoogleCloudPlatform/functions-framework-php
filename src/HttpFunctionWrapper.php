@@ -30,13 +30,7 @@ class HttpFunctionWrapper extends FunctionWrapper
 
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
-        $path = $request->getUri()->getPath();
-        if ($path == '/robots.txt' || $path == '/favicon.ico') {
-            return new Response(404);
-        }
-
         $response = call_user_func($this->function, $request);
-
         if (is_string($response)) {
             return new Response(200, [], $response);
         } elseif ($response instanceof ResponseInterface) {
