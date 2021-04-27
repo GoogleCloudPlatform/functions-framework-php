@@ -112,6 +112,9 @@ class ProjectContextTest extends TestCase
         $this->assertContains('gs', $wrappers);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testGcsStreamWrapperNotRegisteredWhenGsAlreadyRegistered()
     {
         $this->getMockBuilder(StorageClient::class)->getMock();
@@ -130,8 +133,10 @@ class ProjectContextTest extends TestCase
     }
 }
 
-class StreamWrapperMock {
-    static function register() {
+class StreamWrapperMock
+{
+    public static function register()
+    {
         stream_wrapper_register('gs', __CLASS__);
     }
 }
