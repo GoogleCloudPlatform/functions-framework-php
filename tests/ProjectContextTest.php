@@ -60,7 +60,7 @@ class ProjectContextTest extends TestCase
         $reflection = new ReflectionClass($context);
         $docRoot = $reflection->getProperty('documentRoot');
         $docRoot->setAccessible(true);
-        $docRoot->setValue($context, __DIR__  . '/../');
+        $docRoot->setValue($context, __DIR__ . '/../');
 
         $suppliedSource = 'tests/ProjectContextTest.php';
         $source = $context->locateFunctionSource($suppliedSource);
