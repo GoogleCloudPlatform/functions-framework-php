@@ -36,16 +36,10 @@ if ($source = $projectContext->locateFunctionSource($functionSourceEnv)) {
     require_once $source;
 }
 
-if (class_exists(Google\Cloud\Storage\StreamWrapper::class)) {
-    // Register the "gs://" stream wrapper for Cloud Storage if the package
-    // "google/cloud-storage" is installed and the "gs" protocol has not been
-    // registered.
-    if (!in_array('gs', stream_get_wrappers())) {
-        // Create a default GCS client and register the stream wrapper
-        $storage = new Google\Cloud\Storage\StorageClient;
-        Google\Cloud\Storage\StreamWrapper::register($storage);
-    }
-}
+// Register the "gs://" stream wrapper for Cloud Storage if the package
+// "google/cloud-storage" is installed and the "gs" protocol has not been
+// registered
+$projectContext->registerCloudStorageStreamWrapperIfPossible();
 
 /**
  * Invoke the function based on the function type.
