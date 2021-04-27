@@ -21,8 +21,13 @@ use Google\Cloud\Storage\StreamWrapper;
 use Google\Cloud\Storage\StorageClient;
 use RuntimeException;
 
+/**
+ * @internal
+ */
 class ProjectContext
 {
+    private $documentRoot = __DIR__ . '/../../../../';
+
     public function locateAutoloadFile(): ?string
     {
         /**
@@ -44,12 +49,10 @@ class ProjectContext
     public function locateFunctionSource(?string $functionSource): ?string
     {
         // Ensure function source is loaded relative to the application root
-        $documentRoot = __DIR__ . '/../../../../';
-
         if ($functionSource) {
             if (0 !== strpos($functionSource, '/')) {
                 // Make the path absolute
-                $absoluteSource = $documentRoot . $functionSource;
+                $absoluteSource = $this->documentRoot . $functionSource;
             } else {
                 $absoluteSource = $functionSource;
             }
@@ -64,7 +67,7 @@ class ProjectContext
             return $absoluteSource;
         }
 
-        if (file_exists($defaultSource = $documentRoot . 'index.php')) {
+        if (file_exists($defaultSource = $this->documentRoot . 'index.php')) {
             // When running from vendor/google/cloud-functions-framework, default to
             // "index.php" in the root of the application.
             return $defaultSource;
@@ -72,19 +75,5 @@ class ProjectContext
 
         // No function source found. Assume the function source is autoloaded.
         return null;
-    }
-
-    public function registerCloudStorageStreamWrapperIfPossible()
-    {
-        if (class_exists(StreamWrapper::class)) {
-            // Register the "gs://" stream wrapper for Cloud Storage if the package
-            // "google/cloud-storage" is installed and the "gs" protocol has not been
-            // registered.
-            if (!in_array('gs', stream_get_wrappers())) {
-                // Create a default GCS client and register the stream wrapper
-                $storage = new StorageClient();
-                StreamWrapper::register($storage);
-            }
-        }
     }
 }
