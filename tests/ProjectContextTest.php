@@ -18,6 +18,8 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use Google\Cloud\Storage\StreamWrapper;
+use Google\Cloud\Storage\StorageClient;
 use Google\CloudFunctions\ProjectContext;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -78,5 +80,63 @@ class ProjectContextTest extends TestCase
 
         $context = new ProjectContext();
         $context->locateFunctionSource('nonexistant.php');
+    }
+
+    public function testGcsStreamWrapperNotRegisteredByDefault()
+    {
+        $context = new ProjectContext();
+        $defaultWrappers = stream_get_wrappers();
+
+        $context->registerCloudStorageStreamWrapperIfPossible();
+        $wrappers = stream_get_wrappers();
+
+        $this->assertSame($defaultWrappers, $wrappers);
+        $this->assertNotContains('gs', $wrappers);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testGcsStreamWrapperRegisteredWhenClassExists()
+    {
+        $this->getMockBuilder(StorageClient::class)->getMock();
+        class_alias(StreamWrapperMock::class, StreamWrapper::class);
+
+        $context = new ProjectContext();
+        $defaultWrappers = stream_get_wrappers();
+
+        $context->registerCloudStorageStreamWrapperIfPossible();
+        $wrappers = stream_get_wrappers();
+
+        $this->assertNotContains('gs', $defaultWrappers);
+        $this->assertContains('gs', $wrappers);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testGcsStreamWrapperNotRegisteredWhenGsAlreadyRegistered()
+    {
+        $this->getMockBuilder(StorageClient::class)->getMock();
+
+        $context = new ProjectContext();
+        $defaultWrappers = stream_get_wrappers();
+
+        stream_wrapper_register('gs', __CLASS__);
+        // This would throw an error if it tried to register GCS because
+        // StreamWrapper does not exist
+        $context->registerCloudStorageStreamWrapperIfPossible();
+        $wrappers = stream_get_wrappers();
+
+        $this->assertNotContains('gs', $defaultWrappers);
+        $this->assertContains('gs', $wrappers);
+    }
+}
+
+class StreamWrapperMock
+{
+    public static function register()
+    {
+        stream_wrapper_register('gs', __CLASS__);
     }
 }

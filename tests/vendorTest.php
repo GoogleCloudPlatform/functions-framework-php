@@ -35,8 +35,10 @@ class vendorTest extends TestCase
             self::markTestSkipped('Explicitly skipping the example tests');
         }
 
-        mkdir($tmpDir = sys_get_temp_dir() . '/ff-php-test-' . rand());
+        $tmpDir = sprintf('%s/ff-php-test-%s', sys_get_temp_dir(), rand());
+        mkdir($tmpDir);
         chdir($tmpDir);
+        echo "Running tests in $tmpDir\n";
 
         // Copy Fixtures
         file_put_contents('composer.json', sprintf(
@@ -66,7 +68,6 @@ class vendorTest extends TestCase
     public function testRelativeFunctionSource()
     {
         copy(__DIR__ . '/fixtures/relative.php', self::$tmpDir . '/relative.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=relative.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
@@ -82,7 +83,6 @@ class vendorTest extends TestCase
     public function testAbsoluteFunctionSource()
     {
         copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
-        putenv('FUNCTION_SOURCE=');
         $cmd = sprintf(
             'FUNCTION_SOURCE=%s/absolute.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
@@ -94,5 +94,42 @@ class vendorTest extends TestCase
         exec($cmd, $output);
 
         $this->assertSame(['Hello Absolute!'], $output);
+    }
+
+    public function testGcsIsNotRegistered()
+    {
+        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=%s/gcs.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/bin/router.php',
+            self::$tmpDir,
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertEquals(['GCS Stream Wrapper is not registered'], $output);
+    }
+
+    /**
+     * @depends testGcsIsNotRegistered
+     */
+    public function testGcsIsRegistered()
+    {
+        passthru('composer require google/cloud-storage');
+
+        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=%s/gcs.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/bin/router.php',
+            self::$tmpDir,
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertEquals(['GCS Stream Wrapper is registered'], $output);
     }
 }

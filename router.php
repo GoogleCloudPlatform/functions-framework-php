@@ -36,6 +36,11 @@ if ($source = $projectContext->locateFunctionSource($functionSourceEnv)) {
     require_once $source;
 }
 
+// Register the "gs://" stream wrapper for Cloud Storage if the package
+// "google/cloud-storage" is installed and the "gs" protocol has not been
+// registered
+$projectContext->registerCloudStorageStreamWrapperIfPossible();
+
 /**
  * Invoke the function based on the function type.
  */

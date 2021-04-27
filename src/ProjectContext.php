@@ -17,6 +17,8 @@
 
 namespace Google\CloudFunctions;
 
+use Google\Cloud\Storage\StreamWrapper;
+use Google\Cloud\Storage\StorageClient;
 use RuntimeException;
 
 /**
@@ -73,5 +75,21 @@ class ProjectContext
 
         // No function source found. Assume the function source is autoloaded.
         return null;
+    }
+
+    /**
+     * Register the "gs://" stream wrapper for Cloud Storage if the package
+     * "google/cloud-storage" is installed and the "gs" protocol has not been
+     * registered.
+     */
+    public function registerCloudStorageStreamWrapperIfPossible()
+    {
+        if (class_exists(StreamWrapper::class)) {
+            if (!in_array('gs', stream_get_wrappers())) {
+                // Create a default GCS client and register the stream wrapper
+                $storage = new StorageClient();
+                StreamWrapper::register($storage);
+            }
+        }
     }
 }

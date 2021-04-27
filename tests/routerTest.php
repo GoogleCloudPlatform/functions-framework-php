@@ -62,6 +62,14 @@ class routerTest extends TestCase
 
         $this->expectOutputString('Invoked!');
     }
+
+    public function testCloudStorageStreamWrapperNotRegisteredByDefault()
+    {
+        $wrappers = stream_get_wrappers();
+        require 'router.php';
+        $this->assertEquals($wrappers, stream_get_wrappers());
+        $this->assertNotContains('gs', stream_get_wrappers());
+    }
 }
 
 function test_callable(ServerRequestInterface $request)
