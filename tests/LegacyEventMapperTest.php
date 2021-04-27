@@ -43,22 +43,22 @@ class LegacyEventMapperTest extends TestCase
         ];
         $cloudevent = $mapper->fromJsonData($jsonData);
 
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame(
             '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.cloud.pubsub.topic.v1.messagePublished',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(null, $cloudevent->getSubject());
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
+        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testWithoutContextProperty()
@@ -76,23 +76,23 @@ class LegacyEventMapperTest extends TestCase
         ];
         $cloudevent = $mapper->fromJsonData($jsonData);
 
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame(
             '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.cloud.pubsub.topic.v1.messagePublished',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(null, $cloudevent->getSubject());
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
+        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
+        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testResourceAsString()
@@ -107,23 +107,23 @@ class LegacyEventMapperTest extends TestCase
         ];
         $cloudevent = $mapper->fromJsonData($jsonData);
 
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame(
             '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.cloud.pubsub.topic.v1.messagePublished',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(null, $cloudevent->getSubject());
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
+        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertEquals(['message' => 'foo'], $cloudevent->getData());
+        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
     public function testCloudStorage()
@@ -143,24 +143,24 @@ class LegacyEventMapperTest extends TestCase
         ];
         $cloudevent = $mapper->fromJsonData($jsonData);
 
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame(
             '//storage.googleapis.com/projects/_/buckets/sample-bucket',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.cloud.storage.object.v1.finalized',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertSame(
             'objects/MyFile#1588778055917163',
             $cloudevent->getSubject()
         );
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
-        $this->assertEquals('foo', $cloudevent->getData());
+        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('foo', $cloudevent->getData());
     }
 
     public function testFirebaseAuth()
@@ -190,24 +190,24 @@ class LegacyEventMapperTest extends TestCase
         ];
         $cloudevent = $mapper->fromJsonData($jsonData);
 
-        $this->assertEquals('aaaaaa-1111-bbbb-2222-cccccccccccc', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('aaaaaa-1111-bbbb-2222-cccccccccccc', $cloudevent->getId());
+        $this->assertSame(
             '//firebaseauth.googleapis.com/projects/my-project-id',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.firebase.auth.user.v1.created',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertSame(
             'users/UUpby3s4spZre6kHsgVSPetzQ8l2',
             $cloudevent->getSubject()
         );
-        $this->assertEquals('2020-09-29T11:32:00.000Z', $cloudevent->getTime());
-        $this->assertEquals('2020-05-26T10:42:27Z', $cloudevent->getData()['metadata']['createTime']);
-        $this->assertEquals('2020-10-24T11:00:00Z', $cloudevent->getData()['metadata']['lastSignInTime']);
+        $this->assertSame('2020-09-29T11:32:00.000Z', $cloudevent->getTime());
+        $this->assertSame('2020-05-26T10:42:27Z', $cloudevent->getData()['metadata']['createTime']);
+        $this->assertSame('2020-10-24T11:00:00Z', $cloudevent->getData()['metadata']['lastSignInTime']);
     }
 }

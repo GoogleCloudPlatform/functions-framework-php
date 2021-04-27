@@ -33,25 +33,25 @@ class ContextTest extends TestCase
             'eventType' => 'ghi',
             'resource' => ['name' => 'jkl', 'service' => 'mno'],
         ]);
-        $this->assertEquals('abc', $context->getEventId());
-        $this->assertEquals('def', $context->getTimestamp());
-        $this->assertEquals('ghi', $context->getEventType());
-        $this->assertEquals([
+        $this->assertSame('abc', $context->getEventId());
+        $this->assertSame('def', $context->getTimestamp());
+        $this->assertSame('ghi', $context->getEventType());
+        $this->assertSame([
             'name' => 'jkl',
             'service' => 'mno'
         ], $context->getResource());
-        $this->assertEquals('jkl', $context->getResourceName());
-        $this->assertEquals('mno', $context->getService());
+        $this->assertSame('jkl', $context->getResourceName());
+        $this->assertSame('mno', $context->getService());
     }
 
     public function testFromEmptyArray()
     {
         $context = Context::fromArray([]);
-        $this->assertEquals(null, $context->getEventId());
-        $this->assertEquals(null, $context->getTimestamp());
-        $this->assertEquals(null, $context->getEventType());
-        $this->assertEquals(null, $context->getResource());
-        $this->assertEquals(null, $context->getResourceName());
-        $this->assertEquals(null, $context->getService());
+        $this->assertNull($context->getEventId());
+        $this->assertNull($context->getTimestamp());
+        $this->assertNull($context->getEventType());
+        $this->assertNull($context->getResource());
+        $this->assertNull($context->getResourceName());
+        $this->assertNull($context->getService());
     }
 }

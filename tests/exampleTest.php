@@ -68,13 +68,13 @@ class exampleTest extends TestCase
         sleep(1);
 
         $response = self::$client->get('/');
-        $this->assertEquals(
+        $this->assertSame(
             'Hello World from PHP HTTP function!' . PHP_EOL,
             $response->getBody()->getContents()
         );
 
         $response = self::$client->get('/?name=Foo');
-        $this->assertEquals(
+        $this->assertSame(
             'Hello Foo from PHP HTTP function!' . PHP_EOL,
             $response->getBody()->getContents()
         );
@@ -107,8 +107,8 @@ class exampleTest extends TestCase
             'json' => ['foo' => 'bar']
         ]);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('', $response->getBody()->getContents());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertEmpty($response->getBody()->getContents());
 
         exec('docker logs ' . self::$containerId, $output);
 
