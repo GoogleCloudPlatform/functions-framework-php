@@ -28,11 +28,11 @@ class ProjectContext
 {
     private $documentRoot = __DIR__ . '/../../../../';
 
+    /**
+     * Determine the autoload file to load.
+     */
     public function locateAutoloadFile(): ?string
     {
-        /**
-         * Determine the autoload file to load.
-         */
         if (file_exists($vendored = __DIR__ . '/../../../autoload.php')) {
             // when running from vendor/google/cloud-functions-framework
             return $vendored;
@@ -84,12 +84,10 @@ class ProjectContext
      */
     public function registerCloudStorageStreamWrapperIfPossible()
     {
-        if (class_exists(StreamWrapper::class)) {
-            if (!in_array('gs', stream_get_wrappers())) {
-                // Create a default GCS client and register the stream wrapper
-                $storage = new StorageClient();
-                StreamWrapper::register($storage);
-            }
+        if (class_exists(StreamWrapper::class) && !in_array('gs', stream_get_wrappers())) {
+            // Create a default GCS client and register the stream wrapper
+            $storage = new StorageClient();
+            StreamWrapper::register($storage);
         }
     }
 }
