@@ -28,11 +28,11 @@ class ProjectContext
 {
     private $documentRoot = __DIR__ . '/../../../../';
 
+    /**
+     * Determine the autoload file to load.
+     */
     public function locateAutoloadFile(): ?string
     {
-        /**
-         * Determine the autoload file to load.
-         */
         if (file_exists($vendored = __DIR__ . '/../../../autoload.php')) {
             // when running from vendor/google/cloud-functions-framework
             return $vendored;
