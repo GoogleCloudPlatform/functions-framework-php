@@ -84,10 +84,12 @@ class ProjectContext
      */
     public function registerCloudStorageStreamWrapperIfPossible()
     {
-        if (class_exists(StreamWrapper::class) && !in_array('gs', stream_get_wrappers())) {
-            // Create a default GCS client and register the stream wrapper
-            $storage = new StorageClient();
-            StreamWrapper::register($storage);
+        if (class_exists(StreamWrapper::class)) {
+            if (!in_array('gs', stream_get_wrappers())) {
+                // Create a default GCS client and register the stream wrapper
+                $storage = new StorageClient();
+                StreamWrapper::register($storage);
+            }
         }
     }
 }
