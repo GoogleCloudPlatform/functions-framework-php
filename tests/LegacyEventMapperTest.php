@@ -184,7 +184,7 @@ class LegacyEventMapperTest extends TestCase
           ],
           'eventId' => 'aaaaaa-1111-bbbb-2222-cccccccccccc',
           'eventType' => 'providers/firebase.auth/eventTypes/user.create',
-          'notSupported' => new \stdClass,
+          'notSupported' => new \stdClass(),
           'resource' => 'projects/my-project-id',
           'timestamp' => '2020-09-29T11:32:00.000Z',
         ];

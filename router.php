@@ -51,7 +51,9 @@ $projectContext->registerCloudStorageStreamWrapperIfPossible();
     }
     if (!is_callable($target)) {
         throw new InvalidArgumentException(sprintf(
-            'Function target is not callable: "%s"', $target));
+            'Function target is not callable: "%s"',
+            $target
+        ));
     }
 
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';

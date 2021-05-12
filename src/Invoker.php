@@ -44,7 +44,9 @@ class Invoker
             $this->function = new CloudEventFunctionWrapper($target);
         } else {
             throw new InvalidArgumentException(sprintf(
-                'Invalid signature type: "%s"', $signatureType));
+                'Invalid signature type: "%s"',
+                $signatureType
+            ));
         }
         $this->errorLogFunc = function (string $error) {
             fwrite(fopen('php://stderr', 'wb'), json_encode([
@@ -56,7 +58,7 @@ class Invoker
 
     public function handle(
         ServerRequestInterface $request = null
-    ) : ResponseInterface {
+    ): ResponseInterface {
         if ($request === null) {
             $request = ServerRequest::fromGlobals();
         }
