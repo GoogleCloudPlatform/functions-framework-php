@@ -12,7 +12,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Google\\CloudFunctions\\": "src"
+      "Google\\CloudFunctions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Google\\CloudFunctions\\Tests\\": "tests/"
     }
   },
   "require-dev": {

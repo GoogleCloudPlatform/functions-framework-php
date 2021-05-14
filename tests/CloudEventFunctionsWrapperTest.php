@@ -26,7 +26,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 /**
  * @group gcf-framework
  */
-class CloudEventFunctionWrapperTest extends TestCase
+class CloudEventFunctionsWrapperTest extends TestCase
 {
     private static $functionCalled;
 
