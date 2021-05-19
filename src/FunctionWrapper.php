@@ -27,7 +27,7 @@ use ReflectionMethod;
 
 abstract class FunctionWrapper
 {
-    const FUNCTION_STATUS_HEADER = 'X-Google-Status';
+    public const FUNCTION_STATUS_HEADER = 'X-Google-Status';
 
     protected $function;
 

@@ -25,8 +25,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 function helloHttp(ServerRequestInterface $request)
 {
-    return sprintf("Hello %s from PHP HTTP function!" . PHP_EOL,
-        $request->getQueryParams()['name'] ?? 'World');
+    return sprintf(
+        "Hello %s from PHP HTTP function!" . PHP_EOL,
+        $request->getQueryParams()['name'] ?? 'World'
+    );
 }
 
 /**
