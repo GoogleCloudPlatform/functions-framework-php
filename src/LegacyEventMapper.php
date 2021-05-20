@@ -81,7 +81,7 @@ class LegacyEventMapper
 
     public function fromJsonData(array $jsonData): CloudEvent
     {
-        list($context, $data) = $this->getLegacyEventContextAndData($jsonData);
+        [$context, $data] = $this->getLegacyEventContextAndData($jsonData);
 
         $eventType = $context->getEventType();
         $resourceName = $context->getResourceName();
@@ -95,7 +95,7 @@ class LegacyEventMapper
         $ceService = $context->getService() ?: $this->ceService($eventType);
 
         // Split the background event resource into a CloudEvent resource and subject.
-        list($ceResource, $ceSubject) = $this->ceResourceAndSubject($ceService, $resourceName);
+        [$ceResource, $ceSubject] = $this->ceResourceAndSubject($ceService, $resourceName);
 
         $ceTime = $context->getTimestamp();
 
