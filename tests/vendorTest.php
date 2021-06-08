@@ -50,7 +50,7 @@ class vendorTest extends TestCase
         self::$tmpDir = $tmpDir;
     }
 
-    public function testDefaultFunctionSource()
+    public function testDefaultFunctionSource(): void
     {
         copy(__DIR__ . '/fixtures/index.php', self::$tmpDir . '/index.php');
         $cmd = sprintf(
@@ -65,7 +65,7 @@ class vendorTest extends TestCase
         $this->assertSame(['Hello Default!'], $output);
     }
 
-    public function testRelativeFunctionSource()
+    public function testRelativeFunctionSource(): void
     {
         copy(__DIR__ . '/fixtures/relative.php', self::$tmpDir . '/relative.php');
         $cmd = sprintf(
@@ -80,7 +80,7 @@ class vendorTest extends TestCase
         $this->assertSame(['Hello Relative!'], $output);
     }
 
-    public function testAbsoluteFunctionSource()
+    public function testAbsoluteFunctionSource(): void
     {
         copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
         $cmd = sprintf(
@@ -96,7 +96,7 @@ class vendorTest extends TestCase
         $this->assertSame(['Hello Absolute!'], $output);
     }
 
-    public function testGcsIsNotRegistered()
+    public function testGcsIsNotRegistered(): void
     {
         copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
         $cmd = sprintf(
@@ -115,7 +115,7 @@ class vendorTest extends TestCase
     /**
      * @depends testGcsIsNotRegistered
      */
-    public function testGcsIsRegistered()
+    public function testGcsIsRegistered(): void
     {
         passthru('composer require google/cloud-storage');
 

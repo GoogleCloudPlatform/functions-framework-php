@@ -26,7 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class routerTest extends TestCase
 {
-    public function testInvalidFunctionTarget()
+    public function testInvalidFunctionTarget(): void
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('FUNCTION_TARGET is not set');
@@ -36,7 +36,7 @@ class routerTest extends TestCase
         require 'router.php';
     }
 
-    public function testDefaultFunctionSignatureType()
+    public function testDefaultFunctionSignatureType(): void
     {
         putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
         putenv('FUNCTION_TARGET=Google\CloudFunctions\Tests\test_callable');
@@ -45,7 +45,7 @@ class routerTest extends TestCase
         $this->expectOutputString('Invoked!');
     }
 
-    public function testInvalidFunctionSource()
+    public function testInvalidFunctionSource(): void
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Unable to load function from "doesnotexist.php"');
@@ -53,7 +53,7 @@ class routerTest extends TestCase
         require 'router.php';
     }
 
-    public function testRouterInvokedSuccessfully()
+    public function testRouterInvokedSuccessfully(): void
     {
         putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
         putenv('FUNCTION_TARGET=Google\CloudFunctions\Tests\test_callable');
@@ -63,7 +63,7 @@ class routerTest extends TestCase
         $this->expectOutputString('Invoked!');
     }
 
-    public function testCloudStorageStreamWrapperNotRegisteredByDefault()
+    public function testCloudStorageStreamWrapperNotRegisteredByDefault(): void
     {
         $wrappers = stream_get_wrappers();
         require 'router.php';
