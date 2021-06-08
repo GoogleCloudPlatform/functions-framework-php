@@ -120,8 +120,8 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
         );
-        $request = new ServerRequest('POST', '/', []);
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new ServerRequest('POST', '/', []);
+        new CloudEventFunctionWrapper(
             function () {
             }
         );
@@ -133,7 +133,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'If your function accepts more than one parameter the additional parameters must be optional'
         );
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new CloudEventFunctionWrapper(
             function (CloudEvent $foo, $bar) {
             }
         );
@@ -145,7 +145,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
         );
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new CloudEventFunctionWrapper(
             function ($foo) {
             }
         );
@@ -157,7 +157,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
         );
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new CloudEventFunctionWrapper(
             function (NotTheRightThing $foo) {
             }
         );
@@ -165,20 +165,20 @@ class CloudEventFunctionsWrapperTest extends TestCase
 
     public function testCorrectTypehintsInFunctionParameter()
     {
-        $request = new ServerRequest('POST', '/', []);
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new ServerRequest('POST', '/', []);
+        new CloudEventFunctionWrapper(
             function (CloudEvent $foo) {
             }
         );
         $this->assertTrue(true, 'No exception was thrown');
         // Optional parameters are ok
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new CloudEventFunctionWrapper(
             function (CloudEvent $foo = null) {
             }
         );
         $this->assertTrue(true, 'No exception was thrown');
         // additional optional parameters are ok
-        $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
+        new CloudEventFunctionWrapper(
             function (CloudEvent $foo, $bar = null) {
             }
         );
