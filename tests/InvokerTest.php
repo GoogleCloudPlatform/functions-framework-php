@@ -17,6 +17,7 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use Exception;
 use Google\CloudFunctions\CloudEvent;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\FunctionWrapper;
@@ -100,11 +101,11 @@ class InvokerTest extends TestCase
 
     public function invokeHttpError(ServerRequestInterface $request)
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 
     public function invokeCloudeventError(CloudEvent $event)
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 }
