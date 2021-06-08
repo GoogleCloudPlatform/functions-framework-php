@@ -41,12 +41,12 @@ class CloudEventFunctionWrapperTest extends TestCase
         $request = new ServerRequest('POST', '/', $headers, 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $response = $cloudEventFunctionWrapper->execute($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals(
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(
             'Could not parse CloudEvent: Syntax error',
             (string) $response->getBody()
         );
-        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
+        $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
     public function testInvalidLegacyEventRequestBody()
@@ -54,12 +54,12 @@ class CloudEventFunctionWrapperTest extends TestCase
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
         $response = $cloudEventFunctionWrapper->execute($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals(
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(
             'Could not parse CloudEvent: Syntax error',
             (string) $response->getBody()
         );
-        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
+        $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
     public function testNonJsonIsValidInBinaryCloudEventRequestBody()
@@ -74,7 +74,7 @@ class CloudEventFunctionWrapperTest extends TestCase
             [$this, 'invokeThisPartial']
         );
         $response = $cloudEventFunctionWrapper->execute($request);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testInvalidJsonBinaryCloudEventRequestBody()
@@ -90,12 +90,12 @@ class CloudEventFunctionWrapperTest extends TestCase
             [$this, 'invokeThisPartial']
         );
         $response = $cloudEventFunctionWrapper->execute($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals(
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(
             'Could not parse CloudEvent: Syntax error',
             (string) $response->getBody()
         );
-        $this->assertEquals('crash', $response->getHeaderLine('X-Google-Status'));
+        $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
     public function testValidJsonBinaryCloudEventRequestBody()
@@ -111,7 +111,7 @@ class CloudEventFunctionWrapperTest extends TestCase
             [$this, 'invokeThisPartial']
         );
         $response = $cloudEventFunctionWrapper->execute($request);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testNoFunctionParameters()
@@ -232,14 +232,14 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals('//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC', $cloudevent->getSource());
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals('com.google.cloud.pubsub.topic.publish', $cloudevent->getType());
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals('type.googleapis.com/google.logging.v2.LogEntry', $cloudevent->getDataSchema());
-        $this->assertEquals('My Subject', $cloudevent->getSubject());
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame('//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC', $cloudevent->getSource());
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame('com.google.cloud.pubsub.topic.publish', $cloudevent->getType());
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertSame('type.googleapis.com/google.logging.v2.LogEntry', $cloudevent->getDataSchema());
+        $this->assertSame('My Subject', $cloudevent->getSubject());
+        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 
     public function testWithNotFullButValidCloudEvent()
@@ -262,10 +262,10 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
-        $this->assertEquals('fooBar', $cloudevent->getId());
-        $this->assertEquals('my-source', $cloudevent->getSource());
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals('my.type', $cloudevent->getType());
+        $this->assertSame('fooBar', $cloudevent->getId());
+        $this->assertSame('my-source', $cloudevent->getSource());
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame('my.type', $cloudevent->getType());
     }
 
     public function testFromLegacyEventWithContextProperty()
@@ -293,20 +293,20 @@ class CloudEventFunctionWrapperTest extends TestCase
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
-        $this->assertEquals('1413058901901494', $cloudevent->getId());
-        $this->assertEquals(
+        $this->assertSame('1413058901901494', $cloudevent->getId());
+        $this->assertSame(
             '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             $cloudevent->getSource()
         );
-        $this->assertEquals('1.0', $cloudevent->getSpecVersion());
-        $this->assertEquals(
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
             'google.cloud.pubsub.topic.v1.messagePublished',
             $cloudevent->getType()
         );
-        $this->assertEquals('application/json', $cloudevent->getDataContentType());
-        $this->assertEquals(null, $cloudevent->getDataSchema());
-        $this->assertEquals(null, $cloudevent->getSubject());
-        $this->assertEquals('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertNull($cloudevent->getSubject());
+        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 
     public function testFromStructuredEventRequest()

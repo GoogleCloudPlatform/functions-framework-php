@@ -1,8 +1,9 @@
 <?php
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR2' => true,
+        '@PHP71Migration' => true,
         'concat_space' => ['spacing' => 'one'],
         'no_unused_imports' => true,
         'method_argument_space' => false,

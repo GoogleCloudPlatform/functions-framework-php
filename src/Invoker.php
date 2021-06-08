@@ -29,9 +29,9 @@ class Invoker
     private $errorLogFunc;
 
     /**
-     * @param $target callable The callable to be invoked
-     * @param $signatureType The signature type of the target callable, either
-     *                       "event" or "http".
+     * @param callable $target      The callable to be invoked
+     * @param string $signatureType The signature type of the target callable,
+     *                              either "event" or "http".
      */
     public function __construct(callable $target, string $signatureType)
     {
@@ -44,7 +44,9 @@ class Invoker
             $this->function = new CloudEventFunctionWrapper($target);
         } else {
             throw new InvalidArgumentException(sprintf(
-                'Invalid signature type: "%s"', $signatureType));
+                'Invalid signature type: "%s"',
+                $signatureType
+            ));
         }
         $this->errorLogFunc = function (string $error) {
             fwrite(fopen('php://stderr', 'wb'), json_encode([
@@ -56,7 +58,7 @@ class Invoker
 
     public function handle(
         ServerRequestInterface $request = null
-    ) : ResponseInterface {
+    ): ResponseInterface {
         if ($request === null) {
             $request = ServerRequest::fromGlobals();
         }

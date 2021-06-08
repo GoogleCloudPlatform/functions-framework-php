@@ -39,9 +39,9 @@ class EmitterTest extends TestCase
         $headers = xdebug_get_headers();
         $output = ob_get_clean();
 
-        $this->assertEquals('Foo', $output);
+        $this->assertSame('Foo', $output);
         $this->assertContains('Foo-Header:bar', $headers);
-        $this->assertEquals(200, http_response_code());
+        $this->assertSame(200, http_response_code());
     }
 
     public function testSingleHeader()
@@ -49,9 +49,9 @@ class EmitterTest extends TestCase
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['foo-header' => 'bar']));
 
-        $this->assertEquals('Foo-Header:bar', $emitter->headers[1][0]);
-        $this->assertEquals(true, $emitter->headers[1][1]);
-        $this->assertEquals(200, $emitter->headers[1][2]);
+        $this->assertSame('Foo-Header:bar', $emitter->headers[1][0]);
+        $this->assertTrue($emitter->headers[1][1]);
+        $this->assertSame(200, $emitter->headers[1][2]);
     }
 
     public function testRepeatHeaders()
@@ -59,13 +59,13 @@ class EmitterTest extends TestCase
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['foo-header' => ['bar', 'baz']]));
 
-        $this->assertEquals('Foo-Header:bar', $emitter->headers[1][0]);
-        $this->assertEquals(true, $emitter->headers[1][1]);
-        $this->assertEquals(200, $emitter->headers[1][2]);
+        $this->assertSame('Foo-Header:bar', $emitter->headers[1][0]);
+        $this->assertTrue($emitter->headers[1][1]);
+        $this->assertSame(200, $emitter->headers[1][2]);
 
-        $this->assertEquals('Foo-Header:baz', $emitter->headers[2][0]);
-        $this->assertEquals(false, $emitter->headers[2][1]);
-        $this->assertEquals(200, $emitter->headers[2][2]);
+        $this->assertSame('Foo-Header:baz', $emitter->headers[2][0]);
+        $this->assertFalse($emitter->headers[2][1]);
+        $this->assertSame(200, $emitter->headers[2][2]);
     }
 
     public function testCookies()
@@ -73,13 +73,13 @@ class EmitterTest extends TestCase
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['Set-Cookie' => ['1', '2']]));
 
-        $this->assertEquals('Set-Cookie:1', $emitter->headers[1][0]);
-        $this->assertEquals(false, $emitter->headers[1][1]);
-        $this->assertEquals(200, $emitter->headers[1][2]);
+        $this->assertSame('Set-Cookie:1', $emitter->headers[1][0]);
+        $this->assertFalse($emitter->headers[1][1]);
+        $this->assertSame(200, $emitter->headers[1][2]);
 
-        $this->assertEquals('Set-Cookie:2', $emitter->headers[2][0]);
-        $this->assertEquals(false, $emitter->headers[2][1]);
-        $this->assertEquals(200, $emitter->headers[2][2]);
+        $this->assertSame('Set-Cookie:2', $emitter->headers[2][0]);
+        $this->assertFalse($emitter->headers[2][1]);
+        $this->assertSame(200, $emitter->headers[2][2]);
     }
 
     public function testStatusLine()
@@ -87,9 +87,9 @@ class EmitterTest extends TestCase
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200));
 
-        $this->assertEquals('HTTP/1.1 200 OK', $emitter->headers[0][0]);
-        $this->assertEquals(true, $emitter->headers[0][1]);
-        $this->assertEquals(200, $emitter->headers[0][2]);
+        $this->assertSame('HTTP/1.1 200 OK', $emitter->headers[0][0]);
+        $this->assertTrue($emitter->headers[0][1]);
+        $this->assertSame(200, $emitter->headers[0][2]);
     }
 
     public function testStatusLineEmptyReasonPhrase()
@@ -97,9 +97,9 @@ class EmitterTest extends TestCase
         $emitter = new TestEmitter();
         $emitter->emit(new Response(419));
 
-        $this->assertEquals('HTTP/1.1 419', $emitter->headers[0][0]);
-        $this->assertEquals(true, $emitter->headers[0][1]);
-        $this->assertEquals(419, $emitter->headers[0][2]);
+        $this->assertSame('HTTP/1.1 419', $emitter->headers[0][0]);
+        $this->assertTrue($emitter->headers[0][1]);
+        $this->assertSame(419, $emitter->headers[0][2]);
     }
 }
 

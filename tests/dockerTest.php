@@ -72,8 +72,8 @@ class dockerTest extends TestCase
 
         $response = self::$client->get('/');
 
-        $this->assertEquals(418, $response->getStatusCode());
-        $this->assertEquals("I'm a teapot", $response->getReasonPhrase());
+        $this->assertSame(418, $response->getStatusCode());
+        $this->assertSame("I'm a teapot", $response->getReasonPhrase());
 
         passthru('docker rm -f ' . self::$containerId);
         self::$containerId = null;

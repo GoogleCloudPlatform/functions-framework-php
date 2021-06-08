@@ -1,5 +1,3 @@
-**DISCLAIMER: This repository is in development and not meant for production use**
-
 # Functions Framework for PHP [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FGoogleCloudPlatform%2Ffunctions-framework-php%2Fbadge&style=flat)](https://actions-badge.atrox.dev/GoogleCloudPlatform/functions-framework-php/goto) [![Packagist](https://poser.pugx.org/google/cloud-functions-framework/v/stable)](https://packagist.org/packages/google/cloud-functions-framework)
 
 An open source FaaS (Function as a service) framework for writing portable
@@ -112,16 +110,14 @@ curl localhost:8080
 
 ## Run your function on Google Cloud Functions
 
+**NOTE**: For an extensive list of samples, see the [PHP functions samples][functions-samples]
+and the [official how-to guides][functions-how-to].
+
 Follow the steps below to deploy to Google Cloud Functions. More information
 on function deployment is available in the
 [GCF documentation](https://cloud.google.com/functions/docs/deploying).
 
 To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
-
-> **Note:** PHP support on Cloud Functions is currently in limited alpha.
-> It is not yet suitable for production workloads, and support is best-effort
-> only. Access is currently limited to selected early-access users.
-> To request access please fill out [this form][gcf-early-access-form].
 
 Make sure your source file (which defines your function) is called
 `index.php`. The Functions Framework lets you choose a function source file,
@@ -154,8 +150,6 @@ for `gcloud functions deploy`.
 
 To update your deployment, just redeploy using the same function **name**.
 Configuration flags are not required.
-
-[gcf-early-access-form]: https://docs.google.com/forms/d/e/1FAIpQLSc3-nfJEPpFk1XHy5FsQJ6c709bto9uhdgnnTX5VLbOvpq9yw/viewform?usp=sf_link
 
 ## Run your function in Cloud Run
 
@@ -202,6 +196,8 @@ gcloud run deploy my-cloud-function \
 After your instance deploys, you can access it at the URL provided, or view it
 in the [Cloud Console][cloud-run-console].
 
+[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/functions
+[functions-how-to]: https://cloud.google.com/functions/docs/how-to
 [gcloud]: https://cloud.google.com/sdk/gcloud/
 [gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
 [gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
@@ -290,6 +286,7 @@ and headers.
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 
 function helloHttp(ServerRequestInterface $request): ResponseInterface
 {
@@ -297,7 +294,7 @@ function helloHttp(ServerRequestInterface $request): ResponseInterface
         $request->getQueryParams()['name'] ?? 'World');
 
     return (new Response())
-        ->withBody(GuzzleHttp\Psr7\stream_for($body))
+        ->withBody(Utils::streamFor($body))
         ->withStatus(418) // I'm a teapot
         ->withHeader('Foo', 'Bar');
 }
@@ -318,6 +315,31 @@ See the [PSR-7 documentation][psr7] documentation for more on working
 with the request and response objects.
 
 [psr7]: https://www.php-fig.org/psr/psr-7/
+
+## Use Google Cloud Storage
+
+When you require the `google/cloud-storage` package with composer, the functions
+framework will register the `gs://` stream wrapper. This enables your function
+to read and write to Google Cloud Storage as you would any filesystem:
+
+```php
+// Get the contents of an object in GCS
+$object = file_get_contents('gs://{YOUR_BUCKET_NAME}/object.txt');
+// Make modifications
+$object .= "\nadd a line";
+// Write the new contents back to GCS
+file_put_contents('gs://{YOUR_BUCKET_NAME}/object.txt', $object);
+```
+
+You can unregister this at any time by using
+[`stream_wrapper_unregister`][stream_wrapper_unregister]:
+
+```php
+// unregister the automatically registered one
+stream_wrapper_unregister('gs');
+```
+
+[stream_wrapper_unregister]: https://www.php.net/manual/en/function.stream-wrapper-unregister.php
 
 ## Run your function on Knative
 

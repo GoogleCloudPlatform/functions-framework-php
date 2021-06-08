@@ -41,7 +41,7 @@ class InvokerTest extends TestCase
     {
         $invoker = new Invoker([$this, 'invokeThis'], 'http');
         $response = $invoker->handle();
-        $this->assertEquals((string) $response->getBody(), 'Invoked!');
+        $this->assertSame('Invoked!', (string) $response->getBody());
     }
 
     /**
@@ -65,12 +65,12 @@ class InvokerTest extends TestCase
         $response = $invoker->handle($request);
 
         // Verify the error message response
-        $this->assertEquals('', (string) $response->getBody());
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEmpty((string) $response->getBody());
+        $this->assertSame(500, $response->getStatusCode());
         $this->assertTrue(
             $response->hasHeader(FunctionWrapper::FUNCTION_STATUS_HEADER)
         );
-        $this->assertEquals(
+        $this->assertSame(
             $errorStatus,
             $response->getHeaderLine(FunctionWrapper::FUNCTION_STATUS_HEADER)
         );
