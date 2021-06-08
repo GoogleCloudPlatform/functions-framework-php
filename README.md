@@ -110,16 +110,14 @@ curl localhost:8080
 
 ## Run your function on Google Cloud Functions
 
+**NOTE**: For an extensive list of samples, see the [PHP functions samples][functions-samples]
+and the [official how-to guides][functions-how-to].
+
 Follow the steps below to deploy to Google Cloud Functions. More information
 on function deployment is available in the
 [GCF documentation](https://cloud.google.com/functions/docs/deploying).
 
 To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
-
-> **Note:** PHP support on Cloud Functions is currently in limited alpha.
-> It is not yet suitable for production workloads, and support is best-effort
-> only. Access is currently limited to selected early-access users.
-> To request access please fill out [this form][gcf-early-access-form].
 
 Make sure your source file (which defines your function) is called
 `index.php`. The Functions Framework lets you choose a function source file,
@@ -152,8 +150,6 @@ for `gcloud functions deploy`.
 
 To update your deployment, just redeploy using the same function **name**.
 Configuration flags are not required.
-
-[gcf-early-access-form]: https://docs.google.com/forms/d/e/1FAIpQLSc3-nfJEPpFk1XHy5FsQJ6c709bto9uhdgnnTX5VLbOvpq9yw/viewform?usp=sf_link
 
 ## Run your function in Cloud Run
 
@@ -200,6 +196,8 @@ gcloud run deploy my-cloud-function \
 After your instance deploys, you can access it at the URL provided, or view it
 in the [Cloud Console][cloud-run-console].
 
+[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/functions
+[functions-how-to]: https://cloud.google.com/functions/docs/how-to
 [gcloud]: https://cloud.google.com/sdk/gcloud/
 [gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
 [gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
