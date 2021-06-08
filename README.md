@@ -110,6 +110,9 @@ curl localhost:8080
 
 ## Run your function on Google Cloud Functions
 
+**NOTE**: For an extensive list of samples, see the [PHP functions samples][functions-samples]
+and the [official how-to guides][functions-how-to].
+
 Follow the steps below to deploy to Google Cloud Functions. More information
 on function deployment is available in the
 [GCF documentation](https://cloud.google.com/functions/docs/deploying).
@@ -193,6 +196,8 @@ gcloud run deploy my-cloud-function \
 After your instance deploys, you can access it at the URL provided, or view it
 in the [Cloud Console][cloud-run-console].
 
+[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/functions
+[functions-how-to]: https://cloud.google.com/functions/docs/how-to
 [gcloud]: https://cloud.google.com/sdk/gcloud/
 [gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
 [gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
