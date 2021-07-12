@@ -117,7 +117,7 @@ class vendorTest extends TestCase
      */
     public function testGcsIsRegistered(): void
     {
-        passthru('composer require google/cloud-storage');
+        passthru('composer require -w google/cloud-storage');
 
         copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
         $cmd = sprintf(
