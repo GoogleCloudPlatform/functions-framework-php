@@ -17,6 +17,7 @@
 
 namespace Google\CloudFunctions;
 
+use Exception;
 use InvalidArgumentException;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -65,7 +66,7 @@ class Invoker
 
         try {
             return $this->function->execute($request);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Log the full error and stack trace
             ($this->errorLogFunc)((string) $e);
             // Set "X-Google-Status" to "crash" for Http functions and "error"
