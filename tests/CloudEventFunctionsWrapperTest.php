@@ -35,7 +35,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         self::$functionCalled = false;
     }
 
-    public function testInvalidCloudEventRequestBody()
+    public function testInvalidCloudEventRequestBody(): void
     {
         $headers = ['content-type' => 'application/cloudevents+json'];
         $request = new ServerRequest('POST', '/', $headers, 'notjson');
@@ -49,7 +49,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
-    public function testInvalidLegacyEventRequestBody()
+    public function testInvalidLegacyEventRequestBody(): void
     {
         $request = new ServerRequest('POST', '/', [], 'notjson');
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
@@ -62,7 +62,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
-    public function testNonJsonIsValidInBinaryCloudEventRequestBody()
+    public function testNonJsonIsValidInBinaryCloudEventRequestBody(): void
     {
         $request = new ServerRequest('POST', '/', [
             'ce-id' => 'fooBar',
@@ -77,7 +77,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testInvalidJsonBinaryCloudEventRequestBody()
+    public function testInvalidJsonBinaryCloudEventRequestBody(): void
     {
         $request = new ServerRequest('POST', '/', [
             'ce-id' => 'fooBar',
@@ -98,7 +98,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('crash', $response->getHeaderLine('X-Google-Status'));
     }
 
-    public function testValidJsonBinaryCloudEventRequestBody()
+    public function testValidJsonBinaryCloudEventRequestBody(): void
     {
         $request = new ServerRequest('POST', '/', [
             'ce-id' => 'fooBar',
@@ -114,7 +114,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testNoFunctionParameters()
+    public function testNoFunctionParameters(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -127,7 +127,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         );
     }
 
-    public function testTooManyFunctionParameters()
+    public function testTooManyFunctionParameters(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -139,7 +139,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         );
     }
 
-    public function testNoTypehintInFunctionParameter()
+    public function testNoTypehintInFunctionParameter(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -151,7 +151,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         );
     }
 
-    public function testWrongTypehintInFunctionParameter()
+    public function testWrongTypehintInFunctionParameter(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -163,7 +163,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         );
     }
 
-    public function testCorrectTypehintsInFunctionParameter()
+    public function testCorrectTypehintsInFunctionParameter(): void
     {
         $request = new ServerRequest('POST', '/', []);
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper(
@@ -185,7 +185,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertTrue(true, 'No exception was thrown');
     }
 
-    public function testWithFullCloudEvent()
+    public function testWithFullCloudEvent(): void
     {
         self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
@@ -210,7 +210,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertTrue(self::$functionCalled);
     }
 
-    public function testWithNonJSONData()
+    public function testWithNonJSONData(): void
     {
         self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);
@@ -228,7 +228,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertTrue(self::$functionCalled);
     }
 
-    public function invokeThis(CloudEvent $cloudevent)
+    public function invokeThis(CloudEvent $cloudevent): void
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
@@ -242,7 +242,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 
-    public function testWithNotFullButValidCloudEvent()
+    public function testWithNotFullButValidCloudEvent(): void
     {
         self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThisPartial']);
@@ -258,7 +258,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertTrue(self::$functionCalled);
     }
 
-    public function invokeThisPartial(CloudEvent $cloudevent)
+    public function invokeThisPartial(CloudEvent $cloudevent): void
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
@@ -268,7 +268,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('my.type', $cloudevent->getType());
     }
 
-    public function testFromLegacyEventWithContextProperty()
+    public function testFromLegacyEventWithContextProperty(): void
     {
         $cloudEventFunctionsWrapper = new CloudEventFunctionWrapper(
             [$this, 'invokeThisLegacy']
@@ -289,7 +289,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertTrue(self::$functionCalled);
     }
 
-    public function invokeThisLegacy(CloudEvent $cloudevent)
+    public function invokeThisLegacy(CloudEvent $cloudevent): void
     {
         $this->assertFalse(self::$functionCalled);
         self::$functionCalled = true;
@@ -309,7 +309,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
     }
 
-    public function testFromStructuredEventRequest()
+    public function testFromStructuredEventRequest(): void
     {
         self::$functionCalled = false;
         $cloudEventFunctionWrapper = new CloudEventFunctionWrapper([$this, 'invokeThis']);

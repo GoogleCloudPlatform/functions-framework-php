@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ContextTest extends TestCase
 {
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $context = Context::fromArray([
             'eventId' => 'abc',
@@ -44,7 +44,7 @@ class ContextTest extends TestCase
         $this->assertSame('mno', $context->getService());
     }
 
-    public function testFromEmptyArray()
+    public function testFromEmptyArray(): void
     {
         $context = Context::fromArray([]);
         $this->assertNull($context->getEventId());

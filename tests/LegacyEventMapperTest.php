@@ -27,7 +27,7 @@ use stdClass;
  */
 class LegacyEventMapperTest extends TestCase
 {
-    public function testWithContextProperty()
+    public function testWithContextProperty(): void
     {
         $mapper = new LegacyEventMapper();
         $jsonData = [
@@ -62,7 +62,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
-    public function testWithoutContextProperty()
+    public function testWithoutContextProperty(): void
     {
         $mapper = new LegacyEventMapper();
         $jsonData = [
@@ -96,7 +96,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
-    public function testResourceAsString()
+    public function testResourceAsString(): void
     {
         $mapper = new LegacyEventMapper();
         $jsonData = [
@@ -127,7 +127,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame(['message' => 'foo'], $cloudevent->getData());
     }
 
-    public function testCloudStorage()
+    public function testCloudStorage(): void
     {
         $mapper = new LegacyEventMapper();
         $jsonData = [
@@ -164,7 +164,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('foo', $cloudevent->getData());
     }
 
-    public function testFirebaseAuth()
+    public function testFirebaseAuth(): void
     {
         $mapper = new LegacyEventMapper();
         $jsonData = [

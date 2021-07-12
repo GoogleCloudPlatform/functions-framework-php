@@ -30,7 +30,7 @@ use RuntimeException;
  */
 class ProjectContextTest extends TestCase
 {
-    public function testLocateAutoloadFile()
+    public function testLocateAutoloadFile(): void
     {
         $context = new ProjectContext();
         $autoloadFile = $context->locateAutoloadFile();
@@ -38,14 +38,14 @@ class ProjectContextTest extends TestCase
         $this->assertTrue(file_exists($autoloadFile));
     }
 
-    public function testLocateFunctionSource()
+    public function testLocateFunctionSource(): void
     {
         $context = new ProjectContext();
         $source = $context->locateFunctionSource(null);
         $this->assertNull($source, 'No detectable source for git clones');
     }
 
-    public function testLocateFunctionSourceAbsolute()
+    public function testLocateFunctionSourceAbsolute(): void
     {
         $context = new ProjectContext();
         $suppliedSource = __FILE__;
@@ -54,7 +54,7 @@ class ProjectContextTest extends TestCase
         $this->assertSame($suppliedSource, $source);
     }
 
-    public function testLocateFunctionSourceRelative()
+    public function testLocateFunctionSourceRelative(): void
     {
         $context = new ProjectContext();
 
@@ -71,7 +71,7 @@ class ProjectContextTest extends TestCase
         $this->assertSame(realpath($suppliedSource), realpath($source));
     }
 
-    public function testNonexistantFunctionSource()
+    public function testNonexistantFunctionSource(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -82,7 +82,7 @@ class ProjectContextTest extends TestCase
         $context->locateFunctionSource('nonexistant.php');
     }
 
-    public function testGcsStreamWrapperNotRegisteredByDefault()
+    public function testGcsStreamWrapperNotRegisteredByDefault(): void
     {
         $context = new ProjectContext();
         $defaultWrappers = stream_get_wrappers();
@@ -97,7 +97,7 @@ class ProjectContextTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testGcsStreamWrapperRegisteredWhenClassExists()
+    public function testGcsStreamWrapperRegisteredWhenClassExists(): void
     {
         $this->getMockBuilder(StorageClient::class)->getMock();
         class_alias(StreamWrapperMock::class, StreamWrapper::class);
@@ -115,7 +115,7 @@ class ProjectContextTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testGcsStreamWrapperNotRegisteredWhenGsAlreadyRegistered()
+    public function testGcsStreamWrapperNotRegisteredWhenGsAlreadyRegistered(): void
     {
         $this->getMockBuilder(StorageClient::class)->getMock();
 
@@ -135,7 +135,7 @@ class ProjectContextTest extends TestCase
 
 class StreamWrapperMock
 {
-    public static function register()
+    public static function register(): void
     {
         stream_wrapper_register('gs', __CLASS__);
     }

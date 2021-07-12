@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class HttpFunctionWrapperTest extends TestCase
 {
-    public function testNoFunctionParameters()
+    public function testNoFunctionParameters(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -40,7 +40,7 @@ class HttpFunctionWrapperTest extends TestCase
         );
     }
 
-    public function testTooManyFunctionParameters()
+    public function testTooManyFunctionParameters(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -52,7 +52,7 @@ class HttpFunctionWrapperTest extends TestCase
         );
     }
 
-    public function testNoTypehintInFunctionParameter()
+    public function testNoTypehintInFunctionParameter(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -64,7 +64,7 @@ class HttpFunctionWrapperTest extends TestCase
         );
     }
 
-    public function testWrongTypehintInFunctionParameter()
+    public function testWrongTypehintInFunctionParameter(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage(
@@ -76,7 +76,7 @@ class HttpFunctionWrapperTest extends TestCase
         );
     }
 
-    public function testCorrectTypehintsInFunctionParameter()
+    public function testCorrectTypehintsInFunctionParameter(): void
     {
         $request = new ServerRequest('POST', '/', []);
         $httpFunctionWrapper = new HttpFunctionWrapper(
@@ -98,7 +98,7 @@ class HttpFunctionWrapperTest extends TestCase
         $this->assertTrue(true, 'No exception was thrown');
     }
 
-    public function testHttpHttpFunctionWrapper()
+    public function testHttpHttpFunctionWrapper(): void
     {
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('GET', '/');
@@ -106,7 +106,7 @@ class HttpFunctionWrapperTest extends TestCase
         $this->assertSame('Invoked!', (string) $response->getBody());
     }
 
-    public function testHttpErrorPaths()
+    public function testHttpErrorPaths(): void
     {
         $httpFunctionWrapper = new HttpFunctionWrapper([$this, 'invokeThis']);
         $request = new ServerRequest('GET', '/robots.txt');
@@ -119,7 +119,7 @@ class HttpFunctionWrapperTest extends TestCase
         $this->assertEmpty((string) $response->getBody());
     }
 
-    public function invokeThis(ServerRequestInterface $request)
+    public function invokeThis(ServerRequestInterface $request): string
     {
         return 'Invoked!';
     }
