@@ -68,10 +68,13 @@ class LegacyEventMapper
     // must have exactly two capture groups: the first for the resource and the second
     // for the subject.
     private static $ceResourceRegexMap = [
-        self::FIREBASE_CE_SERVICE => '#^(projects/[^/]+)/(events/[^/]+)$#',
-        self::FIREBASE_DB_CE_SERVICE => '#^(projects/_/locations/[^/]+/instances/[^/]+)/(refs/.+)$#',
-        self::FIRESTORE_CE_SERVICE => '#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#',
-        self::STORAGE_CE_SERVICE => '#^(projects/_/buckets/[^/]+)/(objects/.+)$#',
+        self::FIREBASE_CE_SERVICE => ['#^(projects/[^/]+)/(events/[^/]+)$#'],
+        self::FIREBASE_DB_CE_SERVICE => [
+            '#^(projects/_/locations/[^/]+/instances/[^/]+)/(refs/.+)$#',
+            '#^(projects/_/instances/[^/]+)/(refs/.+)$#',
+        ],
+        self::FIRESTORE_CE_SERVICE => ['#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#'],
+        self::STORAGE_CE_SERVICE => ['#^(projects/_/buckets/[^/]+)/(objects/.+)$#'],
     ];
 
     // Maps Firebase Auth background event metadata field names to their equivalent
@@ -177,7 +180,11 @@ class LegacyEventMapper
             return [$resource, null];
         }
 
-        $ret = preg_match(self::$ceResourceRegexMap[$ceService], $resource, $matches);
+        $ret = null;
+        foreach (self::$ceResourceRegexMap[$ceService] as $ceResourceRegex) {
+            $ret = preg_match($ceResourceRegex, $resource, $matches);
+        }
+
         if (!$ret) {
             throw new RuntimeException(
                 $ret === 0 ? 'Resource regex did not match' : 'Failed while matching resource regex'
