@@ -36,7 +36,7 @@ jobs:
         command: composer install
 
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.12
       env:
         FUNCTION_TARGET: 'httpFunc'
         FUNCTION_SIGNATURE_TYPE: 'http'
@@ -47,7 +47,7 @@ jobs:
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.9
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.12
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
