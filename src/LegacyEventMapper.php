@@ -69,7 +69,7 @@ class LegacyEventMapper
     // for the subject.
     private static $ceResourceRegexMap = [
         self::FIREBASE_CE_SERVICE => '#^(projects/[^/]+)/(events/[^/]+)$#',
-        self::FIREBASE_DB_CE_SERVICE => '#^(projects/_/instances/[^/]+)/(refs/.+)$#',
+        self::FIREBASE_DB_CE_SERVICE => '#^(projects/_/locations/[^/]+/instances/[^/]+)/(refs/.+)$#',
         self::FIRESTORE_CE_SERVICE => '#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#',
         self::STORAGE_CE_SERVICE => '#^(projects/_/buckets/[^/]+)/(objects/.+)$#',
     ];
