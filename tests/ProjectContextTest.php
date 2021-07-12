@@ -35,7 +35,7 @@ class ProjectContextTest extends TestCase
         $context = new ProjectContext();
         $autoloadFile = $context->locateAutoloadFile();
         $this->assertNotNull($autoloadFile);
-        $this->assertTrue(file_exists($autoloadFile));
+        $this->assertFileExists($autoloadFile);
     }
 
     public function testLocateFunctionSource(): void
