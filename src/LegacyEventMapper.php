@@ -17,6 +17,8 @@
 
 namespace Google\CloudFunctions;
 
+use RuntimeException;
+
 class LegacyEventMapper
 {
     // Maps background/legacy event types to their equivalent CloudEvent types.
@@ -177,7 +179,7 @@ class LegacyEventMapper
 
         $ret = preg_match(self::$ceResourceRegexMap[$ceService], $resource, $matches);
         if (!$ret) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 $ret === 0 ? 'Resource regex did not match' : 'Failed while matching resource regex'
             );
         }
