@@ -220,4 +220,47 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('2020-05-26T10:42:27Z', $cloudevent->getData()['metadata']['createTime']);
         $this->assertSame('2020-10-24T11:00:00Z', $cloudevent->getData()['metadata']['lastSignInTime']);
     }
+
+    public function testFirebaseAuthDbDelete(): void
+    {
+        $mapper = new LegacyEventMapper();
+        $jsonData = [
+            'eventType' => 'providers/google.firebase.database/eventTypes/ref.delete',
+            'params' => [
+              'child' => 'xyz'
+            ],
+            'auth' => [
+              'admin' => true
+            ],
+            'domain' => 'europe-west1.firebasedatabase.app',
+            'data' => [
+              'data' => [
+                'grandchild' => 'other changed'
+              ],
+              'delta' => null
+            ],
+            'resource' => 'projects/_/instances/my-project-id/refs/gcf-test/xyz',
+            'timestamp' => '2020-05-21T11:53:45.337Z',
+            'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
+        ];
+        $cloudevent = $mapper->fromJsonData($jsonData);
+
+        $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
+        $this->assertSame(
+            '//firebasedatabase.googleapis.com/projects/_/locations/europe-west1/instances/my-project-id',
+            $cloudevent->getSource()
+        );
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame(
+            'google.firebase.database.document.v1.deleted',
+            $cloudevent->getType()
+        );
+        $this->assertSame('application/json', $cloudevent->getDataContentType());
+        $this->assertNull($cloudevent->getDataSchema());
+        $this->assertSame(
+            'refs/gcf-test/xyz',
+            $cloudevent->getSubject()
+        );
+        $this->assertSame('2020-05-21T11:53:45.337Z', $cloudevent->getTime());
+    }
 }
