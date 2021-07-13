@@ -30,7 +30,7 @@ class Context
         ?string $timestamp,
         ?string $eventType,
         ?array $resource,
-        ?array $domain
+        ?string $domain
     ) {
         $this->eventId = $eventId;
         $this->timestamp = $timestamp;
