@@ -59,7 +59,10 @@ class LegacyEventMapperTest extends TestCase
         $this->assertNull($cloudevent->getSubject());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
+        $message = $cloudevent->getData()['message'];
+        $this->assertSame('foo', $message['data']);
+        $this->assertSame($jsonData['context']['eventId'], $message['messageId']);
+        $this->assertSame($jsonData['context']['timestamp'], $message['publishTime']);
     }
 
     public function testWithoutContextProperty(): void
@@ -93,7 +96,10 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
+        $message = $cloudevent->getData()['message'];
+        $this->assertSame('foo', $message['data']);
+        $this->assertSame($jsonData['eventId'], $message['messageId']);
+        $this->assertSame($jsonData['timestamp'], $message['publishTime']);
     }
 
     public function testResourceAsString(): void
@@ -124,7 +130,10 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
 
         // Verify Pub/Sub-specific data transformation.
-        $this->assertSame(['message' => 'foo'], $cloudevent->getData());
+        $message = $cloudevent->getData()['message'];
+        $this->assertSame('foo', $message['data']);
+        $this->assertSame($jsonData['eventId'], $message['messageId']);
+        $this->assertSame($jsonData['timestamp'], $message['publishTime']);
     }
 
     public function testCloudStorage(): void
