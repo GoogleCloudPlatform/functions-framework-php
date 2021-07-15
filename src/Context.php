@@ -71,7 +71,7 @@ class Context
 
     public function getDomain(): ?string
     {
-        return $this->domain ?? null;
+        return $this->domain;
     }
 
     public static function fromArray(array $arr)

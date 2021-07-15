@@ -192,7 +192,7 @@ class LegacyEventMapper
                 $ret === 0 ? 'Resource regex did not match' : 'Failed while matching resource regex'
             );
         }
-        if ('firebasedatabase.googleapis.com' === $ceService) {
+        if (self::FIREBASE_DB_CE_SERVICE === $ceService) {
             if (null === $domain) {
                 return [null, null];
             }
