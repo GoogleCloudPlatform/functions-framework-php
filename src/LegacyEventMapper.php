@@ -198,7 +198,7 @@ class LegacyEventMapper
             }
             $location = 'us-central1';
             if ($domain !== 'firebaseio.com') {
-                preg_match('#^([\w-]+)\.firebasedatabase\.app$#', $domain, $locationMatches);
+                preg_match('#^([\w-]+)\.#', $domain, $locationMatches);
                 if (!$locationMatches) {
                     return [null, null];
                 }
