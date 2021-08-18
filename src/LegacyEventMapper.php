@@ -45,6 +45,10 @@ class LegacyEventMapper
         'providers/cloud.storage/eventTypes/object.change' => 'google.cloud.storage.object.v1.finalized',
     ];
 
+    // Constants for Legacy Pubsub Conversion
+    private const PUBSUB_CE_EVENT_TYPE = 'google.pubsub.topic.publish';
+    private const LEGACY_PUBSUB_MESSAGE_TYPE = 'type.googleapis.com/google.pubsub.v1.PubsubMessage';
+
     // CloudEvent service names.
     private const FIREBASE_AUTH_CE_SERVICE = 'firebaseauth.googleapis.com';
     private const FIREBASE_CE_SERVICE = 'firebase.googleapis.com';
@@ -81,9 +85,9 @@ class LegacyEventMapper
         'lastSignedInAt' => 'lastSignInTime',
     ];
 
-    public function fromJsonData(array $jsonData): CloudEvent
+    public function fromJsonData(array $jsonData, string $requestUriPath): CloudEvent
     {
-        [$context, $data] = $this->getLegacyEventContextAndData($jsonData);
+        [$context, $data] = $this->getLegacyEventContextAndData($jsonData, $requestUriPath);
 
         $eventType = $context->getEventType();
         $resourceName = $context->getResourceName();
@@ -142,8 +146,12 @@ class LegacyEventMapper
         ]);
     }
 
-    private function getLegacyEventContextAndData(array $jsonData): array
+    private function getLegacyEventContextAndData(array $jsonData, string $requestUriPath): array
     {
+        if ($this->isRawPubsubPayload($jsonData)) {
+            $jsonData = $this->convertRawPubsubPayload($jsonData, $requestUriPath);
+        }
+
         $data = $jsonData['data'] ?? null;
 
         if (array_key_exists('context', $jsonData)) {
@@ -156,6 +164,47 @@ class LegacyEventMapper
         $context = Context::fromArray($context);
 
         return [$context, $data];
+    }
+
+    private function isRawPubsubPayload(array $jsonData): bool
+    {
+        return (!is_null($jsonData) &&
+              !array_key_exists('context', $jsonData) &&
+              array_key_exists('subscription', $jsonData) &&
+              array_key_exists('message', $jsonData) &&
+              array_key_exists('data', $jsonData['message']) &&
+              array_key_exists('messageId', $jsonData['message']));
+    }
+
+    private function convertRawPubsubPayload(array $jsonData, string $requestUriPath): array
+    {
+        $path_match = preg_match('#projects/[^/?]+/topics/[^/?]+#', $requestUriPath, $matches);
+        $topic = $path_match ? $matches[0] : 'UNKNOWN_PUBSUB_TOPIC';
+
+        if (array_key_exists('publishTime', $jsonData['message'])) {
+            $timestamp = $jsonData['message']['publishTime'];
+        } else {
+            $timestamp = gmdate('%Y-%m-%dT%H:%M:%S.%6NZ');
+        }
+
+        $converted = [
+            'context' => [
+                'eventId' => $jsonData['message']['messageId'],
+                'timestamp' => $timestamp,
+                'eventType' => self::PUBSUB_CE_EVENT_TYPE,
+                'resource' => [
+                    'service' => self::PUBSUB_CE_SERVICE,
+                    'type' => self::LEGACY_PUBSUB_MESSAGE_TYPE,
+                    'name' => $topic,
+                ],
+            ],
+            'data' => [
+                '@type' => self::LEGACY_PUBSUB_MESSAGE_TYPE,
+                'data' => $jsonData['message']['data'],
+                'attributes' => $jsonData['message']['attributes'],
+            ],
+        ];
+        return $converted;
     }
 
     private function ceType(string $eventType): string
