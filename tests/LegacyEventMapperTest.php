@@ -323,7 +323,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
@@ -366,7 +366,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
@@ -409,7 +409,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
