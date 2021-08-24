@@ -252,7 +252,7 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertSame('1.0', $cloudevent->getSpecVersion());
         $this->assertSame(
-            'google.firebase.database.document.v1.deleted',
+            'google.firebase.database.ref.v1.deleted',
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
@@ -295,7 +295,7 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertSame('1.0', $cloudevent->getSpecVersion());
         $this->assertSame(
-            'google.firebase.database.document.v1.deleted',
+            'google.firebase.database.ref.v1.deleted',
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
@@ -338,7 +338,7 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertSame('1.0', $cloudevent->getSpecVersion());
         $this->assertSame(
-            'google.firebase.database.document.v1.deleted',
+            'google.firebase.database.ref.v1.deleted',
             $cloudevent->getType()
         );
         $this->assertSame('application/json', $cloudevent->getDataContentType());
