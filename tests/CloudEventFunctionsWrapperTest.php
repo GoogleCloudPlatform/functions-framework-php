@@ -274,7 +274,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
             [$this, 'invokeThisLegacy']
         );
         $request = new ServerRequest('GET', '/', [], json_encode([
-            'data' => 'foo',
+            'data' => ['data' => 'foo'],
             'context' => [
                 'eventId' => '1413058901901494',
                 'timestamp' => '2020-12-08T20:03:19.162Z',
@@ -324,7 +324,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
             'dataschema' => 'type.googleapis.com/google.logging.v2.LogEntry',
             'subject' => 'My Subject',
             'time' => '2020-12-08T20:03:19.162Z',
-            'data' => 'foo',
+            'data' => ['data' => 'foo'],
         ]));
         $cloudEventFunctionWrapper->execute($request);
         $this->assertTrue(self::$functionCalled);

@@ -23,17 +23,20 @@ class Context
     private $timestamp;
     private $eventType;
     private $resource;
+    private $domain;
 
     public function __construct(
         ?string $eventId,
         ?string $timestamp,
         ?string $eventType,
-        ?array $resource
+        ?array $resource,
+        ?string $domain
     ) {
         $this->eventId = $eventId;
         $this->timestamp = $timestamp;
         $this->eventType = $eventType;
         $this->resource = $resource;
+        $this->domain = $domain;
     }
 
     public function getEventId(): ?string
@@ -66,6 +69,11 @@ class Context
         return $this->resource['name'] ?? null;
     }
 
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
+
     public static function fromArray(array $arr)
     {
         // When "resource" is defined in the root (instead of in "context") it
@@ -75,7 +83,7 @@ class Context
         }
 
         $args = [];
-        $argKeys = ['eventId', 'timestamp', 'eventType', 'resource'];
+        $argKeys = ['eventId', 'timestamp', 'eventType', 'resource', 'domain'];
         foreach ($argKeys as $key) {
             $args[] = $arr[$key] ?? null;
         }

@@ -38,10 +38,10 @@ class LegacyEventMapper
         'providers/firebase.auth/eventTypes/user.create' => 'google.firebase.auth.user.v1.created',
         'providers/firebase.auth/eventTypes/user.delete' => 'google.firebase.auth.user.v1.deleted',
         'providers/google.firebase.analytics/eventTypes/event.log' => 'google.firebase.analytics.log.v1.written',
-        'providers/google.firebase.database/eventTypes/ref.create' => 'google.firebase.database.document.v1.created',
-        'providers/google.firebase.database/eventTypes/ref.write' => 'google.firebase.database.document.v1.written',
-        'providers/google.firebase.database/eventTypes/ref.update' => 'google.firebase.database.document.v1.updated',
-        'providers/google.firebase.database/eventTypes/ref.delete' => 'google.firebase.database.document.v1.deleted',
+        'providers/google.firebase.database/eventTypes/ref.create' => 'google.firebase.database.ref.v1.created',
+        'providers/google.firebase.database/eventTypes/ref.write' => 'google.firebase.database.ref.v1.written',
+        'providers/google.firebase.database/eventTypes/ref.update' => 'google.firebase.database.ref.v1.updated',
+        'providers/google.firebase.database/eventTypes/ref.delete' => 'google.firebase.database.ref.v1.deleted',
         'providers/cloud.storage/eventTypes/object.change' => 'google.cloud.storage.object.v1.finalized',
     ];
 
@@ -69,7 +69,7 @@ class LegacyEventMapper
     // for the subject.
     private static $ceResourceRegexMap = [
         self::FIREBASE_CE_SERVICE => '#^(projects/[^/]+)/(events/[^/]+)$#',
-        self::FIREBASE_DB_CE_SERVICE => '#^(projects/_/instances/[^/]+)/(refs/.+)$#',
+        self::FIREBASE_DB_CE_SERVICE => '#^projects/_/(instances/[^/]+)/(refs/.+)$#',
         self::FIRESTORE_CE_SERVICE => '#^(projects/[^/]+/databases/\(default\))/(documents/.+)$#',
         self::STORAGE_CE_SERVICE => '#^(projects/_/buckets/[^/]+)/(objects/.+)$#',
     ];
@@ -97,12 +97,21 @@ class LegacyEventMapper
         $ceService = $context->getService() ?: $this->ceService($eventType);
 
         // Split the background event resource into a CloudEvent resource and subject.
-        [$ceResource, $ceSubject] = $this->ceResourceAndSubject($ceService, $resourceName);
+        [$ceResource, $ceSubject] = $this->ceResourceAndSubject(
+            $ceService,
+            $resourceName,
+            $context->getDomain()
+        );
 
         $ceTime = $context->getTimestamp();
 
         if ($ceService === self::PUBSUB_CE_SERVICE) {
             // Handle Pub/Sub events.
+            if (!is_array($data)) {
+                $data = ['data' => $data];
+            }
+            $data['messageId'] = $context->getEventId();
+            $data['publishTime'] = $context->getTimestamp();
             $data = ['message' => $data];
         } elseif ($ceService === self::FIREBASE_AUTH_CE_SERVICE) {
             // Handle Firebase Auth events.
@@ -171,7 +180,7 @@ class LegacyEventMapper
         return $eventType;
     }
 
-    private function ceResourceAndSubject(string $ceService, string $resource): array
+    private function ceResourceAndSubject(string $ceService, string $resource, ?string $domain): array
     {
         if (!array_key_exists($ceService, self::$ceResourceRegexMap)) {
             return [$resource, null];
@@ -182,6 +191,20 @@ class LegacyEventMapper
             throw new RuntimeException(
                 $ret === 0 ? 'Resource regex did not match' : 'Failed while matching resource regex'
             );
+        }
+        if (self::FIREBASE_DB_CE_SERVICE === $ceService) {
+            if (null === $domain) {
+                return [null, null];
+            }
+            $location = 'us-central1';
+            if ($domain !== 'firebaseio.com') {
+                preg_match('#^([\w-]+)\.#', $domain, $locationMatches);
+                if (!$locationMatches) {
+                    return [null, null];
+                }
+                $location = $locationMatches[1];
+            }
+            return ["projects/_/locations/$location/$matches[1]", $matches[2]];
         }
 
         return [$matches[1], $matches[2]];
