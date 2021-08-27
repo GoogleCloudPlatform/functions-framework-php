@@ -179,7 +179,16 @@ class LegacyEventMapper
     private function convertRawPubsubPayload(array $jsonData, string $requestUriPath): array
     {
         $path_match = preg_match('#projects/[^/?]+/topics/[^/?]+#', $requestUriPath, $matches);
-        $topic = $path_match ? $matches[0] : 'UNKNOWN_PUBSUB_TOPIC';
+        if ($path_match) {
+            $topic = $matches[0];
+        } else {
+            $topic = 'UNKNOWN_PUBSUB_TOPIC';
+            $this->stderrStructuredWarn('Failed to extract the topic name from the URL path.');
+            $this->stderrStructuredWarn(
+                'Configure your subscription\'s push endpoint to use the following path: ' .
+              'projects/PROJECT_NAME/topics/TOPIC_NAME'
+            );
+        }
 
         if (array_key_exists('publishTime', $jsonData['message'])) {
             $timestamp = $jsonData['message']['publishTime'];
@@ -187,7 +196,7 @@ class LegacyEventMapper
             $timestamp = gmdate('%Y-%m-%dT%H:%M:%S.%6NZ');
         }
 
-        $converted = [
+        return [
             'context' => [
                 'eventId' => $jsonData['message']['messageId'],
                 'timestamp' => $timestamp,
@@ -204,7 +213,6 @@ class LegacyEventMapper
                 'attributes' => $jsonData['message']['attributes'],
             ],
         ];
-        return $converted;
     }
 
     private function ceType(string $eventType): string
@@ -257,5 +265,15 @@ class LegacyEventMapper
         }
 
         return [$matches[1], $matches[2]];
+    }
+
+    private function stderrStructuredWarn(string $msg)
+    {
+        $stderr = fopen('php://stderr', 'wb');
+        fwrite($stderr, json_encode([
+            'message' => $msg,
+            'severity' => 'WARNING'
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        fclose($stderr);
     }
 }
