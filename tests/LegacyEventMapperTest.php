@@ -42,7 +42,7 @@ class LegacyEventMapperTest extends TestCase
                 ],
             ]
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('1413058901901494', $cloudevent->getId());
         $this->assertSame(
@@ -78,7 +78,7 @@ class LegacyEventMapperTest extends TestCase
                 'service' => 'pubsub.googleapis.com'
             ],
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('1413058901901494', $cloudevent->getId());
         $this->assertSame(
@@ -102,6 +102,86 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame($jsonData['timestamp'], $message['publishTime']);
     }
 
+    public function testRawPubsubNoPath(): void
+    {
+        $mapper = new LegacyEventMapper();
+        $jsonData = [
+            'subscription' => 'projects/sample-project/subscriptions/gcf-test-sub',
+            'message' => [
+                'data' => 'eyJmb28iOiJiYXIifQ==',
+                'messageId' => '1215011316659232',
+                'attributes' => ['test' => '123']
+            ],
+        ];
+
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
+
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame('1215011316659232', $cloudevent->getId());
+        $this->assertSame(
+            '//pubsub.googleapis.com/UNKNOWN_PUBSUB_TOPIC',
+            $cloudevent->getSource()
+        );
+        $this->assertSame(
+            'google.cloud.pubsub.topic.v1.messagePublished',
+            $cloudevent->getType()
+        );
+        $this->assertNull($cloudevent->getSubject());
+        $this->assertEqualsWithDelta(
+            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
+            strtotime($cloudevent->getTime()),
+            1
+        );
+        $this->assertSame(
+            '123',
+            $cloudevent->getData()['message']['attributes']['test']
+        );
+        $this->assertSame(
+            'eyJmb28iOiJiYXIifQ==',
+            $cloudevent->getData()['message']['data']
+        );
+    }
+
+    public function testRawPubsubWithPath(): void
+    {
+        $mapper = new LegacyEventMapper();
+        $jsonData = [
+            'subscription' => 'projects/sample-project/subscriptions/gcf-test-sub',
+            'message' => [
+                'data' => 'eyJmb28iOiJiYXIifQ==',
+                'messageId' => '1215011316659232',
+                'attributes' => ['test' => '123']
+            ],
+        ];
+
+        $cloudevent = $mapper->fromJsonData($jsonData, '/projects/sample-project/topics/gcf-test?pubsub_trigger=true');
+
+        $this->assertSame('1.0', $cloudevent->getSpecVersion());
+        $this->assertSame('1215011316659232', $cloudevent->getId());
+        $this->assertSame(
+            '//pubsub.googleapis.com/projects/sample-project/topics/gcf-test',
+            $cloudevent->getSource()
+        );
+        $this->assertSame(
+            'google.cloud.pubsub.topic.v1.messagePublished',
+            $cloudevent->getType()
+        );
+        $this->assertNull($cloudevent->getSubject());
+        $this->assertEqualsWithDelta(
+            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
+            strtotime($cloudevent->getTime()),
+            1
+        );
+        $this->assertSame(
+            '123',
+            $cloudevent->getData()['message']['attributes']['test']
+        );
+        $this->assertSame(
+            'eyJmb28iOiJiYXIifQ==',
+            $cloudevent->getData()['message']['data']
+        );
+    }
+
     public function testResourceAsString(): void
     {
         $mapper = new LegacyEventMapper();
@@ -112,7 +192,7 @@ class LegacyEventMapperTest extends TestCase
             'eventType' => 'providers/cloud.pubsub/eventTypes/topic.publish',
             'resource' => 'projects/MY-PROJECT/topics/MY-TOPIC',
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('1413058901901494', $cloudevent->getId());
         $this->assertSame(
@@ -151,7 +231,7 @@ class LegacyEventMapperTest extends TestCase
                 ],
             ]
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('1413058901901494', $cloudevent->getId());
         $this->assertSame(
@@ -198,7 +278,7 @@ class LegacyEventMapperTest extends TestCase
           'resource' => 'projects/my-project-id',
           'timestamp' => '2020-09-29T11:32:00.000Z',
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('aaaaaa-1111-bbbb-2222-cccccccccccc', $cloudevent->getId());
         $this->assertSame(
@@ -243,7 +323,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
@@ -286,7 +366,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
@@ -329,7 +409,7 @@ class LegacyEventMapperTest extends TestCase
             'timestamp' => '2020-05-21T11:53:45.337Z',
             'eventId' => 'oIcVXHEMZfhQMNs/yD4nwpuKE0s='
         ];
-        $cloudevent = $mapper->fromJsonData($jsonData);
+        $cloudevent = $mapper->fromJsonData($jsonData, '');
 
         $this->assertSame('oIcVXHEMZfhQMNs/yD4nwpuKE0s=', $cloudevent->getId());
         $this->assertSame(
