@@ -29,4 +29,8 @@ Guidelines](https://opensource.google.com/conduct/).
 
 ## Releasing
 
-This library is released automatically to Packagist when a [GitHub release](https://github.com/GoogleCloudPlatform/functions-framework-php/releases) is cut. To cut a release, manually create a new tag, create a release and save. The package will automatically be published to Packagist within a few minutes.
+This library is released automatically to Packagist when a
+[GitHub release](https://github.com/GoogleCloudPlatform/functions-framework-php/releases)
+is created. Name the release with the version appropriate for the changes 
+included in that release, following semantic versioning. The package will
+automatically be published to Packagist within a few minutes.
