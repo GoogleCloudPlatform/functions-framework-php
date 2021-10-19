@@ -18,11 +18,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: '1.15'
-
     - name: Setup PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
@@ -35,24 +30,31 @@ jobs:
         max_attempts: 3
         command: composer install
 
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.15'
+
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.12
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       env:
         FUNCTION_TARGET: 'httpFunc'
         FUNCTION_SIGNATURE_TYPE: 'http'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
+        version: 'v1.0.0'
         functionType: 'http'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v0.3.12
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
+        version: 'v1.0.0'
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
