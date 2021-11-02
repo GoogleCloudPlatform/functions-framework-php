@@ -27,13 +27,12 @@ use DateTimeInterface;
 
 /**
  * @group gcf-framework
- * @group newtest
  */
 class CloudEventSdkCompliantTest extends TestCase
 {
     private CloudEvent $cloudevent;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->cloudevent = new CloudEvent(
             '1413058901901494',
@@ -57,7 +56,6 @@ class CloudEventSdkCompliantTest extends TestCase
 
     public function testJsonSerialize(): void
     {
-
         $wrappedEvent = new CloudEventSdkCompliant($this->cloudevent);
 
         $want = '{

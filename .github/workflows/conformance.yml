@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ '7.2', '7.3', '7.4','8.0' ]
+        php-version: [ '7.4','8.0' ]
     name: PHP ${{ matrix.php-version }} Conformance Test
     steps:
     - name: Checkout code
