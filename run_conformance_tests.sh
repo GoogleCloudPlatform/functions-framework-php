@@ -50,3 +50,6 @@ FUNCTION_TARGET='cloudEventFunc' FUNCTION_SIGNATURE_TYPE='cloudevent' FUNCTION_S
 
 print_header "DECLARATIVE CLOUDEVENT CONFORMANCE TESTS"
 FUNCTION_TARGET='declarativeCloudEventFunc' FUNCTION_SIGNATURE_TYPE= FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=cloudevent -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true
+
+
+Command failed: ~/client -output-file=function_output.json -type=cloudevent -validate-mapping=true -builder-source= -builder-target= -builder-runtime= -builder-tag=latest -buildpacks=false -cmd='php -S localhost:8080 router.php' -start-delay=1
