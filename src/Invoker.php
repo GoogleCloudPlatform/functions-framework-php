@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -30,19 +31,33 @@ class Invoker
     private $errorLogFunc;
 
     /**
-     * @param callable $target      The callable to be invoked
-     * @param string $signatureType The signature type of the target callable,
-     *                              either "event" or "http".
+     * @param array|string $target      The callable to be invoked
      */
-    public function __construct(callable $target, string $signatureType)
+    public function __construct($target)
     {
+        $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
+
+        $isDeclarativeSignature = false;
+        if (is_string($target) && Registry::contains($target)) {
+            $isDeclarativeSignature = true;
+            $signatureType = Registry::getFunctionType($target);
+            $target = Registry::getFunctionHandle($target);
+        }
+
+        if (!is_callable($target)) {
+            throw new InvalidArgumentException(sprintf(
+                'Function target is not callable: "%s"',
+                $target
+            ));
+        }
+
         if ($signatureType === 'http') {
             $this->function = new HttpFunctionWrapper($target);
         } elseif (
             $signatureType === 'event'
             || $signatureType === 'cloudevent'
         ) {
-            $this->function = new CloudEventFunctionWrapper($target);
+            $this->function = new CloudEventFunctionWrapper($target, $isDeclarativeSignature);
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Invalid signature type: "%s"',
@@ -51,8 +66,8 @@ class Invoker
         }
         $this->errorLogFunc = function (string $error) {
             fwrite(fopen('php://stderr', 'wb'), json_encode([
-              'message' => $error,
-              'severity' => 'error'
+                'message' => $error,
+                'severity' => 'error'
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         };
     }

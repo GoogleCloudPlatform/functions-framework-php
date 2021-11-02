@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,6 +20,10 @@ namespace Google\CloudFunctions\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Google\CloudFunctions\CloudEvent;
+use Google\CloudFunctions\FunctionsFramework;
+use Symfony\Component\Process\Process;
+use GuzzleHttp\Client;
 
 /**
  * @group gcf-framework
@@ -26,6 +31,9 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class routerTest extends TestCase
 {
+    /** @var Process */
+    private static $process;
+
     public function testInvalidFunctionTarget(): void
     {
         $this->expectException('RuntimeException');
@@ -69,6 +77,22 @@ class routerTest extends TestCase
         require 'router.php';
         $this->assertEquals($wrappers, stream_get_wrappers());
         $this->assertNotContains('gs', stream_get_wrappers());
+    }
+
+    public function testDeclarativeOverNonDeclarative(): void
+    {
+        FunctionsFramework::http('helloHttp', function (ServerRequestInterface $request) {
+            return 'Hello World!';
+        });
+
+        // index.php also has a non-declaration function named 'helloHttp'.
+        putenv('FUNCTION_SOURCE=' . __DIR__ . '/../examples/hello/index.php');
+        putenv('FUNCTION_TARGET=helloHttp');
+        putenv('FUNCTION_SIGNATURE_TYPE=cloudevent'); // ignored due to declarative signature
+        require 'router.php';
+
+        // Expect the declarative function to be called.
+        $this->expectOutputString('Hello World!');
     }
 }
 

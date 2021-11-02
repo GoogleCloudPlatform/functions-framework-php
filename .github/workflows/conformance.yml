@@ -47,11 +47,35 @@ jobs:
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
 
+    - name: Run Declarative HTTP conformance tests
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
+      env:
+        FUNCTION_TARGET: 'declarativeHttpFunc'
+        FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
+      with:
+        version: 'v1.0.0'
+        functionType: 'http'
+        useBuildpacks: false
+        cmd: "'php -S localhost:8080 router.php'"
+
     - name: Run CloudEvent conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
+        FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
+      with:
+        version: 'v1.0.0'
+        functionType: 'cloudevent'
+        useBuildpacks: false
+        validateMapping: true
+        cmd: "'php -S localhost:8080 router.php'"
+
+
+    - name: Run Declarative CloudEvent conformance tests
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.0
+      env:
+        FUNCTION_TARGET: 'declarativeCloudEventFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
         version: 'v1.0.0'
