@@ -42,7 +42,7 @@ jobs:
         FUNCTION_SIGNATURE_TYPE: 'http'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.0.0'
+        version: 'v1.2.0'
         functionType: 'http'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
@@ -53,7 +53,7 @@ jobs:
         FUNCTION_TARGET: 'declarativeHttpFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.0.0'
+        version: 'v1.2.0'
         functionType: 'http'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
@@ -65,7 +65,7 @@ jobs:
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.0.0'
+        version: 'v1.2.0'
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
@@ -78,7 +78,7 @@ jobs:
         FUNCTION_TARGET: 'declarativeCloudEventFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.0.0'
+        version: 'v1.2.0'
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
