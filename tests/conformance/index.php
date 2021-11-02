@@ -1,9 +1,14 @@
 <?php
 
+use CloudEvents\V1\CloudEventInterface;
 use Google\CloudFunctions\CloudEvent;
+use Google\CloudFunctions\CloudEventSdkCompliant;
+use Google\CloudFunctions\FunctionsFramework;
 use Psr\Http\Message\ServerRequestInterface;
 
 define('OUTPUT_FILE', 'function_output.json');
+
+FunctionsFramework::http('declarativeHttpFunc', 'httpFunc');
 
 function httpFunc(ServerRequestInterface $request)
 {
@@ -69,3 +74,45 @@ function cloudEventFunc(CloudEvent $cloudevent)
 {
     file_put_contents(OUTPUT_FILE, json_encode(fixCloudEventData($cloudevent)));
 }
+
+function fixCloudEventInterfaceData(CloudEventInterface $cloudevent): CloudEventInterface
+{
+    $data = $cloudevent->getData();
+    $dataModified = false;
+
+    // These fields are known to be maps, so if they're present and empty
+    // change them to the empty object so they encode as '{}'.
+    $fields = ['oldValue', 'updateMask'];
+    foreach ($fields as $f) {
+        if (array_key_exists($f, $data) && empty($data[$f])) {
+            $data[$f] = new stdClass();
+            $dataModified = true;
+        }
+    }
+
+    if ($dataModified) {
+        // Clone the event but swap in the modified data.
+        $ffCloudevent = new CloudEvent(
+            $cloudevent->getId(),
+            $cloudevent->getSource(),
+            $cloudevent->getSpecversion(),
+            $cloudevent->getType(),
+            $cloudevent->getDatacontenttype(),
+            $cloudevent->getDataschema(),
+            $cloudevent->getSubject(),
+            $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED),
+            $data
+        );
+
+        return new CloudEventSdkCompliant($ffCloudevent);
+    }
+
+    return $cloudevent;
+}
+
+function declarativeCloudEventFunc(CloudEventInterface $cloudevent)
+{
+    file_put_contents(OUTPUT_FILE, json_encode(fixCloudEventInterfaceData($cloudevent)));
+}
+
+FunctionsFramework::cloudEvent('declarativeCloudEventFunc', 'declarativeCloudEventFunc');
