@@ -20,10 +20,7 @@ namespace Google\CloudFunctions\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Google\CloudFunctions\CloudEvent;
 use Google\CloudFunctions\FunctionsFramework;
-use Symfony\Component\Process\Process;
-use GuzzleHttp\Client;
 
 /**
  * @group gcf-framework
@@ -31,9 +28,6 @@ use GuzzleHttp\Client;
  */
 class routerTest extends TestCase
 {
-    /** @var Process */
-    private static $process;
-
     public function testInvalidFunctionTarget(): void
     {
         $this->expectException('RuntimeException');
