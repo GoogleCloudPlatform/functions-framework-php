@@ -71,7 +71,6 @@ jobs:
         validateMapping: true
         cmd: "'php -S localhost:8080 router.php'"
 
-
     - name: Run Declarative CloudEvent conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.1
       env:
