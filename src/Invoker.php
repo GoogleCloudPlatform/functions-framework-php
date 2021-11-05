@@ -32,13 +32,12 @@ class Invoker
 
     /**
      * @param array|string $target    The callable to be invoked
-     * @param $signatureType          The signature type of the target callable,
+     * @param string $signatureType          The signature type of the target callable,
      *                                either "cloudevent" or "http". If null,
      *                                env var `FUNCTION_SIGNATURE_TYPE` is used.
      */
-    public function __construct($target, ?string $signatureType = null)
+    public function __construct($target, string $signatureType)
     {
-        $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
         $registry = Registry::getInstance();
 
         $isDeclarativeSignature = false;

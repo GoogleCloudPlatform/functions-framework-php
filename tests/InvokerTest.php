@@ -36,18 +36,11 @@ class InvokerTest extends TestCase
 {
     private static string $cloudeventResponse;
 
-    protected function tearDown(): void
-    {
-        // Clear env var
-        putenv('FUNCTION_SIGNATURE_TYPE');
-    }
-
     public function testInvalidSignatureType(): void
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid signature type: "invalid-signature-type"');
-        putenv('FUNCTION_SIGNATURE_TYPE=invalid-signature-type');
-        new Invoker([$this, 'invokeThis']);
+        new Invoker([$this, 'invokeThis'], 'invalid-signature-type');
     }
 
     public function testHttpInvoker(): void
@@ -62,8 +55,9 @@ class InvokerTest extends TestCase
         FunctionsFramework::http('helloHttp', function (ServerRequestInterface $request) {
             return "Hello HTTP!";
         });
-        putenv('FUNCTION_SIGNATURE_TYPE=cloudevent'); // ignored due to declarative signature
-        $invoker = new Invoker('helloHttp');
+
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloHttp', 'cloudevent');
         $response = $invoker->handle();
         $this->assertSame('Hello HTTP!', (string) $response->getBody());
     }
@@ -74,15 +68,16 @@ class InvokerTest extends TestCase
         FunctionsFramework::cloudEvent('helloCloudEvent', function (CloudEventInterface $cloudevent) {
             InvokerTest::$cloudeventResponse = "Hello CloudEvent!";
         });
-        putenv('FUNCTION_SIGNATURE_TYPE=http'); // ignored due to declarative signature
-        $invoker = new Invoker('helloCloudEvent', 'cludevent');
+
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloCloudEvent', 'http');
         $request = new ServerRequest(
             'POST',
             '',
             [],
             '{"eventId":"foo","eventType":"bar","resource":"baz"}'
         );
-        $response = $invoker->handle($request);
+        $invoker->handle($request);
         $this->assertSame('Hello CloudEvent!', InvokerTest::$cloudeventResponse);
     }
 
@@ -97,8 +92,8 @@ class InvokerTest extends TestCase
         FunctionsFramework::http('helloHttp3', function (ServerRequestInterface $request) {
             return "Hello HTTP 3!";
         });
-        putenv('FUNCTION_SIGNATURE_TYPE=cloudevent'); // ignored due to declarative signature
-        $invoker = new Invoker('helloHttp2');
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloHttp2', 'cloudevent');
         $response = $invoker->handle();
         $this->assertSame('Hello HTTP 2!', (string) $response->getBody());
     }
@@ -110,7 +105,7 @@ class InvokerTest extends TestCase
     {
         $functionName = sprintf('invoke%sError', ucwords($signatureType));
         putenv(sprintf('FUNCTION_SIGNATURE_TYPE=%s', $signatureType));
-        $invoker = new Invoker([$this, $functionName]);
+        $invoker = new Invoker([$this, $functionName], $signatureType);
         // use a custom error log func
         $message = null;
         $newErrorLogFunc = function (string $error) use (&$message) {

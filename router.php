@@ -51,7 +51,9 @@ $projectContext->registerCloudStorageStreamWrapperIfPossible();
         throw new RuntimeException('FUNCTION_TARGET is not set');
     }
 
-    $invoker = new Invoker($target);
+    $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
+
+    $invoker = new Invoker($target, $signatureType);
     $response = $invoker->handle();
     (new Emitter())->emit($response);
 })();
