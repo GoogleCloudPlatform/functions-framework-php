@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -50,8 +49,16 @@ $projectContext->registerCloudStorageStreamWrapperIfPossible();
     if (false === $target) {
         throw new RuntimeException('FUNCTION_TARGET is not set');
     }
+    if (!is_callable($target)) {
+        throw new InvalidArgumentException(sprintf(
+            'Function target is not callable: "%s"',
+            $target
+        ));
+    }
 
-    $invoker = new Invoker($target);
+    $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
+
+    $invoker = new Invoker($target, $signatureType);
     $response = $invoker->handle();
     (new Emitter())->emit($response);
 })();

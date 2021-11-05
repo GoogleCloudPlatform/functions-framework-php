@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2020 Google LLC.
  *
@@ -18,7 +17,6 @@
 
 namespace Google\CloudFunctions;
 
-use CloudEvents\V1\CloudEventInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,8 +26,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
     private const TYPE_LEGACY = 1;
     private const TYPE_BINARY = 2;
     private const TYPE_STRUCTURED = 3;
-
-    private bool $marshalToCloudEventInterface;
 
     // These are CloudEvent context attribute names that map to binary mode
     // HTTP headers when prefixed with 'ce-'. 'datacontenttype' is notably absent
@@ -45,12 +41,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         'subject',
         'time'
     ];
-
-    public function __construct(callable $function, bool $marshalToCloudEventInterface = false)
-    {
-        $this->marshalToCloudEventInterface = $marshalToCloudEventInterface;
-        parent::__construct($function);
-    }
 
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
@@ -99,10 +89,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
                 ], 'invalid event type');
         }
 
-        if ($this->marshalToCloudEventInterface) {
-            $cloudevent = new CloudEventSdkCompliant($cloudevent);
-        }
-
         call_user_func($this->function, $cloudevent);
         return new Response();
     }
@@ -148,6 +134,6 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     protected function getFunctionParameterClassName(): string
     {
-        return $this->marshalToCloudEventInterface ? CloudEventInterface::class : CloudEvent::class;
+        return CloudEvent::class;
     }
 }

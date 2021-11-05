@@ -69,11 +69,7 @@ class CloudEventSdkCompliant implements JsonSerializable, CloudEventInterface
     }
     public function getTime(): ?DateTimeImmutable
     {
-        $time = DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $this->cloudevent->getTime());
-        if ($time === false) {
-            return null;
-        }
-        return $time;
+        return DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $this->cloudevent->getTime());
     }
     public function getExtension(string $attribute)
     {
