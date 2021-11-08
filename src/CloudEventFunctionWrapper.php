@@ -72,7 +72,7 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         switch ($this->getEventType($request)) {
             case self::TYPE_LEGACY:
                 $mapper = new LegacyEventMapper();
-                $cloudevent = $mapper->fromJsonData($data);
+                $cloudevent = $mapper->fromJsonData($data, $request->getUri()->getPath());
                 break;
 
             case self::TYPE_STRUCTURED:

@@ -18,17 +18,23 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use BadMethodCallException;
 use Google\CloudFunctions\CloudEvent;
+use Google\CloudFunctions\CloudEventSdkCompliant;
 use PHPUnit\Framework\TestCase;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 /**
  * @group gcf-framework
  */
-class CloudEventTest extends TestCase
+class CloudEventSdkCompliantTest extends TestCase
 {
-    public function testJsonSerialize(): void
+    private CloudEvent $cloudevent;
+
+    public function setUp(): void
     {
-        $event = new CloudEvent(
+        $this->cloudevent = new CloudEvent(
             '1413058901901494',
             '//pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC',
             '1.0',
@@ -46,6 +52,11 @@ class CloudEventTest extends TestCase
                 "subscription" => "projects/MY-PROJECT/subscriptions/MY-SUB"
             ]
         );
+    }
+
+    public function testJsonSerialize(): void
+    {
+        $wrappedEvent = new CloudEventSdkCompliant($this->cloudevent);
 
         $want = '{
     "id": "1413058901901494",
@@ -66,6 +77,36 @@ class CloudEventTest extends TestCase
     }
 }';
 
-        $this->assertSame(json_encode($event, JSON_PRETTY_PRINT), $want);
+        $this->assertSame($want, json_encode($wrappedEvent, JSON_PRETTY_PRINT));
+    }
+
+    public function testWrapsCloudEvent(): void
+    {
+        $wrappedEvent = new CloudEventSdkCompliant($this->cloudevent);
+
+        $this->assertSame($this->cloudevent->getId(), $wrappedEvent->getId());
+        $this->assertSame($this->cloudevent->getSource(), $wrappedEvent->getSource());
+        $this->assertSame($this->cloudevent->getType(), $wrappedEvent->getType());
+        $this->assertSame($this->cloudevent->getData(), $wrappedEvent->getData());
+        $this->assertSame($this->cloudevent->getDataContentType(), $wrappedEvent->getDataContentType());
+        $this->assertSame($this->cloudevent->getDataSchema(), $wrappedEvent->getDataSchema());
+        $this->assertSame($this->cloudevent->getSubject(), $wrappedEvent->getSubject());
+        $this->assertEquals(DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $this->cloudevent->getTime()), $wrappedEvent->getTime());
+    }
+
+    public function testUnimplementedGetExtensionThrowsError(): void
+    {
+        $wrappedEvent = new CloudEventSdkCompliant($this->cloudevent);
+        $this->expectException(BadMethodCallException::class);
+
+        $wrappedEvent->getExtension('attribute');
+    }
+
+    public function testUnimplementedGetExtensionsThrowsError(): void
+    {
+        $wrappedEvent = new CloudEventSdkCompliant($this->cloudevent);
+        $this->expectException(BadMethodCallException::class);
+
+        $wrappedEvent->getExtensions();
     }
 }

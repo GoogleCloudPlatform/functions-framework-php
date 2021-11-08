@@ -17,6 +17,7 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use Exception;
 use Google\CloudFunctions\CloudEvent;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\FunctionWrapper;
@@ -30,14 +31,14 @@ use ReflectionClass;
  */
 class InvokerTest extends TestCase
 {
-    public function testInvalidSignatureType()
+    public function testInvalidSignatureType(): void
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid signature type: "invalid-signature-type"');
         new Invoker([$this, 'invokeThis'], 'invalid-signature-type');
     }
 
-    public function testHttpInvoker()
+    public function testHttpInvoker(): void
     {
         $invoker = new Invoker([$this, 'invokeThis'], 'http');
         $response = $invoker->handle();
@@ -47,7 +48,7 @@ class InvokerTest extends TestCase
     /**
      * @dataProvider provideErrorHandling
      */
-    public function testErrorHandling($signatureType, $errorStatus, $request = null)
+    public function testErrorHandling($signatureType, $errorStatus, $request = null): void
     {
         $functionName = sprintf('invoke%sError', ucwords($signatureType));
         $invoker = new Invoker([$this, $functionName], $signatureType);
@@ -80,7 +81,7 @@ class InvokerTest extends TestCase
         $this->assertStringContainsString('InvokerTest.php', $message); // stack trace
     }
 
-    public function provideErrorHandling()
+    public function provideErrorHandling(): array
     {
         return [
             ['http', 'crash'],
@@ -93,18 +94,18 @@ class InvokerTest extends TestCase
         ];
     }
 
-    public function invokeThis(ServerRequestInterface $request)
+    public function invokeThis(ServerRequestInterface $request): string
     {
         return 'Invoked!';
     }
 
-    public function invokeHttpError(ServerRequestInterface $request)
+    public function invokeHttpError(ServerRequestInterface $request): void
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 
-    public function invokeCloudeventError(CloudEvent $event)
+    public function invokeCloudeventError(CloudEvent $event): void
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 }
