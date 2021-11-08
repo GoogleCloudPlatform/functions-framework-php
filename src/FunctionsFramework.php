@@ -18,12 +18,8 @@
 
 namespace Google\CloudFunctions;
 
-use Google\CloudFunctions\Registry;
-
 class FunctionsFramework
 {
-    private static $functions = [];
-
     private function __construct()
     {
     }
