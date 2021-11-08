@@ -31,7 +31,7 @@ abstract class FunctionWrapper
 
     protected $function;
 
-    public function __construct(callable $function, array $signature = null)
+    public function __construct(callable $function)
     {
         $this->validateFunctionSignature(
             $this->getFunctionReflection($function)

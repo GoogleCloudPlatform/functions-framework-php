@@ -46,10 +46,10 @@ class CloudEventFunctionWrapper extends FunctionWrapper
         'time'
     ];
 
-    public function __construct(callable $function, array $signature = null, bool $marshalToCloudEventInterface = false)
+    public function __construct(callable $function, bool $marshalToCloudEventInterface = false)
     {
         $this->marshalToCloudEventInterface = $marshalToCloudEventInterface;
-        parent::__construct($function, $signature);
+        parent::__construct($function);
     }
 
     public function execute(ServerRequestInterface $request): ResponseInterface

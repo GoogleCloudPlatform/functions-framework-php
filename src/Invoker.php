@@ -29,44 +29,41 @@ class Invoker
 {
     private $function;
     private $errorLogFunc;
+    private static $registeredFunction = [];
 
     /**
-     * @param array|string $target    The callable to be invoked
-     * @param string $signatureType          The signature type of the target callable,
-     *                                either "cloudevent" or "http". If null,
-     *                                env var `FUNCTION_SIGNATURE_TYPE` is used.
+     * @param array|string|FunctionWrapper $target The callable to be invoked.
+     * @param string|null $signatureType   The signature type of the target callable,
+     *                                     either "cloudevent" or "http". If null,
+     *                                     env var `FUNCTION_SIGNATURE_TYPE` is used.
      */
-    public function __construct($target, string $signatureType)
+    public function __construct($target, ?string $signatureType = null)
     {
-        $registry = Registry::getInstance();
-
-        $isDeclarativeSignature = false;
-        if (is_string($target) && $registry->contains($target)) {
-            $isDeclarativeSignature = true;
-            $signatureType = $registry->getFunctionType($target);
-            $target = $registry->getFunctionHandle($target);
-        }
-
-        if (!is_callable($target)) {
-            throw new InvalidArgumentException(sprintf(
-                'Function target is not callable: "%s"',
-                $target
-            ));
-        }
-
-        if ($signatureType === 'http') {
-            $this->function = new HttpFunctionWrapper($target);
-        } elseif (
-            $signatureType === 'event'
-            || $signatureType === 'cloudevent'
-        ) {
-            $this->function = new CloudEventFunctionWrapper($target, null, $isDeclarativeSignature);
+        if (is_string($target) && isset(self::$registeredFunction[$target])) {
+            $this->function = self::$registeredFunction[$target];
         } else {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid signature type: "%s"',
-                $signatureType
-            ));
+            if (!is_callable($target)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Function target is not callable: "%s"',
+                    $target
+                ));
+            }
+
+            if ($signatureType === 'http') {
+                $this->function = new HttpFunctionWrapper($target);
+            } elseif (
+                $signatureType === 'event'
+                || $signatureType === 'cloudevent'
+            ) {
+                $this->function = new CloudEventFunctionWrapper($target, false);
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid signature type: "%s"',
+                    $signatureType
+                ));
+            }
         }
+
         $this->errorLogFunc = function (string $error) {
             fwrite(fopen('php://stderr', 'wb'), json_encode([
                 'message' => $error,
@@ -96,5 +93,10 @@ class Invoker
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
             ]);
         }
+    }
+
+    public static function registerFunction(string $name, FunctionWrapper $function)
+    {
+        self::$registeredFunction[$name] = $function;
     }
 }

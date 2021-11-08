@@ -18,11 +18,6 @@
 
 namespace Google\CloudFunctions;
 
-use Google\CloudFunctions\Registry;
-
-/**
- * @internal
- */
 class FunctionsFramework
 {
     private function __construct()
@@ -31,11 +26,11 @@ class FunctionsFramework
 
     public static function http(string $name, callable $fn)
     {
-        Registry::getInstance()->registerHttp($name, $fn);
+        Invoker::registerFunction($name, new HttpFunctionWrapper($fn));
     }
 
     public static function cloudEvent(string $name, callable $fn)
     {
-        Registry::getInstance()->registerCloudEvent($name, $fn);
+        Invoker::registerFunction($name, new CloudEventFunctionWrapper($fn, true));
     }
 }

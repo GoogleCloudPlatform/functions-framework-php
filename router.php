@@ -19,6 +19,7 @@
 use Google\CloudFunctions\Emitter;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\ProjectContext;
+use Google\CloudFunctions\FunctionsFramework;
 
 // ProjectContext finds the autoload file, so we must manually include it first
 require_once __DIR__ . '/src/ProjectContext.php';
@@ -53,6 +54,7 @@ $projectContext->registerCloudStorageStreamWrapperIfPossible();
 
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
 
+    // Check if the user has registered a function in FunctionsFramework
     $invoker = new Invoker($target, $signatureType);
     $response = $invoker->handle();
     (new Emitter())->emit($response);
