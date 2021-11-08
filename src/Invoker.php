@@ -29,6 +29,7 @@ class Invoker
 {
     private $function;
     private $errorLogFunc;
+    private static $registeredFunction = [];
 
     /**
      * @param array|string|FunctionWrapper $target The callable to be invoked.
@@ -38,7 +39,9 @@ class Invoker
      */
     public function __construct($target, ?string $signatureType = null)
     {
-        if (!$target instanceof FunctionWrapper) {
+        if (is_string($target) && isset(self::$registeredFunction[$target])) {
+            $this->function = self::$registeredFunction[$target];
+        } else {
             if (!is_callable($target)) {
                 throw new InvalidArgumentException(sprintf(
                     'Function target is not callable: "%s"',
@@ -90,5 +93,10 @@ class Invoker
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
             ]);
         }
+    }
+
+    public static function registerFunction(string $name, FunctionWrapper $function)
+    {
+        self::$registeredFunction[$name] = $function;
     }
 }

@@ -20,9 +20,6 @@ namespace Google\CloudFunctions;
 
 use Google\CloudFunctions\Registry;
 
-/**
- * @internal
- */
 class FunctionsFramework
 {
     private static $functions = [];
@@ -33,19 +30,11 @@ class FunctionsFramework
 
     public static function http(string $name, callable $fn)
     {
-        self::$functions[$name] = new HttpFunctionWrapper($fn);
+        Invoker::registerFunction($name, new HttpFunctionWrapper($fn));
     }
 
     public static function cloudEvent(string $name, callable $fn)
     {
-        self::$functions[$name] = new CloudEventFunctionWrapper($fn, true);
-    }
-
-    public static function getRegisteredFunction(string $name)
-    {
-        if (!isset(self::$functions[$name])) {
-            return null;
-        }
-        return self::$functions[$name];
+        Invoker::registerFunction($name, new CloudEventFunctionWrapper($fn, true));
     }
 }

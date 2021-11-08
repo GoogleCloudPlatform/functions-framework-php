@@ -55,7 +55,6 @@ $projectContext->registerCloudStorageStreamWrapperIfPossible();
     $signatureType = getenv('FUNCTION_SIGNATURE_TYPE', true) ?: 'http';
 
     // Check if the user has registered a function in FunctionsFramework
-    $function = FunctionsFramework::getRegisteredFunction($target) ?: $target;
     $invoker = new Invoker($target, $signatureType);
     $response = $invoker->handle();
     (new Emitter())->emit($response);
