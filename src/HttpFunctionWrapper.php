@@ -24,11 +24,6 @@ use GuzzleHttp\Psr7\Response;
 
 class HttpFunctionWrapper extends FunctionWrapper
 {
-    public function __construct(callable $function)
-    {
-        parent::__construct($function);
-    }
-
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $path = $request->getUri()->getPath();
