@@ -104,7 +104,6 @@ class InvokerTest extends TestCase
     public function testErrorHandling($signatureType, $errorStatus, $request = null): void
     {
         $functionName = sprintf('invoke%sError', ucwords($signatureType));
-        putenv(sprintf('FUNCTION_SIGNATURE_TYPE=%s', $signatureType));
         $invoker = new Invoker([$this, $functionName], $signatureType);
         // use a custom error log func
         $message = null;

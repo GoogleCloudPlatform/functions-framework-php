@@ -32,7 +32,7 @@ class Invoker
     private static $registeredFunction = [];
 
     /**
-     * @param array|string|FunctionWrapper $target The callable to be invoked.
+     * @param array|string $target The callable to be invoked.
      * @param string|null $signatureType   The signature type of the target callable,
      *                                     either "cloudevent" or "http". If null,
      *                                     env var `FUNCTION_SIGNATURE_TYPE` is used.
@@ -95,6 +95,12 @@ class Invoker
         }
     }
 
+    /**
+     * Static registry for declaring functions
+     *
+     * @param string $name              The name of the registered function
+     * @param FunctionWrapper $function The mapped FunctionWrapper instance
+     */
     public static function registerFunction(string $name, FunctionWrapper $function)
     {
         self::$registeredFunction[$name] = $function;

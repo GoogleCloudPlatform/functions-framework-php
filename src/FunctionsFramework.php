@@ -22,6 +22,7 @@ class FunctionsFramework
 {
     private function __construct()
     {
+        // Constructor disabled because this class should only be used statically.
     }
 
     public static function http(string $name, callable $fn)
