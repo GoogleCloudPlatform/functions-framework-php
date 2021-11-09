@@ -96,8 +96,9 @@ class Invoker
     }
 
     /**
-     * Static registry for declaring functions
+     * Static registry for declaring functions. Internal only
      *
+     * @internal
      * @param string $name              The name of the registered function
      * @param FunctionWrapper $function The mapped FunctionWrapper instance
      */

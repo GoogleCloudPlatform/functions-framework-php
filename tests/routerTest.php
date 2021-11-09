@@ -76,7 +76,7 @@ class routerTest extends TestCase
     public function testDeclarativeOverNonDeclarative(): void
     {
         FunctionsFramework::http('helloHttp', function (ServerRequestInterface $request) {
-            return 'Hello World!';
+            return 'Hello World from a declarative function!';
         });
 
         // index.php also has a non-declaration function named 'helloHttp'.
@@ -86,7 +86,7 @@ class routerTest extends TestCase
         require 'router.php';
 
         // Expect the declarative function to be called.
-        $this->expectOutputString('Hello World!');
+        $this->expectOutputString('Hello World from a declarative function!');
     }
 }
 
