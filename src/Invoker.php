@@ -29,18 +29,19 @@ class Invoker
 {
     private $function;
     private $errorLogFunc;
-    private static $registeredFunction = [];
+    private static $registeredFunctions = [];
 
     /**
      * @param array|string $target The callable to be invoked.
      * @param string|null $signatureType   The signature type of the target callable,
-     *                                     either "cloudevent" or "http". If null,
-     *                                     env var `FUNCTION_SIGNATURE_TYPE` is used.
+     *                                     either "cloudevent" or "http". This can be
+     *                                     null if $target is registered using
+     *                                     Invoker::registerFunction.
      */
     public function __construct($target, ?string $signatureType = null)
     {
-        if (is_string($target) && isset(self::$registeredFunction[$target])) {
-            $this->function = self::$registeredFunction[$target];
+        if (is_string($target) && isset(self::$registeredFunctions[$target])) {
+            $this->function = self::$registeredFunctions[$target];
         } else {
             if (!is_callable($target)) {
                 throw new InvalidArgumentException(sprintf(
@@ -104,6 +105,6 @@ class Invoker
      */
     public static function registerFunction(string $name, FunctionWrapper $function)
     {
-        self::$registeredFunction[$name] = $function;
+        self::$registeredFunctions[$name] = $function;
     }
 }
