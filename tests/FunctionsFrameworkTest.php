@@ -30,7 +30,7 @@ class FunctionsFrameworkTest extends TestCase
 {
     public function testRegisterAndRetrieveHttpFunction(): void
     {
-        $fn = function(ServerRequestInterface $request) {
+        $fn = function (ServerRequestInterface $request) {
             return "this is a test function";
         };
 
@@ -44,7 +44,7 @@ class FunctionsFrameworkTest extends TestCase
 
     public function testRegisterAndRetrieveCloudEventFunction(): void
     {
-        $fn = function(CloudEventInterface $event) {
+        $fn = function (CloudEventInterface $event) {
             return "this is a test function";
         };
 
