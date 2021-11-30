@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
  */
 class EmitterTest extends TestCase
 {
-    public function testEmit()
+    public function testEmit(): void
     {
         if (!extension_loaded('xdebug')) {
             $this->markTestSkipped('xdebug extension required');
@@ -44,7 +44,7 @@ class EmitterTest extends TestCase
         $this->assertSame(200, http_response_code());
     }
 
-    public function testSingleHeader()
+    public function testSingleHeader(): void
     {
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['foo-header' => 'bar']));
@@ -54,7 +54,7 @@ class EmitterTest extends TestCase
         $this->assertSame(200, $emitter->headers[1][2]);
     }
 
-    public function testRepeatHeaders()
+    public function testRepeatHeaders(): void
     {
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['foo-header' => ['bar', 'baz']]));
@@ -68,7 +68,7 @@ class EmitterTest extends TestCase
         $this->assertSame(200, $emitter->headers[2][2]);
     }
 
-    public function testCookies()
+    public function testCookies(): void
     {
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200, ['Set-Cookie' => ['1', '2']]));
@@ -82,7 +82,7 @@ class EmitterTest extends TestCase
         $this->assertSame(200, $emitter->headers[2][2]);
     }
 
-    public function testStatusLine()
+    public function testStatusLine(): void
     {
         $emitter = new TestEmitter();
         $emitter->emit(new Response(200));
@@ -92,7 +92,7 @@ class EmitterTest extends TestCase
         $this->assertSame(200, $emitter->headers[0][2]);
     }
 
-    public function testStatusLineEmptyReasonPhrase()
+    public function testStatusLineEmptyReasonPhrase(): void
     {
         $emitter = new TestEmitter();
         $emitter->emit(new Response(419));

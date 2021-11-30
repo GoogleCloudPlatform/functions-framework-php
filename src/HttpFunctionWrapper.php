@@ -17,17 +17,13 @@
 
 namespace Google\CloudFunctions;
 
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
 
 class HttpFunctionWrapper extends FunctionWrapper
 {
-    public function __construct(callable $function)
-    {
-        parent::__construct($function);
-    }
-
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $path = $request->getUri()->getPath();
@@ -43,7 +39,7 @@ class HttpFunctionWrapper extends FunctionWrapper
             return $response;
         }
 
-        throw new \LogicException(
+        throw new LogicException(
             'Function response must be string or ' . ResponseInterface::class
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -17,7 +18,10 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use CloudEvents\V1\CloudEventInterface;
+use Exception;
 use Google\CloudFunctions\CloudEvent;
+use Google\CloudFunctions\FunctionsFramework;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\FunctionWrapper;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -30,24 +34,74 @@ use ReflectionClass;
  */
 class InvokerTest extends TestCase
 {
-    public function testInvalidSignatureType()
+    private static string $cloudeventResponse;
+
+    public function testInvalidSignatureType(): void
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid signature type: "invalid-signature-type"');
         new Invoker([$this, 'invokeThis'], 'invalid-signature-type');
     }
 
-    public function testHttpInvoker()
+    public function testHttpInvoker(): void
     {
         $invoker = new Invoker([$this, 'invokeThis'], 'http');
         $response = $invoker->handle();
         $this->assertSame('Invoked!', (string) $response->getBody());
     }
 
+    public function testHttpInvokerDeclarative(): void
+    {
+        FunctionsFramework::http('helloHttp', function (ServerRequestInterface $request) {
+            return "Hello HTTP!";
+        });
+
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloHttp', 'cloudevent');
+        $response = $invoker->handle();
+        $this->assertSame('Hello HTTP!', (string) $response->getBody());
+    }
+
+    public function testCloudEventInvokerDeclarative(): void
+    {
+        InvokerTest::$cloudeventResponse = "bye";
+        FunctionsFramework::cloudEvent('helloCloudEvent', function (CloudEventInterface $cloudevent) {
+            InvokerTest::$cloudeventResponse = "Hello CloudEvent!";
+        });
+
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloCloudEvent', 'http');
+        $request = new ServerRequest(
+            'POST',
+            '',
+            [],
+            '{"eventId":"foo","eventType":"bar","resource":"baz"}'
+        );
+        $invoker->handle($request);
+        $this->assertSame('Hello CloudEvent!', InvokerTest::$cloudeventResponse);
+    }
+
+    public function testMultipleDeclarative(): void
+    {
+        FunctionsFramework::http('helloHttp', function (ServerRequestInterface $request) {
+            return "Hello HTTP!";
+        });
+        FunctionsFramework::http('helloHttp2', function (ServerRequestInterface $request) {
+            return "Hello HTTP 2!";
+        });
+        FunctionsFramework::http('helloHttp3', function (ServerRequestInterface $request) {
+            return "Hello HTTP 3!";
+        });
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloHttp2', 'cloudevent');
+        $response = $invoker->handle();
+        $this->assertSame('Hello HTTP 2!', (string) $response->getBody());
+    }
+
     /**
      * @dataProvider provideErrorHandling
      */
-    public function testErrorHandling($signatureType, $errorStatus, $request = null)
+    public function testErrorHandling($signatureType, $errorStatus, $request = null): void
     {
         $functionName = sprintf('invoke%sError', ucwords($signatureType));
         $invoker = new Invoker([$this, $functionName], $signatureType);
@@ -80,7 +134,7 @@ class InvokerTest extends TestCase
         $this->assertStringContainsString('InvokerTest.php', $message); // stack trace
     }
 
-    public function provideErrorHandling()
+    public function provideErrorHandling(): array
     {
         return [
             ['http', 'crash'],
@@ -93,18 +147,18 @@ class InvokerTest extends TestCase
         ];
     }
 
-    public function invokeThis(ServerRequestInterface $request)
+    public function invokeThis(ServerRequestInterface $request): string
     {
         return 'Invoked!';
     }
 
-    public function invokeHttpError(ServerRequestInterface $request)
+    public function invokeHttpError(ServerRequestInterface $request): void
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 
-    public function invokeCloudeventError(CloudEvent $event)
+    public function invokeCloudeventError(CloudEvent $event): void
     {
-        throw new \Exception('This is an error');
+        throw new Exception('This is an error');
     }
 }
