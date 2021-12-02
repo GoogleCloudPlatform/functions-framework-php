@@ -196,7 +196,7 @@ gcloud run deploy my-cloud-function \
 After your instance deploys, you can access it at the URL provided, or view it
 in the [Cloud Console][cloud-run-console].
 
-[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/functions
+[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/functions
 [functions-how-to]: https://cloud.google.com/functions/docs/how-to
 [gcloud]: https://cloud.google.com/sdk/gcloud/
 [gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
