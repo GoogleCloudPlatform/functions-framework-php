@@ -1,11 +1,9 @@
 name: PHP Conformance CI
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
 jobs:
   build:
