@@ -217,7 +217,7 @@ cloudevent function signature:
 ```php
 use Google\CloudFunctions\CloudEvent;
 
-function helloCloudEvents(CloudEvent $cloudevent)
+function helloCloudEvent(CloudEvent $cloudevent)
 {
     // Print the whole CloudEvent
     $stdout = fopen('php://stdout', 'wb');
