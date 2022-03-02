@@ -33,7 +33,6 @@ class HttpFunctionWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'Your function must have "Psr\Http\Message\ServerRequestInterface" as the typehint for the first argument'
         );
-        new ServerRequest('POST', '/', []);
         new HttpFunctionWrapper(
             function () {
             }
