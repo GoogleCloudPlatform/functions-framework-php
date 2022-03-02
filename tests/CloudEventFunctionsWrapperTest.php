@@ -164,7 +164,6 @@ class CloudEventFunctionsWrapperTest extends TestCase
 
     public function testCorrectTypehintsInFunctionParameter(): void
     {
-        new ServerRequest('POST', '/', []);
         new CloudEventFunctionWrapper(
             function (CloudEvent $foo) {
             }
