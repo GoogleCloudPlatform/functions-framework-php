@@ -78,7 +78,6 @@ class HttpFunctionWrapperTest extends TestCase
 
     public function testCorrectTypehintsInFunctionParameter(): void
     {
-        new ServerRequest('POST', '/', []);
         new HttpFunctionWrapper(
             function (ServerRequestInterface $foo) {
             }
