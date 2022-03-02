@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 Google LLC.
  *
@@ -28,31 +29,46 @@ class Invoker
 {
     private $function;
     private $errorLogFunc;
+    private static $registeredFunctions = [];
 
     /**
-     * @param callable $target      The callable to be invoked
-     * @param string $signatureType The signature type of the target callable,
-     *                              either "event" or "http".
+     * @param array|string $target The callable to be invoked.
+     * @param string|null $signatureType   The signature type of the target callable,
+     *                                     either "cloudevent" or "http". This can be
+     *                                     null if $target is registered using
+     *                                     Invoker::registerFunction.
      */
-    public function __construct(callable $target, string $signatureType)
+    public function __construct($target, ?string $signatureType = null)
     {
-        if ($signatureType === 'http') {
-            $this->function = new HttpFunctionWrapper($target);
-        } elseif (
-            $signatureType === 'event'
-            || $signatureType === 'cloudevent'
-        ) {
-            $this->function = new CloudEventFunctionWrapper($target);
+        if (is_string($target) && isset(self::$registeredFunctions[$target])) {
+            $this->function = self::$registeredFunctions[$target];
         } else {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid signature type: "%s"',
-                $signatureType
-            ));
+            if (!is_callable($target)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Function target is not callable: "%s"',
+                    $target
+                ));
+            }
+
+            if ($signatureType === 'http') {
+                $this->function = new HttpFunctionWrapper($target);
+            } elseif (
+                $signatureType === 'event'
+                || $signatureType === 'cloudevent'
+            ) {
+                $this->function = new CloudEventFunctionWrapper($target, false);
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid signature type: "%s"',
+                    $signatureType
+                ));
+            }
         }
+
         $this->errorLogFunc = function (string $error) {
             fwrite(fopen('php://stderr', 'wb'), json_encode([
-              'message' => $error,
-              'severity' => 'error'
+                'message' => $error,
+                'severity' => 'error'
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         };
     }
@@ -78,5 +94,17 @@ class Invoker
                 FunctionWrapper::FUNCTION_STATUS_HEADER => $statusHeader,
             ]);
         }
+    }
+
+    /**
+     * Static registry for declaring functions. Internal only
+     *
+     * @internal
+     * @param string $name              The name of the registered function
+     * @param FunctionWrapper $function The mapped FunctionWrapper instance
+     */
+    public static function registerFunction(string $name, FunctionWrapper $function)
+    {
+        self::$registeredFunctions[$name] = $function;
     }
 }

@@ -2,7 +2,7 @@ name: PHP Unit CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: [ '7.4','8.0' ]
+        php-versions: [ '7.4','8.0','8.1' ]
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
     - name: Checkout
