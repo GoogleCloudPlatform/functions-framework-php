@@ -120,7 +120,6 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->expectExceptionMessage(
             'Your function must have "Google\CloudFunctions\CloudEvent" as the typehint for the first argument'
         );
-        new ServerRequest('POST', '/', []);
         new CloudEventFunctionWrapper(
             function () {
             }
