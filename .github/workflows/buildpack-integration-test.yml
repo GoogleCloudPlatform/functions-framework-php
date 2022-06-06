@@ -1,0 +1,30 @@
+# Validates Functions Framework with GCF buildpacks.
+name: Buildpack Integration Test
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  php74:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: '/tests/conformance/index.php'
+      http-builder-target: 'declarativeHttpFunc'
+      cloudevent-builder-source: '/tests/conformance/index.php'
+      cloudevent-builder-target: 'declarativeCloudEventFunc'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'php74'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/php74/builder
+      builder-tag: 'php74_20220531_7_4_29_RC00'
+  php81:
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@v1.4.1
+    with:
+      http-builder-source: '/tests/conformance/index.php'
+      http-builder-target: 'declarativeHttpFunc'
+      cloudevent-builder-source: '/tests/conformance/index.php'
+      cloudevent-builder-target: 'declarativeCloudEventFunc'
+      prerun: 'test/conformance/prerun.sh'
+      builder-runtime: 'php81'
+      # Latest uploaded tag from us.gcr.io/fn-img/buildpacks/php81/builder
+      builder-tag: 'php81_20220530_8_1_6_RC00'
