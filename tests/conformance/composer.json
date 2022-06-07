@@ -1,13 +1,4 @@
 {
-  "repositories": [
-      {
-          "type": "path",
-          "url": "./../..",
-          "options": {
-              "symlink": false
-          }
-      }
-  ],
   "require": {
       "google/cloud-functions-framework": "*"
   },
