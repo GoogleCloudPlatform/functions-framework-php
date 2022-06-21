@@ -14,12 +14,6 @@
 # Defaults to the latest version of the repo, which may be ahead of the
 # latest release.
 
-# exit when any command fails
-set -e
-
-# Change into the repo root
-cd $(dirname $0)/../..
-
 CLIENT_VERSION=$1
 if [ $CLIENT_VERSION ]; then
     CLIENT_VERSION="@$CLIENT_VERSION"
