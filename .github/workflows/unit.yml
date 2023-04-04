@@ -4,6 +4,9 @@ on:
     branches:
       - main
   pull_request:
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ matrix.operating-system }}
@@ -13,14 +16,19 @@ jobs:
         php-versions: [ '7.4','8.0','8.1','8.2' ]
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
     - name: Uses PHP ${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # v2
       with:
         php-version: ${{ matrix.php-versions }}
     - name: Install Dependencies
-      uses: nick-invision/retry@v1
+      uses: nick-invision/retry@39da88d5f7d15a96aed861dbabbe8b7443e3182a # v1.0.4
       with:
         timeout_minutes: 10
         max_attempts: 3

@@ -13,28 +13,33 @@ jobs:
         php-version: [ '7.4','8.0','8.1','8.2' ]
     name: PHP ${{ matrix.php-version }} Conformance Test
     steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # v2
       with:
         php-version: ${{ matrix.php-version }}
 
     - name: Install Dependencies
-      uses: nick-invision/retry@v1
+      uses: nick-invision/retry@39da88d5f7d15a96aed861dbabbe8b7443e3182a # v1.0.4
       with:
         timeout_minutes: 10
         max_attempts: 3
         command: composer install
 
     - name: Setup Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492 # v2.2.0
       with:
         go-version: '1.15'
 
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
       env:
         FUNCTION_TARGET: 'httpFunc'
         FUNCTION_SIGNATURE_TYPE: 'http'
@@ -46,7 +51,7 @@ jobs:
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run Declarative HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
       env:
         FUNCTION_TARGET: 'declarativeHttpFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
@@ -57,7 +62,7 @@ jobs:
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
@@ -70,7 +75,7 @@ jobs:
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run Declarative CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
       env:
         FUNCTION_TARGET: 'declarativeCloudEventFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
