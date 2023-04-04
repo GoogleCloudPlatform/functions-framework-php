@@ -4,12 +4,20 @@ on:
     branches:
       - main
   pull_request:
+permissions:
+  contents: read
+
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Harden Runner
+      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
+    - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
     - name: PHP-CS-Fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
+      uses: docker://oskarstark/php-cs-fixer-ga:latest@sha256:73ae29e0cf222d3e132651af5bfb84ac3f210d58cd98e8f863d0b47f8ee0346f
       with:
         args: . --diff --dry-run
