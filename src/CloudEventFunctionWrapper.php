@@ -23,7 +23,7 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class CloudEventFunctionWrapper extends FunctionWrapper
+class CloudEventFunctionWrapper extends ValidatingFunctionWrapper
 {
     private const TYPE_LEGACY = 1;
     private const TYPE_BINARY = 2;

@@ -17,11 +17,14 @@
 
 namespace Google\CloudFunctions\Tests;
 
+require_once 'tests/common/types.php';
+
 use Google\CloudFunctions\FunctionsFramework;
 use Google\CloudFunctions\FunctionsFrameworkTesting;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use CloudEvents\V1\CloudEventInterface;
+use Google\CloudFunctions\Tests\Common\IntValue;
 
 /**
  * @group gcf-framework
@@ -49,6 +52,20 @@ class FunctionsFrameworkTest extends TestCase
         };
 
         FunctionsFramework::cloudEvent('testFn', $fn);
+
+        $this->assertEquals(
+            $fn,
+            FunctionsFrameworkTesting::getRegisteredFunction('testFn')
+        );
+    }
+
+    public function testRegisterAndRetrieveTypedFunction(): void
+    {
+        $fn = function (IntValue $event) {
+            return $event;
+        };
+
+        FunctionsFramework::typed('testFn', $fn);
 
         $this->assertEquals(
             $fn,

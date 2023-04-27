@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
 
-class HttpFunctionWrapper extends FunctionWrapper
+class HttpFunctionWrapper extends ValidatingFunctionWrapper
 {
     public function execute(ServerRequestInterface $request): ResponseInterface
     {

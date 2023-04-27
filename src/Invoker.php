@@ -57,6 +57,8 @@ class Invoker
                 || $signatureType === 'cloudevent'
             ) {
                 $this->function = new CloudEventFunctionWrapper($target, false);
+            } elseif ($signatureType === 'typed') {
+                $this->function = new TypedFunctionWrapper($target);
             } else {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid signature type: "%s"',
@@ -82,6 +84,10 @@ class Invoker
 
         try {
             return $this->function->execute($request);
+        } catch (ParseError $e) {
+            // Log the full error and stack trace
+            ($this->errorLogFunc)((string) $e);
+            return new Response(400, [], 'Bad Request');
         } catch (Exception $e) {
             // Log the full error and stack trace
             ($this->errorLogFunc)((string) $e);

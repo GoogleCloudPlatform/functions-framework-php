@@ -17,10 +17,9 @@
 
 namespace Google\CloudFunctions;
 
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Closure;
-use LogicException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
@@ -33,10 +32,6 @@ abstract class FunctionWrapper
 
     public function __construct(callable $function)
     {
-        $this->validateFunctionSignature(
-            $this->getFunctionReflection($function)
-        );
-
         $this->function = $function;
     }
 
@@ -44,9 +39,7 @@ abstract class FunctionWrapper
         ServerRequestInterface $request
     ): ResponseInterface;
 
-    abstract protected function getFunctionParameterClassName(): string;
-
-    private function getFunctionReflection(
+    protected function getFunctionReflection(
         callable $function
     ): ReflectionFunctionAbstract {
         if ($function instanceof Closure) {
@@ -63,42 +56,5 @@ abstract class FunctionWrapper
         }
 
         return new ReflectionMethod($function, '__invoke');
-    }
-
-    private function validateFunctionSignature(
-        ReflectionFunctionAbstract $reflection
-    ) {
-        $parameters = $reflection->getParameters();
-        $parametersCount = count($parameters);
-
-        // Check there is at least one parameter
-        if ($parametersCount === 0) {
-            $this->throwInvalidFunctionException();
-        }
-        // Check the first parameter has the proper typehint
-        $type = $parameters[0]->getType();
-        $class = $this->getFunctionParameterClassName();
-        if (!$type || $type->getName() !== $class) {
-            $this->throwInvalidFunctionException();
-        }
-
-        if ($parametersCount > 1) {
-            for ($i = 1; $i < $parametersCount; $i++) {
-                if (!$parameters[$i]->isOptional()) {
-                    throw new LogicException(
-                        'If your function accepts more than one parameter the '
-                        . 'additional parameters must be optional'
-                    );
-                }
-            }
-        }
-    }
-
-    private function throwInvalidFunctionException()
-    {
-        throw new LogicException(sprintf(
-            'Your function must have "%s" as the typehint for the first argument',
-            $this->getFunctionParameterClassName()
-        ));
     }
 }
