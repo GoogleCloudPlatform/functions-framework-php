@@ -115,7 +115,7 @@ class TypedFunctionWrapperTest extends TestCase
 
     public function testBadRequest(): void
     {
-        $this->expectException('Google\CloudFunctions\ParseError');
+        $this->expectException('Google\CloudFunctions\BadRequestError');
         $this->expectExceptionMessage(
             'could not parse'
         );

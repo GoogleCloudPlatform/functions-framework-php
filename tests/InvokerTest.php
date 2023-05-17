@@ -125,13 +125,9 @@ class InvokerTest extends TestCase
         $invoker = new Invoker([$this, $functionName], $signatureType);
         // use a custom error log func
         $message = null;
-        $newErrorLogFunc = function (string $error) use (&$message) {
+        $invoker->setErrorLogger(function (string $error) use (&$message) {
             $message = $error;
-        };
-        $errorLogFuncProp = (new ReflectionClass($invoker))
-            ->getProperty('errorLogFunc');
-        $errorLogFuncProp->setAccessible(true);
-        $errorLogFuncProp->setValue($invoker, $newErrorLogFunc);
+        });
 
         // Invoke the handler
         $response = $invoker->handle($request);
@@ -152,18 +148,15 @@ class InvokerTest extends TestCase
         $this->assertStringContainsString('InvokerTest.php', $message); // stack trace
     }
 
-    public function testTypedParseError(): void
+    public function testTypedBadRequestError(): void
     {
         FunctionsFramework::typed('parseError', function (NotParseable $request) {
             throw new LogicException("should not get here");
         });
 
         $invoker = new Invoker('parseError', 'typed');
-        $errorLogFuncProp = (new ReflectionClass($invoker))
-            ->getProperty('errorLogFunc');
-        $errorLogFuncProp->setAccessible(true);
-        $errorLogFuncProp->setValue($invoker, function (string $error) {
-            ; // logs nothing
+        $invoker->setErrorLogger(function () {
+            ; // Log nothing in tests.
         });
 
         $request = new ServerRequest('POST', '/', [], '');

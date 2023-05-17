@@ -75,6 +75,11 @@ class Invoker
         };
     }
 
+    public function setErrorLogger(callable $logFunc)
+    {
+        $this->errorLogFunc = $logFunc;
+    }
+
     public function handle(
         ServerRequestInterface $request = null
     ): ResponseInterface {
@@ -84,7 +89,7 @@ class Invoker
 
         try {
             return $this->function->execute($request);
-        } catch (ParseError $e) {
+        } catch (BadRequestError $e) {
             // Log the full error and stack trace
             ($this->errorLogFunc)((string) $e);
             return new Response(400, [], 'Bad Request');

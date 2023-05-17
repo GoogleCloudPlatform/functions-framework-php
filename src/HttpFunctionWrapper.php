@@ -21,9 +21,37 @@ use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
+use ReflectionParameter;
 
-class HttpFunctionWrapper extends ValidatingFunctionWrapper
+class HttpFunctionWrapper extends FunctionWrapper
 {
+    use FunctionValidationTrait;
+
+    public function __construct(callable $function)
+    {
+        parent::__construct($function);
+
+        $this->validateFunctionSignature(
+            $this->getFunctionReflection($function)
+        );
+    }
+
+    private function throwInvalidFirstParameterException(): void
+    {
+        throw new LogicException(sprintf(
+            'Your function must have "%s" as the typehint for the first argument',
+            ServerRequestInterface::class
+        ));
+    }
+
+    private function validateFirstParameter(ReflectionParameter $param): void
+    {
+        $type = $param->getType();
+        if (!$type || $type->getName() !== ServerRequestInterface::class) {
+            $this->throwInvalidFirstParameterException();
+        }
+    }
+
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $path = $request->getUri()->getPath();
@@ -42,10 +70,5 @@ class HttpFunctionWrapper extends ValidatingFunctionWrapper
         throw new LogicException(
             'Function response must be string or ' . ResponseInterface::class
         );
-    }
-
-    protected function getFunctionParameterClassName(): string
-    {
-        return ServerRequestInterface::class;
     }
 }

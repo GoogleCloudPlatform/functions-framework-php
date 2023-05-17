@@ -26,12 +26,13 @@ use GuzzleHttp\Psr7\Response;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionFunction;
 use ReflectionFunctionAbstract;
-use ReflectionMethod;
+use ReflectionParameter;
 
 class TypedFunctionWrapper extends FunctionWrapper
 {
+    use FunctionValidationTrait;
+
     public const FUNCTION_STATUS_HEADER = 'X-Google-Status';
 
     /** @var callable */
@@ -48,6 +49,29 @@ class TypedFunctionWrapper extends FunctionWrapper
         );
     }
 
+    private function validateFirstParameter(ReflectionParameter $param): void
+    {
+        $type = $param->getType();
+        if ($type == null) {
+            $this->throwInvalidFirstParameterException();
+        }
+
+        try {
+            $this->functionArgClass = new ReflectionClass($type->getName());
+        } catch (ReflectionException $e) {
+            $name = $type->getName();
+            $message = $e->getMessage();
+            throw new LogicException("Could not find function parameter type $name, error: $message");
+        }
+    }
+
+    private function throwInvalidFirstParameterException(): void
+    {
+        throw new LogicException(
+            'Your function must declare exactly one required parameter that has a valid type hint'
+        );
+    }
+
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         try {
@@ -60,7 +84,7 @@ class TypedFunctionWrapper extends FunctionWrapper
         try {
             $argInst->mergeFromJsonString($body);
         } catch (Exception $e) {
-            throw new ParseError($e->getMessage(), 0, $e);
+            throw new BadRequestError($e->getMessage(), 0, $e);
         }
 
         $funcResult = call_user_func($this->function, $argInst);
@@ -72,50 +96,4 @@ class TypedFunctionWrapper extends FunctionWrapper
 
         return new Response(200, ['content-type' => 'application/cloudevents+json'], $resultJson);
     }
-
-    private function validateFunctionSignature(
-        ReflectionFunctionAbstract $reflection
-    ) {
-        $parameters = $reflection->getParameters();
-        $parametersCount = count($parameters);
-
-        // Check there is at least one parameter
-        if ($parametersCount === 0) {
-            $this->throwInvalidFunctionException();
-        }
-
-        // Check the first parameter has the proper typehint
-        $type = $parameters[0]->getType();
-        if ($type == null) {
-            $this->throwInvalidFunctionException();
-        }
-
-        for ($i = 1; $i < $parametersCount; $i++) {
-            if (!$parameters[$i]->isOptional()) {
-                throw new LogicException(
-                    'If your function accepts more than one parameter the '
-                        . 'additional parameters must be optional'
-                );
-            }
-        }
-
-        try {
-            $this->functionArgClass = new ReflectionClass($type->getName());
-        } catch (ReflectionException $e) {
-            $name = $type->getName();
-            $message = $e->getMessage();
-            throw new LogicException("Could not find function parameter type $name, error: $message");
-        }
-    }
-
-    private function throwInvalidFunctionException()
-    {
-        throw new LogicException(
-            'Your function must declare exactly one required parameter that has a valid type hint'
-        );
-    }
-}
-
-class ParseError extends Exception
-{
 }

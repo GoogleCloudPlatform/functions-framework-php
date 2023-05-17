@@ -20,11 +20,15 @@ namespace Google\CloudFunctions;
 
 use CloudEvents\V1\CloudEventInterface;
 use GuzzleHttp\Psr7\Response;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionParameter;
 
-class CloudEventFunctionWrapper extends ValidatingFunctionWrapper
+class CloudEventFunctionWrapper extends FunctionWrapper
 {
+    use FunctionValidationTrait;
+
     private const TYPE_LEGACY = 1;
     private const TYPE_BINARY = 2;
     private const TYPE_STRUCTURED = 3;
@@ -50,6 +54,33 @@ class CloudEventFunctionWrapper extends ValidatingFunctionWrapper
     {
         $this->marshalToCloudEventInterface = $marshalToCloudEventInterface;
         parent::__construct($function);
+
+        $this->validateFunctionSignature(
+            $this->getFunctionReflection($function)
+        );
+    }
+
+    private function throwInvalidFirstParameterException(): void
+    {
+        $class = $this->getFunctionParameterClassName();
+        throw new LogicException(sprintf(
+            'Your function must have "%s" as the typehint for the first argument',
+            $class
+        ));
+    }
+
+    private function validateFirstParameter(ReflectionParameter $param): void
+    {
+        $type = $param->getType();
+        $class = $this->getFunctionParameterClassName();
+        if (!$type || $type->getName() !== $class) {
+            $this->throwInvalidFirstParameterException();
+        }
+    }
+
+    private function getFunctionParameterClassName(): string
+    {
+        return $this->marshalToCloudEventInterface ? CloudEventInterface::class : CloudEvent::class;
     }
 
     public function execute(ServerRequestInterface $request): ResponseInterface
@@ -144,10 +175,5 @@ class CloudEventFunctionWrapper extends ValidatingFunctionWrapper
         }
 
         return CloudEvent::fromArray($content);
-    }
-
-    protected function getFunctionParameterClassName(): string
-    {
-        return $this->marshalToCloudEventInterface ? CloudEventInterface::class : CloudEvent::class;
     }
 }

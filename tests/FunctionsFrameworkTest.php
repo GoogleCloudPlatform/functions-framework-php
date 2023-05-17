@@ -24,6 +24,7 @@ use Google\CloudFunctions\FunctionsFrameworkTesting;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use CloudEvents\V1\CloudEventInterface;
+use Exception;
 use Google\CloudFunctions\Tests\Common\IntValue;
 
 /**
@@ -61,7 +62,7 @@ class FunctionsFrameworkTest extends TestCase
 
     public function testRegisterAndRetrieveTypedFunction(): void
     {
-        $fn = function (IntValue $event) {
+        $fn = function (IntValue $event): IntValue {
             return $event;
         };
 
@@ -71,6 +72,22 @@ class FunctionsFrameworkTest extends TestCase
             $fn,
             FunctionsFrameworkTesting::getRegisteredFunction('testFn')
         );
+    }
+
+    public function testRegisterBadlyTypedFunction(): void
+    {
+        try {
+            $fn = function (bool $event): void {
+                ; // Does nothing
+            };
+
+            FunctionsFramework::typed('badTestFn', $fn);
+            $this->assertTrue(false, "Should not get here");
+        } catch (Exception $e) {
+            $this->assertStringContainsString('Could not find function parameter type bool', $e->getMessage());
+        }
+
+        $this->assertNull(FunctionsFrameworkTesting::getRegisteredFunction('badTestFn'));
     }
 
     public function testRetrieveNonexistantFunction(): void
