@@ -1,4 +1,4 @@
-FROM gcr.io/gae-runtimes/php74:php74_20210216_7_4_15_RC00
+FROM gcr.io/gae-runtimes/php74:php74_20210216_7_4_15_RC00@sha256:b7d4aef9e57c17152c2ea9a3fbd04c23687fc93c7254608bdf6e19f14a7c10f3
 
 WORKDIR /srv/
 
