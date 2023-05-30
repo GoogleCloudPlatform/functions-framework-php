@@ -1,6 +1,6 @@
 # Functions Framework for PHP [![Packagist](https://poser.pugx.org/google/cloud-functions-framework/v/stable)](https://packagist.org/packages/google/cloud-functions-framework)
 
-[![PHP unit CI][ff_php_unit_img]][ff_php_unit_link] [![PHP lint CI][ff_php_lint_img]][ff_php_lint_link] [![PHP conformace CI][ff_php_conformance_img]][ff_php_conformance_link]
+[![PHP unit CI][ff_php_unit_img]][ff_php_unit_link] [![PHP lint CI][ff_php_lint_img]][ff_php_lint_link] [![PHP conformace CI][ff_php_conformance_img]][ff_php_conformance_link] ![Security Scorecard](https://api.securityscorecards.dev/projects/github.com/GoogleCloudPlatform/functions-framework-php/badge)
 
 An open source FaaS (Function as a service) framework for writing portable
 PHP functions.
