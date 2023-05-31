@@ -17,9 +17,21 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
       with:
-        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+        egress-policy: block
+        allowed-endpoints: >
+          api.github.com:443
+          gcr.io:443
+          github.com:443
+          objects.githubusercontent.com:443
+          packagist.org:443
+          packagist.org:80
+          production.cloudflare.docker.com:443
+          registry-1.docker.io:443
+          repo.packagist.org:443
+          storage.googleapis.com:443
+          auth.docker.io:443
 
     - name: Checkout
       uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
