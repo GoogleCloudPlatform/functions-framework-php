@@ -18,8 +18,6 @@
 
 namespace Google\CloudFunctions\Tests;
 
-require_once 'tests/common/types.php';
-
 use CloudEvents\V1\CloudEventInterface;
 use Exception;
 use Google\CloudFunctions\CloudEvent;

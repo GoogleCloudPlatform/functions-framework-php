@@ -17,8 +17,6 @@
 
 namespace Google\CloudFunctions\Tests;
 
-require_once 'tests/common/types.php';
-
 use Google\CloudFunctions\FunctionsFramework;
 use Google\CloudFunctions\FunctionsFrameworkTesting;
 use PHPUnit\Framework\TestCase;
