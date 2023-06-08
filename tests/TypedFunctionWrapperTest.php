@@ -18,8 +18,6 @@
 
 namespace Google\CloudFunctions\Tests;
 
-require_once 'tests/common/types.php';
-
 use Google\CloudFunctions\HttpFunctionWrapper;
 use Google\CloudFunctions\Tests\Common\BadType;
 use Google\CloudFunctions\Tests\Common\IntValue;
