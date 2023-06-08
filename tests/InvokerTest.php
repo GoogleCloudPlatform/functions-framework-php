@@ -18,13 +18,18 @@
 
 namespace Google\CloudFunctions\Tests;
 
+require_once 'tests/common/types.php';
+
 use CloudEvents\V1\CloudEventInterface;
 use Exception;
 use Google\CloudFunctions\CloudEvent;
 use Google\CloudFunctions\FunctionsFramework;
 use Google\CloudFunctions\Invoker;
 use Google\CloudFunctions\FunctionWrapper;
+use Google\CloudFunctions\Tests\Common\IntValue;
+use Google\CloudFunctions\Tests\Common\NotParseable;
 use GuzzleHttp\Psr7\ServerRequest;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
@@ -60,6 +65,19 @@ class InvokerTest extends TestCase
         $invoker = new Invoker('helloHttp', 'cloudevent');
         $response = $invoker->handle();
         $this->assertSame('Hello HTTP!', (string) $response->getBody());
+    }
+
+    public function testTypedInvokerDeclarative(): void
+    {
+        FunctionsFramework::typed('helloTyped', function (IntValue $request) {
+            return new IntValue($request->value + 1);
+        });
+
+        // signature type ignored due to declarative signature
+        $invoker = new Invoker('helloTyped', 'typed');
+        $request = new ServerRequest('POST', '/', [], '1');
+        $response = $invoker->handle($request);
+        $this->assertSame('2', (string) $response->getBody());
     }
 
     public function testCloudEventInvokerDeclarative(): void
@@ -107,13 +125,9 @@ class InvokerTest extends TestCase
         $invoker = new Invoker([$this, $functionName], $signatureType);
         // use a custom error log func
         $message = null;
-        $newErrorLogFunc = function (string $error) use (&$message) {
+        $invoker->setErrorLogger(function (string $error) use (&$message) {
             $message = $error;
-        };
-        $errorLogFuncProp = (new ReflectionClass($invoker))
-            ->getProperty('errorLogFunc');
-        $errorLogFuncProp->setAccessible(true);
-        $errorLogFuncProp->setValue($invoker, $newErrorLogFunc);
+        });
 
         // Invoke the handler
         $response = $invoker->handle($request);
@@ -134,6 +148,23 @@ class InvokerTest extends TestCase
         $this->assertStringContainsString('InvokerTest.php', $message); // stack trace
     }
 
+    public function testTypedBadRequestError(): void
+    {
+        FunctionsFramework::typed('parseError', function (NotParseable $request) {
+            throw new LogicException("should not get here");
+        });
+
+        $invoker = new Invoker('parseError', 'typed');
+        $invoker->setErrorLogger(function () {
+            ; // Log nothing in tests.
+        });
+
+        $request = new ServerRequest('POST', '/', [], '');
+        $response = $invoker->handle($request);
+        $this->assertSame('400', (string) $response->getStatusCode());
+        $this->assertSame('Bad Request', (string) $response->getBody());
+    }
+
     public function provideErrorHandling(): array
     {
         return [
@@ -144,6 +175,7 @@ class InvokerTest extends TestCase
                 [],
                 '{"eventId":"foo","eventType":"bar","resource":"baz"}'
             )],
+            ['typed', 'error'],
         ];
     }
 
@@ -158,6 +190,11 @@ class InvokerTest extends TestCase
     }
 
     public function invokeCloudeventError(CloudEvent $event): void
+    {
+        throw new Exception('This is an error');
+    }
+
+    public function invokeTypedError(IntValue $event): void
     {
         throw new Exception('This is an error');
     }

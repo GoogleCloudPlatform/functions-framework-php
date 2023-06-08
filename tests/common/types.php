@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2021 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,39 @@
  * limitations under the License.
  */
 
-namespace Google\CloudFunctions;
+namespace Google\CloudFunctions\Tests\Common;
 
-class FunctionsFramework
+use LogicException;
+
+class BadType
 {
-    private function __construct()
+}
+
+class IntValue
+{
+    /** @var int */
+    public $value;
+
+    public function __construct(int $value = 0)
     {
-        // Constructor disabled because this class should only be used statically.
+        $this->value = $value;
     }
 
-    public static function http(string $name, callable $fn)
+    public function serializeToJsonString(): string
     {
-        Invoker::registerFunction($name, new HttpFunctionWrapper($fn));
+        return "$this->value";
     }
 
-    public static function cloudEvent(string $name, callable $fn)
+    public function mergeFromJsonString(string $body): void
     {
-        Invoker::registerFunction($name, new CloudEventFunctionWrapper($fn, true));
+        $this->value = intval($body);
     }
+}
 
-    public static function typed(string $name, callable $fn)
+class NotParseable
+{
+    public function mergeFromJsonString(string $body): void
     {
-        Invoker::registerFunction($name, new TypedFunctionWrapper($fn));
+        throw new LogicException("could not parse");
     }
 }
