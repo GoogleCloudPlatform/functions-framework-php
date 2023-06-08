@@ -62,10 +62,9 @@ class CloudEventFunctionWrapper extends FunctionWrapper
 
     private function throwInvalidFirstParameterException(): void
     {
-        $class = $this->getFunctionParameterClassName();
         throw new LogicException(sprintf(
             'Your function must have "%s" as the typehint for the first argument',
-            $class
+            $this->getFunctionParameterClassName()
         ));
     }
 

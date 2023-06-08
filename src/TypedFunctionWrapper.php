@@ -72,6 +72,11 @@ class TypedFunctionWrapper extends FunctionWrapper
         );
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws BadRequestException
+     */
     public function execute(ServerRequestInterface $request): ResponseInterface
     {
         try {

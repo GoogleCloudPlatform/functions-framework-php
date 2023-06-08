@@ -21,7 +21,8 @@ namespace Google\CloudFunctions;
 use Exception;
 
 /**
- * BadRequestError indicates a malformatted request.
+ * BadRequestError indicates a malformatted request. This is thrown internally
+ * when a typed function cannot deserialize the request body.
  * @internal
  */
 class BadRequestError extends Exception
