@@ -49,7 +49,10 @@ print_header "HTTP CONFORMANCE TESTS"
 FUNCTION_TARGET='httpFunc' FUNCTION_SIGNATURE_TYPE='http' FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=http -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true
 
 print_header "DECLARATIVE HTTP CONFORMANCE TESTS"
-FUNCTION_TARGET='declarativeHttpFunc' FUNCTION_SIGNATURE_TYPE=  FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=http -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true
+FUNCTION_TARGET='declarativeHttpFunc' FUNCTION_SIGNATURE_TYPE= FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=http -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true
+
+print_header "DECLARATIVE TYPED CONFORMANCE TESTS"
+FUNCTION_TARGET='declarativeTypedFunc' FUNCTION_SIGNATURE_TYPE=http FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=http -declarative-type=typed -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true
 
 print_header "CLOUDEVENT CONFORMANCE TESTS"
 FUNCTION_TARGET='cloudEventFunc' FUNCTION_SIGNATURE_TYPE='cloudevent' FUNCTION_SOURCE=$(realpath tests/conformance/index.php) client -buildpacks=false -type=cloudevent -cmd='php -S localhost:8080 router.php' -start-delay 5 -validate-mapping=true

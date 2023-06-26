@@ -16,6 +16,37 @@ function httpFunc(ServerRequestInterface $request)
     return "ok" . PHP_EOL;
 }
 
+FunctionsFramework::typed('declarativeTypedFunc', 'typedFunc');
+
+function typedFunc(ConformanceRequest $request)
+{
+    $resp = new ConformanceResponse();
+    $resp->payload = $request;
+    return $resp;
+}
+
+class ConformanceRequest
+{
+    /** @var string */
+    public $message;
+
+    public function mergeFromJsonString(string $body): void
+    {
+        $this->message = json_decode($body)->message;
+    }
+}
+
+class ConformanceResponse
+{
+    /** @var ConformanceRequest */
+    public $payload;
+
+    public function serializeToJsonString()
+    {
+        return json_encode(get_object_vars($this));
+    }
+}
+
 // PHP cannot distinguish between an empty array and an empty map because they
 // are represented by the same type. This means that when a JSON object
 // containing either an empty array or an empty map is decoded the type
