@@ -109,6 +109,7 @@ class TypedFunctionWrapperTest extends TestCase
         $request = new ServerRequest('POST', '/', ['content-type' => 'application/json'], '1');
         $response = $typedFunctionWrapper->execute($request);
         $this->assertSame('2', (string) $response->getBody());
+        $this->assertSame('application/json', $response->getHeaderLine("Content-Type"));
     }
 
     public function testBadRequest(): void
