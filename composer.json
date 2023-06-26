@@ -21,7 +21,9 @@
     "guzzlehttp/guzzle": "^7.2"
   },
   "autoload-dev": {
-    "files": ["tests/common/types.php"]
+    "files": [
+      "tests/common/types.php"
+    ]
   },
   "bin": [
     "router.php"
