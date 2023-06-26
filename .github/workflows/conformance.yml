@@ -48,51 +48,58 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492 # v2.2.0
       with:
-        go-version: '1.15'
+        go-version: '1.20'
 
     - name: Run HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
       env:
         FUNCTION_TARGET: 'httpFunc'
         FUNCTION_SIGNATURE_TYPE: 'http'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.2.1'
         functionType: 'http'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run Declarative HTTP conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
       env:
         FUNCTION_TARGET: 'declarativeHttpFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.2.1'
         functionType: 'http'
+        useBuildpacks: false
+        cmd: "'php -S localhost:8080 router.php'"
+    
+    - name: Run Declarative Typed conformance tests
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
+      env:
+        FUNCTION_TARGET: 'declarativeTypedFunc'
+        FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
+      with:
+        functionType: 'http'
+        declarativeType: 'typed'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.8.3
       env:
         FUNCTION_TARGET: 'cloudEventFunc'
         FUNCTION_SIGNATURE_TYPE: 'cloudevent'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.2.1'
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run Declarative CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.2.1
       env:
         FUNCTION_TARGET: 'declarativeCloudEventFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
       with:
-        version: 'v1.2.1'
         functionType: 'cloudevent'
         useBuildpacks: false
         validateMapping: true
