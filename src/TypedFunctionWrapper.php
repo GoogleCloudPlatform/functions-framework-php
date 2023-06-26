@@ -99,6 +99,6 @@ class TypedFunctionWrapper extends FunctionWrapper
         }
         $resultJson = $funcResult->serializeToJsonString();
 
-        return new Response(200, ['content-type' => 'application/cloudevents+json'], $resultJson);
+        return new Response(200, ['content-type' => 'application/json'], $resultJson);
     }
 }
