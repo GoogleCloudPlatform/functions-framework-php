@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.3.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.2.0...v1.3.0) (2023-06-26)
+
+
+### Features
+
+* implement typed function signature ([#141](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/141)) ([a925ca4](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a925ca45efce9a99ea3420a542514757107d6ef3))
+
+
+### Bug Fixes
+
+* correct content-type headers on typed function response ([#152](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/152)) ([2a99824](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/2a99824f547d5407bbe639753ee97249b0b2de6f))
+
+
+### Miscellaneous Chores
+
+* add conformance test coverage for typed function signature ([#151](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/151)) ([4a4abeb](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/4a4abebd95f1368bcef3da18087f197482907111))
+* add missing endpoint to allow list ([#146](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/146)) ([284e581](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/284e5812f2eac0514e1d974d7f62c37b6611548d))
+* add security scorecard to readme ([#143](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/143)) ([d9ab518](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d9ab518fd8d86a439c2312e5d584ec5af336b485))
+* apply recommended egress policy ([#144](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/144)) ([aa2a0e8](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/aa2a0e87484974a7e997c7b2a831dd496b2b05bd))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 27a50ce ([#147](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/147)) ([6408db2](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/6408db2bce395f5613d0eadb26c401e77cf816eb))
+* **deps:** update shivammathur/setup-php digest to c5fc0d8 ([#148](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/148)) ([bd0d24c](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/bd0d24c545bb514a1d1837f033900860a74c9d5a))
+* refactor includes in favor of autoload-dev ([#149](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/149)) ([dfd5cb4](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/dfd5cb4499ab1e9adfe3d94c10bc6daa81ca29ef))
+* update buildpack integrations tests ([#150](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/150)) ([8c5bb47](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/8c5bb471254d9e62d81ebe6e7dbc5e0728863acf))
+
 ## [1.2.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.1.0...v1.2.0) (2023-05-25)
 
 
