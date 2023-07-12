@@ -11,17 +11,20 @@ set -e
 
 cd $(dirname $0)
 
-if [ -z "${FRAMEWORK_VERSION}" ]
-    then
-        echo "Functions Framework version required as first parameter"
-        exit 1
+if [ -z "${FRAMEWORK_VERSION}" ]; then
+    echo "Functions Framework version required as first parameter"
+    exit 1
+fi
+
+if [ -z "${GITHUB_HEAD_REF}" ]; then
+    GITHUB_HEAD_REF="main"
 fi
 
 echo '{
     "require": {
-        "google/cloud-functions-framework": "dev-main#'${FRAMEWORK_VERSION}'",
+        "google/cloud-functions-framework": "dev-'${GITHUB_HEAD_REF}'#'${FRAMEWORK_VERSION}'",
         "cloudevents/sdk-php": "^1.0"
     }
-}' > composer.json
+}' >composer.json
 
 cat composer.json
