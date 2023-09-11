@@ -17,7 +17,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+      uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
       with:
         egress-policy: block
         allowed-endpoints: >
@@ -33,6 +33,7 @@ jobs:
           repo.packagist.org:80
           storage.googleapis.com:443
           auth.docker.io:443
+          *.githubusercontent.com:443
 
     - name: Checkout
       uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
