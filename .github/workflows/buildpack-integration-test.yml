@@ -12,7 +12,7 @@ permissions: read-all
 
 jobs:
   php74-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@1.8.5
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
@@ -21,10 +21,9 @@ jobs:
       prerun: 'tests/conformance/prerun.sh ${{ github.sha }}'
       output-file: 'vendor/bin/function_output.json'
       builder-runtime: 'php74'
-      builder-url: 'gcr.io/gae-runtimes/buildpacks/google-gae-22/php/builder:latest'
       builder-runtime-version: '7.4'
   php81-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@1.8.5
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
@@ -33,10 +32,9 @@ jobs:
       prerun: 'tests/conformance/prerun.sh ${{ github.sha }}'
       output-file: 'vendor/bin/function_output.json'
       builder-runtime: 'php81'
-      builder-url: 'gcr.io/gae-runtimes/buildpacks/google-gae-22/php/builder:latest'
       builder-runtime-version: '8.1'
   php82-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@1.8.5
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
@@ -45,5 +43,4 @@ jobs:
       prerun: 'tests/conformance/prerun.sh ${{ github.sha }}'
       output-file: 'vendor/bin/function_output.json'
       builder-runtime: 'php82'
-      builder-url: 'gcr.io/gae-runtimes/buildpacks/google-gae-22/php/builder:latest'
       builder-runtime-version: '8.2'
