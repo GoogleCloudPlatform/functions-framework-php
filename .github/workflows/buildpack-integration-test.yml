@@ -12,7 +12,7 @@ permissions: read-all
 
 jobs:
   php74-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@64c4b63601f34b2dab011f89ede3b24788bc5a55 # main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
@@ -23,7 +23,7 @@ jobs:
       builder-runtime: 'php74'
       builder-runtime-version: '7.4'
   php81-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@64c4b63601f34b2dab011f89ede3b24788bc5a55 # main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
@@ -34,7 +34,7 @@ jobs:
       builder-runtime: 'php81'
       builder-runtime-version: '8.1'
   php82-buildpack-test:
-    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@64c4b63601f34b2dab011f89ede3b24788bc5a55 # main
+    uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
       http-builder-target: 'declarativeHttpFunc'
