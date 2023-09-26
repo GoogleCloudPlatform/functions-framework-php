@@ -10,7 +10,7 @@ WORKDIR /srv/
 #
 # We configure it to use the `router.php` file included in this package.
 RUN mkdir .googleconfig && \
-    echo '{"entrypointContents": "serve vendor/bin/router.php"}' > .googleconfig/app_start.json
+    echo '{"entrypointContents": "serve vendor/google/cloud-functions-framework/router.php"}' > .googleconfig/app_start.json
 
 # Copy over composer files and run "composer install"
 COPY composer.* ./

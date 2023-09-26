@@ -57,7 +57,7 @@ class vendorTest extends TestCase
             'FUNCTION_SOURCE=' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
             ' FUNCTION_TARGET=helloDefault' .
-            ' php %s/vendor/bin/router.php',
+            ' php %s/vendor/google/cloud-functions-framework/router.php',
             self::$tmpDir
         );
         exec($cmd, $output);
@@ -72,7 +72,7 @@ class vendorTest extends TestCase
             'FUNCTION_SOURCE=relative.php' .
             ' FUNCTION_SIGNATURE_TYPE=http' .
             ' FUNCTION_TARGET=helloDefault' .
-            ' php %s/vendor/bin/router.php',
+            ' php %s/vendor/google/cloud-functions-framework/router.php',
             self::$tmpDir
         );
         exec($cmd, $output);
@@ -81,6 +81,89 @@ class vendorTest extends TestCase
     }
 
     public function testAbsoluteFunctionSource(): void
+    {
+        copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=%s/absolute.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/google/cloud-functions-framework/router.php',
+            self::$tmpDir,
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertSame(['Hello Absolute!'], $output);
+    }
+
+    public function testGcsIsNotRegistered(): void
+    {
+        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=%s/gcs.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/google/cloud-functions-framework/router.php',
+            self::$tmpDir,
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertEquals(['GCS Stream Wrapper is not registered'], $output);
+    }
+
+    /**
+     * @depends testGcsIsNotRegistered
+     */
+    public function testGcsIsRegistered(): void
+    {
+        passthru('composer require -w google/cloud-storage');
+
+        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=%s/gcs.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/google/cloud-functions-framework/router.php',
+            self::$tmpDir,
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertEquals(['GCS Stream Wrapper is registered'], $output);
+    }
+
+    public function testLegacyVendorBinDefaultFunctionSource(): void
+    {
+        copy(__DIR__ . '/fixtures/index.php', self::$tmpDir . '/index.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/bin/router.php',
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertSame(['Hello Default!'], $output);
+    }
+
+    public function testLegacyVendorBinRelativeFunctionSource(): void
+    {
+        copy(__DIR__ . '/fixtures/relative.php', self::$tmpDir . '/relative.php');
+        $cmd = sprintf(
+            'FUNCTION_SOURCE=relative.php' .
+            ' FUNCTION_SIGNATURE_TYPE=http' .
+            ' FUNCTION_TARGET=helloDefault' .
+            ' php %s/vendor/bin/router.php',
+            self::$tmpDir
+        );
+        exec($cmd, $output);
+
+        $this->assertSame(['Hello Relative!'], $output);
+    }
+
+    public function testLegacyVendorBinAbsoluteFunctionSource(): void
     {
         copy(__DIR__ . '/fixtures/absolute.php', self::$tmpDir . '/absolute.php');
         $cmd = sprintf(
@@ -96,7 +179,7 @@ class vendorTest extends TestCase
         $this->assertSame(['Hello Absolute!'], $output);
     }
 
-    public function testGcsIsNotRegistered(): void
+    public function testLegacyVendorBinGcsIsNotRegistered(): void
     {
         copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
         $cmd = sprintf(
@@ -113,9 +196,9 @@ class vendorTest extends TestCase
     }
 
     /**
-     * @depends testGcsIsNotRegistered
+     * @depends testLegacyVendorBinGcsIsNotRegistered
      */
-    public function testGcsIsRegistered(): void
+    public function testLegacyVendorBinGcsIsRegistered(): void
     {
         passthru('composer require -w google/cloud-storage');
 
