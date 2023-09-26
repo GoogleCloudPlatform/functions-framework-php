@@ -77,7 +77,7 @@ run the following commands:
 
 ```sh
 export FUNCTION_TARGET=helloHttp
-php -S localhost:8080 vendor/bin/router.php
+php -S localhost:8080 vendor/google/cloud-functions-framework/router.php
 ```
 
 Open `http://localhost:8080/` in your browser and see *Hello World from a PHP HTTP function!*.
@@ -231,7 +231,7 @@ variable to `cloudevent`.
 ```sh
 export FUNCTION_TARGET=helloCloudEvent
 export FUNCTION_SIGNATURE_TYPE=cloudevent
-php -S localhost:8080 vendor/bin/router.php
+php -S localhost:8080 vendor/google/cloud-functions-framework/router.php
 ```
 
 In a separate tab, make a cURL request in Cloud Event format to your function:
