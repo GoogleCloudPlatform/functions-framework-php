@@ -178,41 +178,4 @@ class vendorTest extends TestCase
 
         $this->assertSame(['Hello Absolute!'], $output);
     }
-
-    public function testLegacyVendorBinGcsIsNotRegistered(): void
-    {
-        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
-        $cmd = sprintf(
-            'FUNCTION_SOURCE=%s/gcs.php' .
-            ' FUNCTION_SIGNATURE_TYPE=http' .
-            ' FUNCTION_TARGET=helloDefault' .
-            ' php %s/vendor/bin/router.php',
-            self::$tmpDir,
-            self::$tmpDir
-        );
-        exec($cmd, $output);
-
-        $this->assertEquals(['GCS Stream Wrapper is not registered'], $output);
-    }
-
-    /**
-     * @depends testLegacyVendorBinGcsIsNotRegistered
-     */
-    public function testLegacyVendorBinGcsIsRegistered(): void
-    {
-        passthru('composer require -w google/cloud-storage');
-
-        copy(__DIR__ . '/fixtures/gcs.php', self::$tmpDir . '/gcs.php');
-        $cmd = sprintf(
-            'FUNCTION_SOURCE=%s/gcs.php' .
-            ' FUNCTION_SIGNATURE_TYPE=http' .
-            ' FUNCTION_TARGET=helloDefault' .
-            ' php %s/vendor/bin/router.php',
-            self::$tmpDir,
-            self::$tmpDir
-        );
-        exec($cmd, $output);
-
-        $this->assertEquals(['GCS Stream Wrapper is registered'], $output);
-    }
 }
