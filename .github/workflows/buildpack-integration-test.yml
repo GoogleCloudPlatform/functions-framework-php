@@ -12,6 +12,7 @@ permissions: read-all
 
 jobs:
   php74-buildpack-test:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
@@ -23,6 +24,7 @@ jobs:
       builder-runtime: 'php74'
       builder-runtime-version: '">=7.4,<7.5"'
   php81-buildpack-test:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
@@ -34,6 +36,7 @@ jobs:
       builder-runtime: 'php81'
       builder-runtime-version: '">=8.1,<8.2"'
   php82-buildpack-test:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
       http-builder-source: 'tests/conformance'
