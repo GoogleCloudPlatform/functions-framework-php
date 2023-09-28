@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.1](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.3.0...v1.3.1) (2023-09-28)
+
+
+### Bug Fixes
+
+* use full import paths from vendor for new composer ([#163](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/163)) ([fb92e9e](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/fb92e9e198dbb71d9d70d7fc199e9981a6a42d26))
+
+
+### Miscellaneous Chores
+
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 8ad55ef ([#158](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/158)) ([3f0a3e0](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/3f0a3e0019155d34374eae5a5a8594293910b132))
+* disable integration test on forks ([#165](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/165)) ([ed91598](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/ed9159810386612c51b416daacc77d510b550741))
+* run buildpack tests on pull ([#153](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/153)) ([8606f4c](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/8606f4c5ca32d5108d977d476bb53265c41d68c4))
+* Update blunderbuss.yml ([#164](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/164)) ([6496941](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/649694181b45175a91dd97d932cfdddeef83bdf4))
+* Update harden runner and fix ci errors. ([#160](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/160)) ([1e26c21](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/1e26c21b0cf7908f50645a86b819fa8eaf5b3d1e))
+
 ## [1.3.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.2.0...v1.3.0) (2023-06-26)
 
 
