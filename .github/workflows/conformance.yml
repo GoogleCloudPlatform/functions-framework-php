@@ -95,7 +95,7 @@ jobs:
         cmd: "'php -S localhost:8080 router.php'"
 
     - name: Run Declarative CloudEvent conformance tests
-      uses: GoogleCloudPlatform/functions-framework-conformance/action@5f2a796b58f099d749e70ecc83f531f6701c64af # v1.2.1
+      uses: GoogleCloudPlatform/functions-framework-conformance/action@e42b1533877f1b639f508ec7fbcfb5be31aca663 # v1.2.1
       env:
         FUNCTION_TARGET: 'declarativeCloudEventFunc'
         FUNCTION_SOURCE: ${{ github.workspace }}/tests/conformance/index.php
