@@ -21,6 +21,6 @@ jobs:
 
     - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
     - name: PHP-CS-Fixer
-      uses: docker://oskarstark/php-cs-fixer-ga:latest@sha256:8ad55efe0658c29ef7990fc8dcde7afc06cebd088be5efa3f1f45435034c1433
+      uses: docker://oskarstark/php-cs-fixer-ga:latest@sha256:dff392802622c3ad8b9abf42a4333b38dbde730f62ceb244a02d6733442cfa78
       with:
         args: . --diff --dry-run
