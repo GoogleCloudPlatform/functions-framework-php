@@ -36,7 +36,7 @@ jobs:
           *.githubusercontent.com:443
 
     - name: Checkout
-      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Uses PHP ${{ matrix.php-versions }}
       uses: shivammathur/setup-php@c5fc0d8281aba02c7fda07d3a70cc5371548067d # v2
       with:
