@@ -42,6 +42,12 @@ if ($source = $projectContext->locateFunctionSource($functionSourceEnv)) {
 // registered
 $projectContext->registerCloudStorageStreamWrapperIfPossible();
 
+// Initialize timeout, in case configured.
+$custom_timeout = getenv('CLOUD_RUN_TIMEOUT_SECONDS');
+if ($custom_timeout !== false) {
+    set_time_limit($custom_timeout);
+}
+
 /**
  * Invoke the function based on the function type.
  */
