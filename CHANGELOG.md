@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.4.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.3.0...v1.4.0) (2024-01-23)
+
+
+### Features
+
+* add environment variable for configuring max_execution_time ([#185](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/185)) ([fd1ca55](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/fd1ca55def1bf267caf8ed0bf6ee1625df64abbf))
+
+
+### Bug Fixes
+
+* use full import paths from vendor for new composer ([#163](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/163)) ([fb92e9e](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/fb92e9e198dbb71d9d70d7fc199e9981a6a42d26))
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/checkout action to v4 ([#176](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/176)) ([a90c0f3](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a90c0f3393c3fba9c51d86052e8f1d5ed4987f04))
+* **deps:** update actions/dependency-review-action action to v3 ([#177](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/177)) ([bbbdfef](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/bbbdfefafd2c791420ca4d0ffb185863003c062a))
+* **deps:** update actions/setup-go action to v5 ([#183](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/183)) ([a81f023](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a81f0232540711d0a6c022d857f7f45a555ec80d))
+* **deps:** update all non-major dependencies ([#175](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/175)) ([f1b4ac1](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/f1b4ac13b75f80384fe5368907a5e629f924462f))
+* **deps:** update all non-major dependencies ([#182](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/182)) ([ceb2acb](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/ceb2acb11802229bb7d1ae642925dd3e8ec06ec4))
+* **deps:** update googlecloudplatform/functions-framework-conformance digest to e42b153 ([#157](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/157)) ([85aed77](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/85aed7719107da6c2c932281fcac3f538830cf63))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 665532c ([#174](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/174)) ([1ad568d](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/1ad568dc86f97bc5fe6cde8f4993fade3c3dc859))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 83b093a ([#181](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/181)) ([02f1777](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/02f1777308e9c66ecdc52fc9a21f2d713fa93383))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 8ad55ef ([#158](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/158)) ([3f0a3e0](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/3f0a3e0019155d34374eae5a5a8594293910b132))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to dff3928 ([#171](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/171)) ([4aef2ea](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/4aef2eabe4e85ea131b1bf3aba18d7ed95d1a6b2))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to febc59e ([#179](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/179)) ([e3af608](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/e3af6084e305ad07b8dde1046d602587ae701f50))
+* **deps:** update shivammathur/setup-php digest to 6d7209f ([#180](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/180)) ([4faaea7](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/4faaea7cf011e5c01ea9af54fdbf361364e5341a))
+* **deps:** update shivammathur/setup-php digest to 81cd5ae ([#172](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/172)) ([e32b8fe](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/e32b8fe42519d28b369be538489269399bbadc69))
+* disable integration test on forks ([#165](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/165)) ([ed91598](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/ed9159810386612c51b416daacc77d510b550741))
+* remove self from blunderbuss.yml ([#173](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/173)) ([d6cc80f](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d6cc80f60e9b6b75dfd492007ca6c2dc4de02ffe))
+* run buildpack tests on pull ([#153](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/153)) ([8606f4c](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/8606f4c5ca32d5108d977d476bb53265c41d68c4))
+* Update blunderbuss.yml ([#164](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/164)) ([6496941](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/649694181b45175a91dd97d932cfdddeef83bdf4))
+* Update harden runner and fix ci errors. ([#160](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/160)) ([1e26c21](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/1e26c21b0cf7908f50645a86b819fa8eaf5b3d1e))
+
 ## [1.3.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.2.0...v1.3.0) (2023-06-26)
 
 
