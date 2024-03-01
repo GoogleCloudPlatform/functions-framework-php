@@ -42,7 +42,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
     - name: Install Dependencies
-      uses: nick-invision/retry@39da88d5f7d15a96aed861dbabbe8b7443e3182a # v1.0.4
+      uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
       with:
         timeout_minutes: 10
         max_attempts: 3
