@@ -93,7 +93,7 @@ function fixCloudEventData(CloudEvent $cloudevent): CloudEvent
             $cloudevent->getDatacontenttype(),
             $cloudevent->getDataschema(),
             $cloudevent->getSubject(),
-            $cloudevent->getTime(),
+            $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED),
             $data
         );
     }
