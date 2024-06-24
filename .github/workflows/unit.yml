@@ -38,7 +38,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Uses PHP ${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d # v2
+      uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
       with:
         php-version: ${{ matrix.php-versions }}
     - name: Install Dependencies
