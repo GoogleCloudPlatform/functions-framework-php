@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+      uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
       with:
         disable-sudo: true
         egress-policy: block
         allowed-endpoints: >
           github.com:443
 
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - name: PHP-CS-Fixer
       uses: docker://oskarstark/php-cs-fixer-ga:latest@sha256:83b093a87ee58ad6b2bc974fd4d81d8bd80655e6174819797583a3434e9cd2fb
       with:
