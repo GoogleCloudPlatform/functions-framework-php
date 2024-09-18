@@ -17,7 +17,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
+      uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
       with:
         egress-policy: block
         allowed-endpoints: >
@@ -38,7 +38,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Uses PHP ${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@81cd5ae0920b34eef300e1775313071038a53429 # v2
+      uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d # v2
       with:
         php-version: ${{ matrix.php-versions }}
     - name: Install Dependencies
