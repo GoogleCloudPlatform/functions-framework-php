@@ -163,7 +163,7 @@ class InvokerTest extends TestCase
         $this->assertSame('Bad Request', (string) $response->getBody());
     }
 
-    public function provideErrorHandling(): array
+    public static function provideErrorHandling(): array
     {
         return [
             ['http', 'crash'],
