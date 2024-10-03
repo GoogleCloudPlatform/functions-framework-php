@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.0...v1.4.1) (2024-10-02)
+
+
+### Miscellaneous Chores
+
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 0c86f44 ([#201](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/201)) ([df1a53c](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/df1a53ce1255c82dae22cb965b7dc393135952a6))
+
 ## [1.4.0](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.3.0...v1.4.0) (2024-09-20)
 
 
