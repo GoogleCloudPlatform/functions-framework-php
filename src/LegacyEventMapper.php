@@ -17,6 +17,8 @@
 
 namespace Google\CloudFunctions;
 
+use DateTime;
+use DateTimeInterface;
 use RuntimeException;
 
 class LegacyEventMapper
@@ -193,7 +195,7 @@ class LegacyEventMapper
         if (array_key_exists('publishTime', $jsonData['message'])) {
             $timestamp = $jsonData['message']['publishTime'];
         } else {
-            $timestamp = gmdate('%Y-%m-%dT%H:%M:%S.%6NZ');
+            $timestamp = gmdate('Y-m-d\TH:i:s.v\Z');
         }
 
         return [
