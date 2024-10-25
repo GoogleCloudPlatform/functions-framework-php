@@ -19,7 +19,7 @@ jobs:
         allowed-endpoints: >
           github.com:443
 
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - name: PHP-CS-Fixer
       uses: docker://oskarstark/php-cs-fixer-ga:latest@sha256:0c86f441e2141a32bfb54deebb9d25ae6dd54dbca64d95f9eec0c92b0c3dcad1
       with:
