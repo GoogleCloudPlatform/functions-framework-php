@@ -35,7 +35,7 @@ jobs:
       output-file: 'vendor/bin/function_output.json'
       builder-runtime: 'php82'
       builder-runtime-version: '">=8.2,<8.3"'
-  php82-buildpack-test:
+  php83-buildpack-test:
     if: github.event.pull_request.head.repo.full_name == github.repository
     uses: GoogleCloudPlatform/functions-framework-conformance/.github/workflows/buildpack-integration-test.yml@main
     with:
