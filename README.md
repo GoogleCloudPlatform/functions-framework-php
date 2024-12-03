@@ -118,7 +118,7 @@ Follow the [Cloud Run function quickstart](https://cloud.google.com/run/docs/qui
 
 ## Run your function as a container in Cloud Run
 
-You can manually build your function as a container and deploy it into Cloud Run. Follow the [CLoud Run instructions for building a function](https://cloud.google.com/run/docs/building/functions) for complete instructions.
+You can manually build your function as a container and deploy it into Cloud Run. Follow the [Cloud Run instructions for building a function](https://cloud.google.com/run/docs/building/functions) for complete instructions.
 
 ## Use CloudEvents
 
