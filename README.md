@@ -9,7 +9,6 @@ The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
 
 *   Your local development machine
-*   [Cloud Run and Cloud Run on GKE](https://cloud.google.com/run/)
 *   [Knative](https://github.com/knative/)-based environments
 
 The framework allows you to go from:
@@ -110,102 +109,16 @@ curl localhost:8080
 # Output: Hello World from a PHP HTTP function!
 ```
 
-## Run your function on Google Cloud Functions
+## Run your function on Google Cloud Run Functions
 
 **NOTE**: For an extensive list of samples, see the [PHP functions samples][functions-samples]
 and the [official how-to guides][functions-how-to].
 
-Follow the steps below to deploy to Google Cloud Functions. More information
-on function deployment is available in the
-[GCF documentation](https://cloud.google.com/functions/docs/deploying).
+Follow the [Cloud Run function quickstart](https://cloud.google.com/run/docs/quickstarts/functions/deploy-functions-gcloud#php) for PHP to learn how to deploy a function to Cloud Run.
 
-To run your function on Cloud Functions, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
+## Run your function as a container in Cloud Run
 
-Make sure your source file (which defines your function) is called
-`index.php`. The Functions Framework lets you choose a function source file,
-but Cloud Functions currently uses the default of `index.php`.
-
-Decide _which_ function in the source file to invoke, that is, the name that you
-used when writing the function. This is called the **target**.
-
-Choose a Cloud Functions **name** for your function. The **name** identifies
-this function deployment (e.g. in the cloud console) and is also part of the
-function's default URL. (Note: the **name** and the **target** do not have to
-be the same value.)
-
-Then, from the directory containing your function source, issue the gcloud command to deploy:
-
-```sh
-gcloud functions deploy $YOUR_FUNCTION_NAME \
-    --runtime=php74 \
-    --entry-point=$YOUR_FUNCTION_TARGET \
-    --trigger-http
-```
-
-The `--entry-point` flag can be omitted if the **target** has the same value
-as the **name**.
-
-If your function handles events rather than HTTP requests, you'll need to
-replace `--trigger-http` with a different trigger. For details, see the
-[reference documentation](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
-for `gcloud functions deploy`.
-
-To update your deployment, just redeploy using the same function **name**.
-Configuration flags are not required.
-
-## Run your function in Cloud Run
-
-To run your function in Cloud Run, first you must have the [gcloud SDK][gcloud] installed and [authenticated][gcloud-auth].
-
-Additionally, you need to have a Google Cloud project ID for the
-[Google Cloud Project][gcp-project] you want to use.
-
-After completing the steps under **Installation** and **Define your Function**, build the container using the example `Dockerfile`. This Dockerfile is
-built on top of the [App Engine runtime for PHP 7.4][gae-php7], but you can use
-any container you want as long as your application listens on **Port 8080**.
-
-```sh
-docker build . \
-    -f vendor/google/cloud-functions-framework/examples/hello/Dockerfile \
-    -t gcr.io/$GCLOUD_PROJECT/my-cloud-function
-```
-
-> **NOTE**: Be sure to replace `$GCLOUD_PROJECT` with your Google Cloud project
-ID, or set the environment variable using `export GCLOUD_PROJECT="some-project-id"`.
-
-Next, push your image to [Google Container Registry](https://cloud.google.com/container-registry). This will allow you to deploy it directly from Cloud Run.
-
-```sh
-docker push gcr.io/$GCLOUD_PROJECT/my-cloud-function
-```
-
-Finally, use the `gcloud` command-line tool to deploy to Cloud Run:
-
-```sh
-gcloud run deploy my-cloud-function \
-    --image=gcr.io/$GCLOUD_PROJECT/my-cloud-function \
-    --platform managed \
-    --set-env-vars "FUNCTION_TARGET=helloHttp" \
-    --allow-unauthenticated \
-    --region $CLOUD_RUN_REGION \
-    --project $GCLOUD_PROJECT
-```
-
-> **NOTE**: Be sure to replace `$CLOUD_RUN_REGION` with the
-[correct region][cloud-run-regions] for your Cloud Run instance, for example
-`us-central1`.
-
-After your instance deploys, you can access it at the URL provided, or view it
-in the [Cloud Console][cloud-run-console].
-
-[functions-samples]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/functions
-[functions-how-to]: https://cloud.google.com/functions/docs/how-to
-[gcloud]: https://cloud.google.com/sdk/gcloud/
-[gcloud-auth]: https://cloud.google.com/sdk/docs/authorizing
-[gcp-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
-[gae-php7]: https://cloud.google.com/appengine/docs/standard/php7/runtime
-[cloud-run-regions]: https://cloud.google.com/run/docs/locations
-[cloud-run-console]: https://console.cloud.google.com/run
+You can manually build your function as a container and deploy it into Cloud Run. Follow the [Cloud Run instructions for building a function](https://cloud.google.com/run/docs/building/functions) for complete instructions.
 
 ## Use CloudEvents
 
