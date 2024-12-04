@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.1...v1.4.2) (2024-12-04)
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#202](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/202)) ([9e83219](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/9e832194e6b4f80999d0373bccdeb477ed28efbb))
+
 ## [1.4.1](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.0...v1.4.1) (2024-10-02)
 
 
