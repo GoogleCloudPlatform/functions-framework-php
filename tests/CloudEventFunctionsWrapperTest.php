@@ -18,6 +18,7 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use DateTimeInterface;
 use Google\CloudFunctions\CloudEventFunctionWrapper;
 use Google\CloudFunctions\CloudEvent;
 use PHPUnit\Framework\TestCase;
@@ -239,7 +240,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('application/json', $cloudevent->getDataContentType());
         $this->assertSame('type.googleapis.com/google.logging.v2.LogEntry', $cloudevent->getDataSchema());
         $this->assertSame('My Subject', $cloudevent->getSubject());
-        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('2020-12-08T20:03:19.162+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
     }
 
     public function testWithNotFullButValidCloudEvent(): void
@@ -306,7 +307,7 @@ class CloudEventFunctionsWrapperTest extends TestCase
         $this->assertSame('application/json', $cloudevent->getDataContentType());
         $this->assertNull($cloudevent->getDataSchema());
         $this->assertNull($cloudevent->getSubject());
-        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('2020-12-08T20:03:19.162+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
     }
 
     public function testFromStructuredEventRequest(): void
