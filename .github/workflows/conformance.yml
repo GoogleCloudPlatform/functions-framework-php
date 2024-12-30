@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ '7.4','8.0','8.1','8.2' ]
+        php-version: [ '8.1','8.2','8.3' ]
     name: PHP ${{ matrix.php-version }} Conformance Test
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+      uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
       with:
         egress-policy: block
         allowed-endpoints: >
@@ -31,22 +31,22 @@ jobs:
           storage.googleapis.com:443
 
     - name: Checkout code
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d # v2
+      uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
       with:
         php-version: ${{ matrix.php-version }}
 
     - name: Install Dependencies
-      uses: nick-invision/retry@39da88d5f7d15a96aed861dbabbe8b7443e3182a # v1.0.4
+      uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
       with:
         timeout_minutes: 10
         max_attempts: 3
         command: composer install
 
     - name: Setup Go
-      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
       with:
         go-version: '1.20'
 
