@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.2](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.1...v1.4.2) (2025-01-03)
+
+
+### Bug Fixes
+
+* remove [@run](https://github.com/run)InSeparateProcess from EmitterTest ([d72892a](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d72892a711b553b28d46f7aa18a8de9f2d511c16))
+* remove [@run](https://github.com/run)InSeparateProcess from EmitterTest ([#211](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/211)) ([d72892a](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d72892a711b553b28d46f7aa18a8de9f2d511c16))
+* update source files with PHP-CS-Fixer ([#212](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/212)) ([c845547](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/c8455472e1227d20c816f2693eab0eff58528d0a))
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#202](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/202)) ([9e83219](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/9e832194e6b4f80999d0373bccdeb477ed28efbb))
+* **deps:** update all non-major dependencies ([#206](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/206)) ([f79172d](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/f79172d71f498bbffc4ff86a6cee6186dc69a9f4))
+* **deps:** update all non-major dependencies ([#215](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/215)) ([0eb7d07](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/0eb7d077f07daa58540c55233c38b37b4dcf8c52))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to a4dc1c9 ([#213](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/213)) ([3725df5](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/3725df5d1d41daf6c5e8734c500df9bf240696e0))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to b9b4d3b ([#205](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/205)) ([99880ee](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/99880eeaa546c5b4ace83f288c5100003456bd61))
+* **deps:** update shivammathur/setup-php digest to 9e72090 ([#214](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/214)) ([dea0e80](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/dea0e804a813ffc26876bb0e7cc78e2db9516a8c))
+
 ## [1.4.1](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.0...v1.4.1) (2024-10-02)
 
 
