@@ -7,3 +7,4 @@ vendor/
 /.php_cs.cache
 *.iml
 .phpunit.result.cache
+.php-cs-fixer.cache
