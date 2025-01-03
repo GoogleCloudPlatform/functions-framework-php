@@ -24,7 +24,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @group gcf-framework
- * @runClassInSeparateProcess
  */
 class EmitterTest extends TestCase
 {
