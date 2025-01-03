@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* remove [@run](https://github.com/run)InSeparateProcess from EmitterTest ([d72892a](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d72892a711b553b28d46f7aa18a8de9f2d511c16))
 * remove [@run](https://github.com/run)InSeparateProcess from EmitterTest ([#211](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/211)) ([d72892a](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/d72892a711b553b28d46f7aa18a8de9f2d511c16))
 * update source files with PHP-CS-Fixer ([#212](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/212)) ([c845547](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/c8455472e1227d20c816f2693eab0eff58528d0a))
 
