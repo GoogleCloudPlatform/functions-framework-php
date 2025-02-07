@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.3](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.2...v1.4.3) (2025-02-07)
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#217](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/217)) ([15bb522](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/15bb522b329b5d10216e60c0508e0c12226073a2))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 8015b49 ([#216](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/216)) ([a03f0d1](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a03f0d1cb529d27e100948894efd57b50dab959e))
+
 ## [1.4.2](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.1...v1.4.2) (2025-01-03)
 
 
