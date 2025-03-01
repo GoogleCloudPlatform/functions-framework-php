@@ -17,7 +17,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Unit Test
     steps:
     - name: Harden Runner
-      uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+      uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
       with:
         egress-policy: block
         allowed-endpoints: >
@@ -42,7 +42,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
     - name: Install Dependencies
-      uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
+      uses: nick-invision/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
       with:
         timeout_minutes: 10
         max_attempts: 3
