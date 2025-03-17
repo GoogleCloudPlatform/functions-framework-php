@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.3](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.2...v1.4.3) (2025-03-17)
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#217](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/217)) ([15bb522](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/15bb522b329b5d10216e60c0508e0c12226073a2))
+* **deps:** update all non-major dependencies ([#220](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/220)) ([140d786](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/140d786eaa9babfb32806fda228dc3127302ec43))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 8015b49 ([#216](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/216)) ([a03f0d1](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a03f0d1cb529d27e100948894efd57b50dab959e))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to c77d3b6 ([#219](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/219)) ([74b22db](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/74b22db6bbca1b313c724b6a5a3587742525f8a8))
+* remove all assignees from blunderbuss.yml ([#221](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/221)) ([f0ef8aa](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/f0ef8aa6f4d60a8e5b6e9d66924239983be40f96))
+
 ## [1.4.2](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.1...v1.4.2) (2025-01-03)
 
 
