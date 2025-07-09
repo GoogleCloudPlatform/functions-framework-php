@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.3](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.2...v1.4.3) (2025-07-09)
+
+
+### Bug Fixes
+
+* use ubuntu 22 for php 8.1 ([#226](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/226)) ([123555f](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/123555f6cd8f8a8977aa3ba0ab86558c6b5b1c60))
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#217](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/217)) ([15bb522](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/15bb522b329b5d10216e60c0508e0c12226073a2))
+* **deps:** update all non-major dependencies ([#220](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/220)) ([140d786](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/140d786eaa9babfb32806fda228dc3127302ec43))
+* **deps:** update all non-major dependencies ([#223](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/223)) ([40c8af7](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/40c8af76be911ece7390ca95d8d4f0264e3c6e87))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to 8015b49 ([#216](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/216)) ([a03f0d1](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/a03f0d1cb529d27e100948894efd57b50dab959e))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to c77d3b6 ([#219](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/219)) ([74b22db](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/74b22db6bbca1b313c724b6a5a3587742525f8a8))
+* **deps:** update oskarstark/php-cs-fixer-ga:latest docker digest to ed1747b ([#222](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/222)) ([8d3c60d](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/8d3c60d456e8f261b72e80b6da7d3386df95427d))
+* **deps:** update shivammathur/setup-php digest to 0f7f1d0 ([#224](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/224)) ([6a15aee](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/6a15aee2741e1c345e4fc923dd15987bcd2e8ace))
+* remove all assignees from blunderbuss.yml ([#221](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/221)) ([f0ef8aa](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/f0ef8aa6f4d60a8e5b6e9d66924239983be40f96))
+
 ## [1.4.2](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.1...v1.4.2) (2025-01-03)
 
 
