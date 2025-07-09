@@ -11,10 +11,14 @@ permissions: read-all
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php-version: [ '8.1','8.2','8.3' ]
+        os: [ 'ubuntu-latest' ]
+        php-version: [ '8.2','8.3', '8.4' ]
+        include:
+          - os: 'ubuntu-22.04'
+            php-version: '8.1'
     name: PHP ${{ matrix.php-version }} Conformance Test
     steps:
     - name: Harden Runner
@@ -70,7 +74,7 @@ jobs:
         functionType: 'http'
         useBuildpacks: false
         cmd: "'php -S localhost:8080 router.php'"
-    
+
     - name: Run Declarative Typed conformance tests
       uses: GoogleCloudPlatform/functions-framework-conformance/action@72a4f36b10f1c6435ab1a86a9ea24bda464cc262 # v1.8.6
       env:
