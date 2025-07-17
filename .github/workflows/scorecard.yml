@@ -33,6 +33,7 @@ jobs:
             api.deps.dev:443
             api.github.com:443
             api.osv.dev:443
+            api.scorecard.dev:443
             api.securityscorecards.dev:443
             bestpractices.coreinfrastructure.org:443
             fulcio.sigstore.dev:443
