@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.3...v1.4.4) (2025-07-17)
+
+
+### Bug Fixes
+
+* update scorecard.yml endpoint allowlist ([#228](https://github.com/GoogleCloudPlatform/functions-framework-php/issues/228)) ([07828ec](https://github.com/GoogleCloudPlatform/functions-framework-php/commit/07828ecbdcbde614f32fa07fec9d6a4419b5bd12))
+
 ## [1.4.3](https://github.com/GoogleCloudPlatform/functions-framework-php/compare/v1.4.2...v1.4.3) (2025-07-09)
 
 
