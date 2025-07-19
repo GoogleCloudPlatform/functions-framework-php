@@ -128,7 +128,7 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertNull($cloudevent->getSubject());
         $this->assertEqualsWithDelta(
-            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
+            strtotime(gmdate('Y-m-d\TH:i:s.v\Z')),
             strtotime($cloudevent->getTime()),
             1
         );
@@ -168,7 +168,7 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertNull($cloudevent->getSubject());
         $this->assertEqualsWithDelta(
-            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
+            strtotime(gmdate('Y-m-d\TH:i:s.v\Z')),
             strtotime($cloudevent->getTime()),
             1
         );
