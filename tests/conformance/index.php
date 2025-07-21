@@ -13,7 +13,7 @@ FunctionsFramework::http('declarativeHttpFunc', 'httpFunc');
 function httpFunc(ServerRequestInterface $request)
 {
     file_put_contents(OUTPUT_FILE, $request->getBody());
-    fwrite(STDERR, "output: ".realpath(OUTPUT_FILE));
+    echo "output: ", realpath(OUTPUT_FILE);
     return "ok" . PHP_EOL;
 }
 
