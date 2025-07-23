@@ -18,6 +18,8 @@
 
 namespace Google\CloudFunctions;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use JsonSerializable;
 
 class CloudEvent implements JsonSerializable
@@ -32,6 +34,9 @@ class CloudEvent implements JsonSerializable
     private $datacontenttype;
     private $dataschema;
     private $subject;
+    /**
+     * @var DateTimeImmutable|null
+     */
     private $time;
     /**
      * @var mixed $data
@@ -56,7 +61,7 @@ class CloudEvent implements JsonSerializable
         $this->datacontenttype = $datacontenttype;
         $this->dataschema = $dataschema;
         $this->subject = $subject;
-        $this->time = $time;
+        $this->time = DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $time) ?: null;
         $this->data = $data;
     }
 
@@ -88,7 +93,7 @@ class CloudEvent implements JsonSerializable
     {
         return $this->subject;
     }
-    public function getTime(): ?string
+    public function getTime(): ?DateTimeImmutable
     {
         return $this->time;
     }
@@ -132,7 +137,7 @@ class CloudEvent implements JsonSerializable
             'datacontenttype' => $this->datacontenttype,
             'dataschema' => $this->dataschema,
             'subject' => $this->subject,
-            'time' => $this->time,
+            'time' => $this->time->format(DateTimeInterface::RFC3339_EXTENDED),
             'data' => $this->data,
         ];
     }
@@ -148,7 +153,7 @@ class CloudEvent implements JsonSerializable
             "- datacontenttype: $this->datacontenttype",
             "- dataschema: $this->dataschema",
             "- subject: $this->subject",
-            "- time: $this->time",
+            "- time: {$this->time->format(DateTimeInterface::RFC3339_EXTENDED)}",
         ]);
         return $output;
     }

@@ -66,7 +66,7 @@ class CloudEventSdkCompliantTest extends TestCase
     "datacontenttype": "application\/json",
     "dataschema": "type.googleapis.com\/google.logging.v2.LogEntry",
     "subject": "My Subject",
-    "time": "2020-12-08T20:03:19.162Z",
+    "time": "2020-12-08T20:03:19.162+00:00",
     "data": {
         "message": {
             "data": "SGVsbG8gdGhlcmU=",
@@ -91,7 +91,7 @@ class CloudEventSdkCompliantTest extends TestCase
         $this->assertSame($this->cloudevent->getDataContentType(), $wrappedEvent->getDataContentType());
         $this->assertSame($this->cloudevent->getDataSchema(), $wrappedEvent->getDataSchema());
         $this->assertSame($this->cloudevent->getSubject(), $wrappedEvent->getSubject());
-        $this->assertEquals(DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $this->cloudevent->getTime()), $wrappedEvent->getTime());
+        $this->assertSame($this->cloudevent->getTime(), $wrappedEvent->getTime());
     }
 
     public function testUnimplementedGetExtensionThrowsError(): void

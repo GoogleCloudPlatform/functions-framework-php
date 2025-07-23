@@ -18,6 +18,7 @@
 
 namespace Google\CloudFunctions\Tests;
 
+use DateTimeInterface;
 use Google\CloudFunctions\LegacyEventMapper;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -93,7 +94,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('application/json', $cloudevent->getDataContentType());
         $this->assertNull($cloudevent->getDataSchema());
         $this->assertNull($cloudevent->getSubject());
-        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('2020-12-08T20:03:19.162+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
 
         // Verify Pub/Sub-specific data transformation.
         $message = $cloudevent->getData()['message'];
@@ -128,8 +129,8 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertNull($cloudevent->getSubject());
         $this->assertEqualsWithDelta(
-            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
-            strtotime($cloudevent->getTime()),
+            strtotime(gmdate(DateTimeInterface::RFC3339_EXTENDED)),
+            strtotime($cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED)),
             1
         );
         $this->assertSame(
@@ -168,8 +169,8 @@ class LegacyEventMapperTest extends TestCase
         );
         $this->assertNull($cloudevent->getSubject());
         $this->assertEqualsWithDelta(
-            strtotime(gmdate('%Y-%m-%dT%H:%M:%S.%6NZ')),
-            strtotime($cloudevent->getTime()),
+            strtotime(gmdate(DateTimeInterface::RFC3339_EXTENDED)),
+            strtotime($cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED)),
             1
         );
         $this->assertSame(
@@ -207,7 +208,7 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('application/json', $cloudevent->getDataContentType());
         $this->assertNull($cloudevent->getDataSchema());
         $this->assertNull($cloudevent->getSubject());
-        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('2020-12-08T20:03:19.162+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
 
         // Verify Pub/Sub-specific data transformation.
         $message = $cloudevent->getData()['message'];
@@ -249,7 +250,7 @@ class LegacyEventMapperTest extends TestCase
             'objects/MyFile#1588778055917163',
             $cloudevent->getSubject()
         );
-        $this->assertSame('2020-12-08T20:03:19.162Z', $cloudevent->getTime());
+        $this->assertSame('2020-12-08T20:03:19.162+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
         $this->assertSame('foo', $cloudevent->getData());
     }
 
@@ -296,7 +297,8 @@ class LegacyEventMapperTest extends TestCase
             'users/UUpby3s4spZre6kHsgVSPetzQ8l2',
             $cloudevent->getSubject()
         );
-        $this->assertSame('2020-09-29T11:32:00.000Z', $cloudevent->getTime());
+        var_dump($cloudevent->getTime());
+        $this->assertSame('2020-09-29T11:32:00.000+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
         $this->assertSame('2020-05-26T10:42:27Z', $cloudevent->getData()['metadata']['createTime']);
         $this->assertSame('2020-10-24T11:00:00Z', $cloudevent->getData()['metadata']['lastSignInTime']);
     }
@@ -341,7 +343,7 @@ class LegacyEventMapperTest extends TestCase
             'refs/gcf-test/xyz',
             $cloudevent->getSubject()
         );
-        $this->assertSame('2020-05-21T11:53:45.337Z', $cloudevent->getTime());
+        $this->assertSame('2020-05-21T11:53:45.337+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
     }
 
     public function testFirebaseAuthDbDeleteWithAlternateDomain(): void
@@ -384,7 +386,7 @@ class LegacyEventMapperTest extends TestCase
             'refs/gcf-test/xyz',
             $cloudevent->getSubject()
         );
-        $this->assertSame('2020-05-21T11:53:45.337Z', $cloudevent->getTime());
+        $this->assertSame('2020-05-21T11:53:45.337+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
     }
 
     public function testFirebaseAuthDbDeleteWithInvalidDomain(): void
@@ -424,6 +426,6 @@ class LegacyEventMapperTest extends TestCase
         $this->assertSame('application/json', $cloudevent->getDataContentType());
         $this->assertNull($cloudevent->getDataSchema());
         $this->assertNull($cloudevent->getSubject());
-        $this->assertSame('2020-05-21T11:53:45.337Z', $cloudevent->getTime());
+        $this->assertSame('2020-05-21T11:53:45.337+00:00', $cloudevent->getTime()->format(DateTimeInterface::RFC3339_EXTENDED));
     }
 }
